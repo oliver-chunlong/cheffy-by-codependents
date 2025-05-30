@@ -5,6 +5,8 @@ node_modules/
 .env
 .env.local
 frontend/.env
+frontend/ios/
+frontend/android/
 backend/.env
 
 # Logs
