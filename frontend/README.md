@@ -1,5 +1,7 @@
 ## Setup
 
+cd frontend
+
 npm install
 
 ### Start with ios
