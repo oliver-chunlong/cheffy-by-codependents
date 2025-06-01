@@ -31,10 +31,9 @@ export default function useListen() {
   const [transcript, setTranscript] = useState("");
 
   useSpeechRecognitionEvent("result", (event) => {
-    console.log("result:", event.results);
     setTranscript(event.results[0]?.transcript);
   });
-  useSpeechRecognitionEvent("end", (event) => {
+  useSpeechRecognitionEvent("end", () => {
     setTranscript("");
   });
   useSpeechRecognitionEvent("error", (event) => {
