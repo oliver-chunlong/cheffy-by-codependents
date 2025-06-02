@@ -92,18 +92,6 @@ export default function SearchBar({
           />
         </View>
       </Modal>
-
-      {/* Category Dropdown */}
-      <Picker
-        onChange={(e) => setCategory(e.target.value)}
-        // style={styles.categorySelect}
-      >
-        <Picker.Item label="Category" value="" />
-        <Picker.Item label="Breakfast" value="breakfast" />
-        <Picker.Item label="Lunch" value="lunch" />
-        <Picker.Item label="Dinner" value="dinner" />
-        <Picker.Item label="Dessert" value="dessert" />
-      </Picker>
     </View>
   );
 }
