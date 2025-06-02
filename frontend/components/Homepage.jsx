@@ -18,7 +18,7 @@ export default function Homepage() {
             <Header /*Header Content Here - logo, "Recipes", Profile Button*/ />
             <SearchBar setSearchQuery={setSearchQuery} setFilterBy={setFilterBy} setCategroy={setCategory} /*SearchBar content - Search, FilterBy, and Category*/ />
             <ScrollView /*Scroll View houses RecipeList to allow scrollable contnet within section*/>
-                <RecipeList /*RecipeList calls RecipeCards */ />
+                <RecipeList searchQuery={searchQuery} filterBy={filterBy} category={category} /*RecipeList calls RecipeCards */ />
             </ScrollView>
             <NavBar />
         </View>
