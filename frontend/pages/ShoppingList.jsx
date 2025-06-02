@@ -19,7 +19,7 @@ export default function ShoppingList() {
         </Text>
       ) : (
         shoppingList.map((ingredient) => {
-          return <ListIngredient ingredient={ingredient} />;
+          return <ListIngredient key={ingredient} ingredient={ingredient} />;
         })
       )}
       <Button

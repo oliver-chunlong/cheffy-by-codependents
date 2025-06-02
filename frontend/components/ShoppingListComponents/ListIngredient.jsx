@@ -4,10 +4,8 @@ import { useState } from "react";
 
 export default function ListIngredient({ ingredient }) {
   const [isChecked, setIsChecked] = useState(false);
-  console.log(ingredient);
   return (
     <View style={styles.item}>
-      {" "}
       <Checkbox value={isChecked} onValueChange={setIsChecked} />
       <Text>{ingredient}</Text>
     </View>
