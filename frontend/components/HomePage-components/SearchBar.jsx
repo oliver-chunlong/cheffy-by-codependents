@@ -22,6 +22,9 @@ export default function SearchBar(setSearchQuery, setFilterBy, setCategory) {
                 <option value="vegan">Vegan</option>
                 <option value="gluten-free">Gluten-Free</option>
                 <option value="vegetarian">Vegetarian</option>
+                <option value="dairy-free">Dairy-Free</option>
+                <option value="nut-free">Nut-Free</option>
+                <option value="pescatarian">Pescatarian</option>
             </select>
             {/* Category Dropdown */}
             <select
@@ -29,9 +32,10 @@ export default function SearchBar(setSearchQuery, setFilterBy, setCategory) {
                 style={styles.categorySelect}
             >
                 <option value="">Category</option>
-                <option value="cuisine_1">cuisine_1</option>
-                <option value="cuisine_2">cuisine_2</option>
-                <option value="cuisine_3">cuisine_3</option>
+                <option value="breakfast">Breakfast</option>
+                <option value="lunch">Lunch</option>
+                <option value="dinner">Dinner</option>
+                <option value="dessert">Dessert</option>
             </select>
         </View>
     )
