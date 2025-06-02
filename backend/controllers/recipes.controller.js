@@ -1,6 +1,6 @@
 const { get } = require('../app');
 const endpointsJson = require("../endpoints.json");
-const { selectRecipes, selectRecipeById } = require('../models/recipes.model');
+const { selectRecipes, selectRecipeById, addRecipeToFavourites, selectUserFavourites } = require('../models/recipes.model');
 
 const getApiDocumentation = (req, res) => {
   res.status(200).send({ endpoints: endpointsJson });
@@ -29,4 +29,37 @@ const getRecipeById = (req, res, next) => {
       .catch(next);
   };
 
-module.exports = { getRecipes, getRecipeById, getApiDocumentation };
+const postRecipeToFavourites = async (req, res, next) => {
+  const { user_id } = req.params;
+  const { recipe_id } = req.body;
+  if (!recipe_id) {
+    return res.status(400).json({ msg: "Missing recipe_id in body" });
+  }
+  try {
+    const favourite = await addRecipeToFavourites(user_id, recipe_id);
+    res.status(201).json({ msg: "Recipe added to favourites", favourite });
+  } catch (err) {
+    next(err);
+  }
+};
+
+const getUserFavourites = async (req, res, next) => {
+  const { user_id } = req.params;
+
+  try {
+    const favourites = await selectUserFavourites(user_id);
+
+    if (favourites.length === 0) {
+      return res.status(200).json({
+        msg: "User has no favourite recipes",
+        favourites: [],
+      });
+    }
+
+    res.status(200).json({ favourites });
+  } catch (err) {
+    next(err);
+  }
+};
+
+module.exports = { getRecipes, getRecipeById, getApiDocumentation, postRecipeToFavourites, getUserFavourites };
