@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { View, StyleSheet, Text } from "react-native";
+import { View, StyleSheet, Text, Button } from "react-native";
 import Timer from "../components/Timer";
 import Progressbar from "../components/Progressbar";
 
@@ -11,7 +11,10 @@ export default function CookingMode() {
       <Text>Cooking Mode</Text>
       <Progressbar step={step} totalSteps={10} />
       <Timer seconds={3} isRunning={isTimerRunning} />
-      <button onClick={() => setIsTimerRunning((prev) => !prev)}>Start</button>
+      <Button
+        title="Start"
+        onClick={() => setIsTimerRunning((prev) => !prev)}
+      />
     </View>
   );
 }

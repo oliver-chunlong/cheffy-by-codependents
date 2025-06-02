@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Text } from "react-native";
 
 function removingLeading0(text) {
   if (text[0].startsWith("0")) {
@@ -61,5 +62,5 @@ export default function Timer({ seconds, isRunning, onFinish }) {
   text = removingLeadingEmpty(text);
   text = removingLeading0(text);
 
-  return <p className="timer">{text.join(":")}</p>;
+  return <Text>{text.join(":")}</Text>;
 }
