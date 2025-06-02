@@ -9,7 +9,7 @@ beforeEach(() => {
 });
 
 afterAll(async () => {
-  await db.end()  
+  await db.end();
 });
 
 describe("GET /api", () => {
@@ -57,35 +57,77 @@ describe("GET /api/recipes/:recipe_id", () => {
           })
         );
       });
-    });
+  });
   test("200: Responds with the recipe object with added ingredients and instructions", () => {
     return request(app)
-    .get("/api/recipes/1")
-    .expect(200)
-    .then(({ body }) => {
-      const recipe = body.recipe;
-      expect(recipe).toHaveProperty("ingredients");
-      expect(Array.isArray(recipe.ingredients)).toBe(true);
-      expect(recipe.ingredients[0]).toEqual(
-        expect.objectContaining({
-          ingredient_id: expect.any(Number),
-          ingredient_name: expect.any(String),
-          quantity_numerical: expect.any(Number),
-          quantity_unit: expect.any(String),
-          optional: expect.any(Boolean)
-        })
-      );
+      .get("/api/recipes/1")
+      .expect(200)
+      .then(({ body }) => {
+        const recipe = body.recipe;
+        expect(recipe).toHaveProperty("ingredients");
+        expect(Array.isArray(recipe.ingredients)).toBe(true);
+        expect(recipe.ingredients[0]).toEqual(
+          expect.objectContaining({
+            ingredient_id: expect.any(Number),
+            ingredient_name: expect.any(String),
+            quantity_numerical: expect.any(Number),
+            quantity_unit: expect.any(String),
+            optional: expect.any(Boolean),
+          })
+        );
 
-      expect(recipe).toHaveProperty("instructions");
-      expect(Array.isArray(recipe.instructions)).toBe(true);
-      expect(recipe.instructions[0]).toEqual(
-        expect.objectContaining({
-          step_number: expect.any(Number),
-          step_description: expect.any(String),
-          time_required: expect.any(Number),
-          timed_task: expect.any(Boolean)
-        })
-      );
-    });
+        expect(recipe).toHaveProperty("instructions");
+        expect(Array.isArray(recipe.instructions)).toBe(true);
+        expect(recipe.instructions[0]).toEqual(
+          expect.objectContaining({
+            step_number: expect.any(Number),
+            step_description: expect.any(String),
+            time_required: expect.any(Number),
+            timed_task: expect.any(Boolean),
+          })
+        );
+      });
   });
+});
+
+describe("POST /api/users/:user_id/favourites", () => {
+  test("201: adds a recipe to the user's favourites and returns a success message", () => {
+    const userId = 1;
+    const newFavouriteRecipe = { recipe_id: 2 };
+
+    return request(app)
+      .post(`/api/users/${userId}/favourites`)
+      .send(newFavouriteRecipe)
+      .expect(201)
+      .then(({ body }) => {
+        console.log("Hello")
+        expect(body).toEqual({
+          msg: "Recipe added to favourites",
+          favourite: {
+            user_id: userId,
+            recipe_id: newFavouriteRecipe.recipe_id,
+          },
+        });
+      });
   });
+
+  test("400: responds with error when recipe_id is missing", () => {
+    return request(app)
+      .post("/api/users/1/favourites")
+      .send({})
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Missing recipe_id in body");
+      });
+  });
+
+  test("404: responds with error if user or recipe does not exist", () => {
+    return request(app)
+      .post("/api/users/9999/favourites")
+      .send({ recipe_id: 9999 })
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("User or recipe not found");
+      });
+  });
+});
