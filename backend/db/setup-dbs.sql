@@ -1,0 +1,5 @@
+DROP DATABASE IF EXISTS cheffy;
+CREATE DATABASE cheffy;
+
+DROP DATABASE IF EXISTS cheffy_test;
+CREATE DATABASE cheffy_test;
