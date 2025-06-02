@@ -160,7 +160,7 @@ INSERT INTO user_favorites (user_id, recipe_id) VALUES
     (28, 4); -- chilli pepper dairy-free
   
     
-INSERT INTO equipment (equipment_name) VALUESgit
+INSERT INTO equipment (equipment_name) VALUES
 ('pan'),
 ('griddle'),
 ('oven'),

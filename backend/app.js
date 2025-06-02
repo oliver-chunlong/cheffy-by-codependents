@@ -1,12 +1,13 @@
 const express = require("express");
 const db = require("./db/connection");
-const { getRecipes } = require('./controllers/recipes.controller');
+const { getRecipes, getRecipeById, getApiDocumentation } = require('./controllers/recipes.controller');
 
 const app = express();
 app.use(express.json());
 
+app.get('/api', getApiDocumentation);
 app.get('/api/recipes', getRecipes);
-// app.get('/api/recipes/:recipe_id', getRecipesById);
+app.get('/api/recipes/:recipe_id', getRecipeById);
 // app.get('/api/users/:user_id/recipes', getUsersRecipes);
 // app.post('/api/users/:user_id/recipes', postRecipe);
 // app.get('/api/users/:user_id/favourites', getFavouriteRecipes);
