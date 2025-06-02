@@ -1,54 +1,25 @@
-const db = require('./connection');
-require('dotenv').config();
+const fs = require("fs").promises;
+const db = require("./connection");
 
-async function seedUserData() {
-  await db.query(
-  `
+const seed = async () => {
+  await db.query(`DROP TABLE IF EXISTS user_favorites;`);
+  await db.query(`DROP TABLE IF EXISTS user_cooked_recipes;`);
+  await db.query(`DROP TABLE IF EXISTS user_dietary_restrictions;`);
+  await db.query(`DROP TABLE IF EXISTS ingredient_dietary_restrictions;`);
+  await db.query(`DROP TABLE IF EXISTS instructions;`);
+  await db.query(`DROP TABLE IF EXISTS equipment;`);
+  await db.query(`DROP TABLE IF EXISTS ingredient_quantities CASCADE;`);
+  await db.query(`DROP TABLE IF EXISTS dietary_restrictions CASCADE;`);
+  await db.query(`DROP TABLE IF EXISTS ingredients CASCADE;`);
+  await db.query(`DROP TABLE IF EXISTS recipes CASCADE;`);
+  await db.query(`DROP TABLE IF EXISTS users CASCADE;`);
+  
 
-  `)
-}
-async function seedIngredients() {
-  await db.query(
-  `
+  const schemaSql = await fs.readFile("./db/schema.sql", "utf-8");
+  await db.query(schemaSql);
 
-  `)
-}
+  const seedDataSql = await fs.readFile("./db/data/seed_test_data.sql", "utf-8");
+  await db.query(seedDataSql);
+};
 
-async function seedRecipes() {
-  await db.query(
-  `
-
-  `)
-}
-
-async function seedIngredientQuantities() {
-  await db.query(
-    `
-
-  `)
-}
-
-async function seedInstructions() {
-  await db.query(
-  `
-
-  `)
-}
-
-
-async function runSeeds() {
-  try {
-    await seedUserData();
-    await seedIngredients();
-    await seedRecipes();
-    await seedIngredientQuantities();
-    await seedInstructions();
-    console.log('All seed data inserted');
-  } catch (err) {
-    console.error('Error seeding data:', err);
-  } finally {
-    db.end();
-  }
-}
-
-runSeeds();
+module.exports = seed;
