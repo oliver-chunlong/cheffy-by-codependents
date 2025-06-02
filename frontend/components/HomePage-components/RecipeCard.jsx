@@ -1,13 +1,13 @@
 import { View, StyleSheet } from "react-native";
-import TTSSample from "./components/TTSSample";
-import SpeechRecogSample from "./components/SpeechRecogSample";
+import TTSSample from "../TTSSample";
+import SpeechRecogSample from "../SpeechRecogSample";
 
-export default function RecipeCard({ recipe }){
-    return (
-        <View>
-            <Image source={{ uri: recipe.img.url} } />
-            <Header>{recipe.title}</Header>
-            <Text>{recipe.description}</Text>
-        </View>
-    )
+export default function RecipeCard({ recipe }) {
+  return (
+    <View>
+      <Image source={{ uri: recipe.img.url }} />
+      <Header>{recipe.title}</Header>
+      <Text>{recipe.description}</Text>
+    </View>
+  );
 }

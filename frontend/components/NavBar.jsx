@@ -2,10 +2,10 @@ import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
-import Home from "../pages/Home";
-import CookingMode from "../pages/CookingMode";
-import ShoppingList from "../pages/ShoppingList";
-import RecipeDetail from "../pages/RecipeDetail";
+import Home from "../pages/Homepage.jsx";
+import CookingMode from "../pages/CookingMode.jsx";
+import ShoppingList from "../pages/ShoppingList.jsx";
+import RecipeDetail from "../pages/RecipeDetail.jsx";
 
 const Tab = createBottomTabNavigator();
 

@@ -1,25 +1,22 @@
 import { View, StyleSheet } from "react-native";
 import { useEffect, useState } from "react";
-import TTSSample from "./components/TTSSample";
-import SpeechRecogSample from "./components/SpeechRecogSample";
-import RecipeCard from "./components/RecipeCard";
-
+import TTSSample from "../TTSSample";
+import SpeechRecogSample from "../SpeechRecogSample";
+import RecipeCard from "./RecipeCard";
 
 export default function RecipeList({ searchQuery, filterBy, category }) {
+  //changes to filtering logic required
 
-    //changes to filtering logic required
+  const [allRecipes, setAllRecipes] = useState([]);
+  const [filteredRecipes, setFilteredRecipes] = useState([]);
 
-
-    const [allRecipes, setAllRecipes] = useState([]);
-    const [filteredRecipes, setFilteredRecipes] = useState([]);
-    
-    useEffect(() => {
-      /*Function to get recipes from the database*/
-    /*UtilFunctionHere*/().then((recipes) => {
-      setAllRecipes(recipes);
-      setFilteredRecipes(recipes);
-    });
-  }, []);
+  // useEffect(() => {
+  //   /*Function to get recipes from the database*/
+  //   /*UtilFunctionHere*/ .then((recipes) => {
+  //     setAllRecipes(recipes);
+  //     setFilteredRecipes(recipes);
+  //   });
+  // }, []);
 
   useEffect(() => {
     let filtered = allRecipes;
@@ -42,9 +39,10 @@ export default function RecipeList({ searchQuery, filterBy, category }) {
   }, [searchQuery, filterBy, category, allRecipes]);
 
   return (
-   
+    <View>
       {filteredRecipes.map((recipe) => (
         <RecipeCard key={recipe.id} recipe={recipe} />
       ))}
+    </View>
   );
 }
