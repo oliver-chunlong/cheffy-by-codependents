@@ -192,7 +192,7 @@ INSERT INTO instructions (recipe_id, step_number, step_description, iq_id, time_
 (3, 6, 'Add soy sauce and toss everything together for 1–2 minutes.', (SELECT iq_id FROM ingredient_quantities WHERE recipe_id = 3 AND ingredient_id = 22), 2, TRUE),
 (3, 7, 'Serve hot.', NULL, NULL, FALSE),
 
--- Gluten-Free Pancakes (recipe_id 4)
+-- Pancakes (recipe_id 4)
 (4, 1, 'Mix gluten-free flour, milk, and melted butter into a batter.', (SELECT iq_id FROM ingredient_quantities WHERE recipe_id = 4 AND ingredient_id = 26), 5, TRUE),
 (4, 2, 'Heat a lightly oiled griddle or pan over medium-high heat.', NULL, 2, TRUE),
 (4, 3, 'Pour about 1/4 cup of batter onto the griddle.', (SELECT iq_id FROM ingredient_quantities WHERE recipe_id = 4 AND ingredient_id = 26), NULL, FALSE),

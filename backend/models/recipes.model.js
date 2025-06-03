@@ -216,6 +216,18 @@ const selectUserRecipes = async (user_id) => {
   return result.rows;
 };
 
+const insertRecipe = async ({ recipe_name, recipe_description, recipe_img_url, created_by }) => {
+  const result = await db.query(
+    `
+    INSERT INTO recipes (recipe_name, recipe_description, recipe_img_url, created_by)
+    VALUES ($1, $2, $3, $4)
+    RETURNING *;
+    `,
+    [recipe_name, recipe_description, recipe_img_url, created_by]
+  );
+  return result.rows[0];
+};
+
 module.exports = {
   selectRecipes,
   selectRecipeById,
@@ -223,5 +235,6 @@ module.exports = {
   selectUserFavourites,
   removeFromFavourites,
   selectUserRecipes,
-  checkUserExists
+  checkUserExists,
+  insertRecipe
 };
