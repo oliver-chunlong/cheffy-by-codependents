@@ -8,7 +8,8 @@ const {
   selectUserFavourites,
   removeFromFavourites,
   selectUserRecipes,
-  checkUserExists
+  checkUserExists,
+  insertRecipe
 } = require("../models/recipes.model");
 
 const getApiDocumentation = (req, res) => {
@@ -106,6 +107,36 @@ const getUserRecipes = (req, res, next) => {
     .catch(next);
 };
 
+const postRecipe = async (req, res, next) => {
+  const { recipe_name, recipe_description, recipe_img_url } = req.body;
+  const user_id = Number(req.params.user_id);
+
+  if (!recipe_name || !recipe_description || !recipe_img_url) {
+    return res.status(400).json({ msg: 'Missing required fields' });
+  }
+
+  if (isNaN(user_id)) {
+    return res.status(400).json({ msg: 'Invalid user ID' });
+  }
+
+  try {
+    const userExists = await checkUserExists(user_id);
+    if (!userExists) {
+      return res.status(404).json({ msg: 'User not found' });
+    }
+
+    const recipe = await insertRecipe({ 
+      recipe_name, 
+      recipe_description, 
+      recipe_img_url, 
+      created_by: user_id 
+    });
+
+    res.status(201).json({ recipe });
+  } catch (err) {
+    next(err);
+  }
+};
 
 module.exports = {
   getRecipes,
@@ -114,5 +145,6 @@ module.exports = {
   postRecipeToFavourites,
   getUserFavourites,
   deleteFromFavourites,
-  getUserRecipes
+  getUserRecipes,
+  postRecipe
 };

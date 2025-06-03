@@ -7,7 +7,8 @@ const {
   postRecipeToFavourites, 
   getUserFavourites, 
   deleteFromFavourites,
-  getUserRecipes
+  getUserRecipes,
+  postRecipe
  } = require('./controllers/recipes.controller');
 
 const app = express();
@@ -17,7 +18,7 @@ app.get('/api', getApiDocumentation);
 app.get('/api/recipes', getRecipes);
 app.get('/api/recipes/:recipe_id', getRecipeById);
 app.get('/api/users/:user_id/recipes', getUserRecipes);
-// app.post('/api/users/:user_id/recipes', postRecipe);
+app.post('/api/users/:user_id/recipes', postRecipe);
 app.get('/api/users/:user_id/favourites', getUserFavourites);
 app.post('/api/users/:user_id/favourites', postRecipeToFavourites);
 // app.patch('/api/users/:user_id/recipes/:recipe_id', editUserRecipe);
