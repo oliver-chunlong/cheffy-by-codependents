@@ -1,6 +1,14 @@
 const express = require("express");
 const db = require("./db/connection");
-const { getRecipes, getRecipeById, getApiDocumentation, postRecipeToFavourites, getUserFavourites, deleteFromFavourites } = require('./controllers/recipes.controller');
+const { 
+  getRecipes, 
+  getRecipeById, 
+  getApiDocumentation, 
+  postRecipeToFavourites, 
+  getUserFavourites, 
+  deleteFromFavourites,
+  getUserRecipes
+ } = require('./controllers/recipes.controller');
 
 const app = express();
 app.use(express.json());
@@ -8,7 +16,7 @@ app.use(express.json());
 app.get('/api', getApiDocumentation);
 app.get('/api/recipes', getRecipes);
 app.get('/api/recipes/:recipe_id', getRecipeById);
-// app.get('/api/users/:user_id/recipes', getUsersRecipes);
+app.get('/api/users/:user_id/recipes', getUserRecipes);
 // app.post('/api/users/:user_id/recipes', postRecipe);
 app.get('/api/users/:user_id/favourites', getUserFavourites);
 app.post('/api/users/:user_id/favourites', postRecipeToFavourites);
