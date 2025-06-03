@@ -7,6 +7,8 @@ const {
   addRecipeToFavourites,
   selectUserFavourites,
   removeFromFavourites,
+  selectUserRecipes,
+  checkUserExists
 } = require("../models/recipes.model");
 
 const getApiDocumentation = (req, res) => {
@@ -69,12 +71,9 @@ const getUserFavourites = async (req, res, next) => {
 
 // const deleteFromFavourites = async (req, res, next) => {
 //   const { user_id, recipe_id } = req.params;
-
 //   try {
 //     const recipeToDelete = await removeFromFavourites(recipe_id)
-
 //   }
-
 // }
 
 const deleteFromFavourites = (req, res, next) => {
@@ -87,6 +86,27 @@ const deleteFromFavourites = (req, res, next) => {
     .catch(next);
 };
 
+const getUserRecipes = (req, res, next) => {
+  const {user_id} = req.params;
+
+  checkUserExists(user_id)
+    .then(userExists => {
+      if (!userExists) {
+        return res.status(404).json({ msg: "User not found" });
+      }
+      return selectUserRecipes(user_id);
+    })
+    .then(recipes => {
+      if (!recipes) return; 
+      if (recipes.length === 0) {
+        return res.status(200).json({ msg: "User has no recipes", recipes: [] });
+      }
+      res.status(200).json({ recipes });
+    })
+    .catch(next);
+};
+
+
 module.exports = {
   getRecipes,
   getRecipeById,
@@ -94,4 +114,5 @@ module.exports = {
   postRecipeToFavourites,
   getUserFavourites,
   deleteFromFavourites,
+  getUserRecipes
 };

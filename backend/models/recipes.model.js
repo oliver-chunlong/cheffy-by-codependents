@@ -201,10 +201,27 @@ const removeFromFavourites = async (user_id, recipe_id) => {
     });
 };
 
+//reusable when needed, to save time on error checks
+const checkUserExists = async (user_id) => {
+  const result = await db.query("SELECT * FROM users WHERE user_id = $1", [user_id]);
+  return result.rowCount > 0;
+};
+
+const selectUserRecipes = async (user_id) => {
+  const result = await db.query(
+    `SELECT recipe_id, recipe_name, recipe_img_url, recipe_description, created_by
+     FROM recipes WHERE created_by = $1`,
+    [user_id]
+  );
+  return result.rows;
+};
+
 module.exports = {
   selectRecipes,
   selectRecipeById,
   addRecipeToFavourites,
   selectUserFavourites,
   removeFromFavourites,
+  selectUserRecipes,
+  checkUserExists
 };
