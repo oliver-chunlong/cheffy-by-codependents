@@ -13,7 +13,7 @@ export default function CookingMode() {
       <Timer seconds={3} isRunning={isTimerRunning} />
       <Button
         title="Start"
-        onClick={() => setIsTimerRunning((prev) => !prev)}
+        onPress={() => setIsTimerRunning((prev) => !prev)}
       />
     </View>
   );
