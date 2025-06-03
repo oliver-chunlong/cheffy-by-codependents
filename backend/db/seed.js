@@ -2,7 +2,7 @@ const fs = require("fs").promises;
 const db = require("./connection");
 
 const seed = async () => {
-  await db.query(`DROP TABLE IF EXISTS user_favorites;`);
+  await db.query(`DROP TABLE IF EXISTS user_favourites;`);
   await db.query(`DROP TABLE IF EXISTS user_cooked_recipes;`);
   await db.query(`DROP TABLE IF EXISTS user_dietary_restrictions;`);
   await db.query(`DROP TABLE IF EXISTS ingredient_dietary_restrictions;`);
