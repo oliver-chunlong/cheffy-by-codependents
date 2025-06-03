@@ -9,7 +9,7 @@ const {
   deleteFromFavourites,
   getUserRecipes,
   postRecipe,
-  editUserRecipe
+  editUserRecipe,
  } = require('./controllers/recipes.controller');
 
 const app = express();

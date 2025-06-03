@@ -481,11 +481,13 @@ describe('PATCH /api/users/:user_id/recipes/:recipe_id', () => {
       .then(({ body }) => {
         expect(body).toEqual(
           expect.objectContaining({
-            recipe_id: 2,
-            recipe_name: updatedRecipe.recipe_name,
-            recipe_description: updatedRecipe.recipe_description,
-            recipe_img_url: updatedRecipe.recipe_img_url,
-            created_by: 1
+            recipe: expect.objectContaining({
+              recipe_id: 2,
+              recipe_name: updatedRecipe.recipe_name,
+              recipe_description: updatedRecipe.recipe_description,
+              recipe_img_url: updatedRecipe.recipe_img_url,
+              created_by: 1
+            })
           })
         );
       });
@@ -498,5 +500,64 @@ describe('PATCH /api/users/:user_id/recipes/:recipe_id', () => {
       .patch('/api/users/1/recipes/9999')
       .send(updatedRecipe)
       .expect(404);
+  });
+});
+
+describe('PATCH /api/users/:user_id/recipes/:recipe_id with ingredients and instructions', () => {
+  test('200: updates existing ingredients and instructions', () => {
+    const updatedData = {
+      ingredients: [
+        { ingredient_id: 1, quantity_numerical: 350, quantity_unit: 'g' },
+        { ingredient_id: 2, quantity_numerical: 2, quantity_unit: 'large' }
+      ]  ,
+      instructions: [
+        { step_number: 1, step_description: 'Heat oil in a large pan.', iq_id: null, time_required: 3, timed_task: true },
+        { step_number: 2, step_description: 'Add onions and sauté until golden.', iq_id: null, time_required: 6, timed_task: true }
+      ]
+    };
+
+    return request(app)
+      .patch('/api/users/1/recipes/2')
+      .send(updatedData)
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.recipe).toEqual(expect.objectContaining({
+          recipe_id: 2,
+          recipe_name: expect.any(String),
+          recipe_description: expect.any(String),
+          recipe_img_url: expect.any(String),
+          created_by: 1
+        }));
+
+        expect(body.ingredients).toEqual(expect.arrayContaining([
+          expect.objectContaining({
+            ingredient_id: 1,
+            ingredient_name: expect.any(String),
+            quantity_numerical: '350',
+            quantity_unit: 'g',
+            optional: expect.any(Boolean),
+            iq_id: expect.any(Number)
+          }),
+          expect.objectContaining({
+            ingredient_id: 2,
+            ingredient_name: expect.any(String),
+            quantity_numerical: '2',
+            quantity_unit: 'large',
+            optional: expect.any(Boolean),
+            iq_id: expect.any(Number)
+          })
+        ]));
+
+        expect(body.instructions).toEqual(expect.arrayContaining([
+          expect.objectContaining({
+            step_description: 'Heat oil in a large pan.',
+            step_number: 1
+          }),
+          expect.objectContaining({
+            step_description: 'Add onions and sauté until golden.',
+            step_number: 2
+          })
+        ]));
+      });
   });
 });

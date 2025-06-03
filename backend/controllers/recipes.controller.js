@@ -151,20 +151,20 @@ const postRecipe = async (req, res, next) => {
   }
 };
 
-const editUserRecipe = async (req, res, next) => {
+const editUserRecipe = async (req, res) => {
   const { user_id, recipe_id } = req.params;
-  const updates = req.body;
+  const updateData = req.body;
 
   try {
-    const updatedRecipe = await updateUserRecipe(user_id, recipe_id, updates);
-    res.status(200).json(updatedRecipe);
-  } catch (err) {
-    if (err.status === 404) {
-      return res.status(404).json({ msg: err.msg });
-    }
-    next(err);
+    const updated = await updateUserRecipe(user_id, recipe_id, updateData);
+    res.status(200).json(updated);
+  } catch (error) {
+    console.error('Error in editUserRecipe:', error);
+    res.status(error.status || 500).json({ msg: error.msg || 'Failed to update recipe' });
   }
 };
+
+
 
 
 module.exports = {
