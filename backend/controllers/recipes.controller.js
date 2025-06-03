@@ -11,7 +11,8 @@ const {
   checkUserExists,
   insertRecipe,
   addIngredientsToRecipe,
-  addInstructionsToRecipe
+  addInstructionsToRecipe,
+  updateUserRecipe
 } = require("../models/recipes.model");
 
 const getApiDocumentation = (req, res) => {
@@ -150,6 +151,22 @@ const postRecipe = async (req, res, next) => {
   }
 };
 
+const editUserRecipe = async (req, res, next) => {
+  const { user_id, recipe_id } = req.params;
+  const updates = req.body;
+
+  try {
+    const updatedRecipe = await updateUserRecipe(user_id, recipe_id, updates);
+    res.status(200).json(updatedRecipe);
+  } catch (err) {
+    if (err.status === 404) {
+      return res.status(404).json({ msg: err.msg });
+    }
+    next(err);
+  }
+};
+
+
 module.exports = {
   getRecipes,
   getRecipeById,
@@ -158,5 +175,6 @@ module.exports = {
   getUserFavourites,
   deleteFromFavourites,
   getUserRecipes,
-  postRecipe
+  postRecipe,
+  editUserRecipe
 };

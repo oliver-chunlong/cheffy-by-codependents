@@ -8,7 +8,8 @@ const {
   getUserFavourites, 
   deleteFromFavourites,
   getUserRecipes,
-  postRecipe
+  postRecipe,
+  editUserRecipe
  } = require('./controllers/recipes.controller');
 
 const app = express();
@@ -21,7 +22,7 @@ app.get('/api/users/:user_id/recipes', getUserRecipes);
 app.post('/api/users/:user_id/recipes', postRecipe);
 app.get('/api/users/:user_id/favourites', getUserFavourites);
 app.post('/api/users/:user_id/favourites', postRecipeToFavourites);
-// app.patch('/api/users/:user_id/recipes/:recipe_id', editUserRecipe);
+app.patch('/api/users/:user_id/recipes/:recipe_id', editUserRecipe);
 // app.delete('/api/users/:user_id/recipes/:recipe_id', deleteRecipe);
 app.delete('/api/users/:user_id/favourites/:recipe_id', deleteFromFavourites);
 

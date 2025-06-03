@@ -267,6 +267,44 @@ const addInstructionsToRecipe = async (recipe_id, instructions) => {
   }));
 };
 
+const updateUserRecipe = (user_id, recipe_id, updateData) => {
+  if (isNaN(Number(user_id))) {
+    return Promise.reject({ status: 400, msg: "Invalid user ID" });
+  }
+  if (isNaN(Number(recipe_id))) {
+    return Promise.reject({ status: 400, msg: "Invalid recipe ID" });
+  }
+  if (!updateData || Object.keys(updateData).length === 0) {
+    return Promise.reject({ status: 400, msg: "No data to update" });
+  }
+
+  const columns = [];
+  const values = [];
+  let index = 1;
+
+  for (const [key, value] of Object.entries(updateData)) {
+    columns.push(`${key} = $${index}`);
+    values.push(value);
+    index++;
+  }
+
+  values.push(user_id);
+  values.push(recipe_id);
+
+  const queryStr = `
+    UPDATE recipes
+    SET ${columns.join(", ")}
+    WHERE created_by = $${index} AND recipe_id = $${index + 1}
+    RETURNING *;
+  `;
+
+  return db.query(queryStr, values).then(({ rows }) => {
+    if (rows.length === 0) {
+      return Promise.reject({ status: 404, msg: "Recipe not found or not owned by user" });
+    }
+    return rows[0];
+  });
+};
 
 
 module.exports = {
@@ -279,5 +317,6 @@ module.exports = {
   checkUserExists,
   insertRecipe,
   addIngredientsToRecipe,
-  addInstructionsToRecipe
+  addInstructionsToRecipe,
+  updateUserRecipe
 };
