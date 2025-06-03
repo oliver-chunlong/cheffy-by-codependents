@@ -1,4 +1,5 @@
 const express = require("express");
+const cors = require("cors");
 const db = require("./db/connection");
 const { 
   getRecipes, 
@@ -13,6 +14,12 @@ const {
  } = require('./controllers/recipes.controller');
 
 const app = express();
+
+app.use(cors({
+  origin: 'http://localhost:8081',
+  methods: ['GET', 'POST', 'PATCH', 'DELETE'],
+  credentials: true}));
+  
 app.use(express.json());
 
 app.get('/api', getApiDocumentation);
