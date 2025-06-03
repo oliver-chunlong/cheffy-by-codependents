@@ -201,7 +201,6 @@ const removeFromFavourites = async (user_id, recipe_id) => {
     });
 };
 
-//reusable when needed, to save time on error checks
 const checkUserExists = async (user_id) => {
   const result = await db.query("SELECT * FROM users WHERE user_id = $1", [user_id]);
   return result.rowCount > 0;
@@ -267,44 +266,95 @@ const addInstructionsToRecipe = async (recipe_id, instructions) => {
   }));
 };
 
-const updateUserRecipe = (user_id, recipe_id, updateData) => {
-  if (isNaN(Number(user_id))) {
-    return Promise.reject({ status: 400, msg: "Invalid user ID" });
-  }
-  if (isNaN(Number(recipe_id))) {
-    return Promise.reject({ status: 400, msg: "Invalid recipe ID" });
-  }
-  if (!updateData || Object.keys(updateData).length === 0) {
-    return Promise.reject({ status: 400, msg: "No data to update" });
-  }
 
-  const columns = [];
-  const values = [];
-  let index = 1;
+const updateUserRecipe = async (user_id, recipe_id, updateData) => {
+  if (isNaN(Number(user_id))) throw { status: 400, msg: "Invalid user ID" }
+  if (isNaN(Number(recipe_id))) throw { status: 400, msg: "Invalid recipe ID" }
+  if (!updateData || Object.keys(updateData).length === 0) throw { status: 400, msg: "No data to update" }
 
-  for (const [key, value] of Object.entries(updateData)) {
-    columns.push(`${key} = $${index}`);
-    values.push(value);
-    index++;
-  }
+  let setParts = []
+  let values = []
+  let i = 1
 
-  values.push(user_id);
-  values.push(recipe_id);
-
-  const queryStr = `
-    UPDATE recipes
-    SET ${columns.join(", ")}
-    WHERE created_by = $${index} AND recipe_id = $${index + 1}
-    RETURNING *;
-  `;
-
-  return db.query(queryStr, values).then(({ rows }) => {
-    if (rows.length === 0) {
-      return Promise.reject({ status: 404, msg: "Recipe not found or not owned by user" });
+  for (const key in updateData) {
+    if (key !== "ingredients" && key !== "instructions") {
+      setParts.push(`${key} = $${i}`)
+      values.push(updateData[key])
+      i++
     }
-    return rows[0];
-  });
-};
+  }
+
+  if (setParts.length > 0) {
+    values.push(user_id)
+    values.push(recipe_id)
+
+    const sql = `UPDATE recipes SET ${setParts.join(", ")} WHERE created_by = $${i} AND recipe_id = $${i+1} RETURNING *`
+    const res = await db.query(sql, values)
+    if (res.rows.length === 0) throw { status: 404, msg: "Recipe not found or not owned by user" }
+  }
+
+  if (Array.isArray(updateData.ingredients)) {
+    for (const ing of updateData.ingredients) {
+      const res = await db.query(
+        "SELECT iq_id FROM ingredient_quantities WHERE recipe_id = $1 AND ingredient_id = $2",
+        [recipe_id, ing.ingredient_id]
+      )
+      if (res.rows.length) {
+        await db.query(
+          "UPDATE ingredient_quantities SET quantity_numerical = $1, quantity_unit = $2, optional = $3 WHERE recipe_id = $4 AND ingredient_id = $5",
+          [ing.quantity_numerical, ing.quantity_unit, ing.optional || false, recipe_id, ing.ingredient_id]
+        )
+      } else {
+        await db.query(
+          "INSERT INTO ingredient_quantities (recipe_id, ingredient_id, quantity_numerical, quantity_unit, optional) VALUES ($1,$2,$3,$4,$5)",
+          [recipe_id, ing.ingredient_id, ing.quantity_numerical, ing.quantity_unit, ing.optional || false]
+        )
+      }
+    }
+  }
+
+  if (Array.isArray(updateData.instructions)) {
+    for (const ins of updateData.instructions) {
+      const res = await db.query(
+        "SELECT instruction_id FROM instructions WHERE recipe_id = $1 AND step_number = $2",
+        [recipe_id, ins.step_number]
+      )
+      if (res.rows.length) {
+        await db.query(
+          "UPDATE instructions SET step_description = $1, iq_id = $2, time_required = $3, timed_task = $4 WHERE recipe_id = $5 AND step_number = $6",
+          [ins.step_description, ins.iq_id || null, ins.time_required || null, ins.timed_task || false, recipe_id, ins.step_number]
+        )
+      } else {
+        await db.query(
+          "INSERT INTO instructions (recipe_id, step_number, step_description, iq_id, time_required, timed_task) VALUES ($1,$2,$3,$4,$5,$6)",
+          [recipe_id, ins.step_number, ins.step_description, ins.iq_id || null, ins.time_required || null, ins.timed_task || false]
+        )
+      }
+    }
+  }
+
+  const recipeRes = await db.query("SELECT * FROM recipes WHERE recipe_id = $1", [recipe_id])
+  if (!recipeRes.rows.length) throw { status: 404, msg: "Recipe not found" }
+
+  const ingredientsRes = await db.query(
+    "SELECT iq.iq_id, iq.recipe_id, iq.ingredient_id, iq.quantity_numerical, iq.quantity_unit, iq.optional, ing.ingredient_name FROM ingredient_quantities iq JOIN ingredients ing ON iq.ingredient_id = ing.id WHERE iq.recipe_id = $1",
+    [recipe_id]
+  )
+
+  const instructionsRes = await db.query(
+    "SELECT instruction_id, recipe_id, step_number, step_description, iq_id, time_required, timed_task FROM instructions WHERE recipe_id = $1 ORDER BY step_number",
+    [recipe_id]
+  )
+
+  return {
+    recipe: recipeRes.rows[0],
+    ingredients: ingredientsRes.rows,
+    instructions: instructionsRes.rows,
+  }
+}
+
+
+
 
 
 module.exports = {
