@@ -8,6 +8,7 @@ import { useContext } from "react";
 import { CurrentRecipeContext } from "../context/CurrentRecipeContext";
 import { useNavigation } from "@react-navigation/native";
 import { Card, Button, View, Text } from "react-native-ui-lib";
+import Timer from "../components/Timer";
 
 const sample = [
   {
@@ -56,10 +57,16 @@ const sample = [
   },
 ];
 
+function hasMoreSteps(step, totalSteps) {
+  return step < totalSteps - 1;
+}
+
 export default function CookingMode() {
+  const instructions = sample;
   const navigation = useNavigation();
   const [step, setStep] = useState(0);
   const [complete, setComplete] = useState(false);
+  const [isTimerRunning, setIsTimerRunning] = useState(false);
   const { currentRecipe, setCurrentRecipe } = useContext(CurrentRecipeContext);
   const currentStep = currentRecipe[step];
   const handleNext = () => {
@@ -92,6 +99,7 @@ export default function CookingMode() {
       </View>
     );
   }
+  console.log(instructions);
   return complete ? (
     <Completed />
   ) : (

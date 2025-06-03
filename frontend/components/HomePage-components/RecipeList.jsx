@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import RecipeCard from "./RecipeCard";
 import { GridList, Spacings } from "react-native-ui-lib";
 import SearchBar from "./SearchBar";
-import { requestRecipes } from "../..frontend/utils/axios";
+import { requestRecipes } from "../../utils/axios";
 
 export default function RecipeList({ searchQuery, filterBy, category }) {
   //changes to filtering logic required
@@ -18,14 +18,17 @@ export default function RecipeList({ searchQuery, filterBy, category }) {
   );
 
   useEffect(() => {
-    requestRecipes.then((recipes) => { setAllRecipes(recipes) }, )
-  // useEffect(() => {
-  //   /*Function to get recipes from the database*/
-  //   /*UtilFunctionHere*/ .then((recipes) => {
-  //     setAllRecipes(recipes);
-  //     setFilteredRecipes(recipes);
-  //   });
-  // }, []);
+    // requestRecipes.then((recipes) => {
+    //   setAllRecipes(recipes);
+    // });
+    // useEffect(() => {
+    //   /*Function to get recipes from the database*/
+    //   /*UtilFunctionHere*/ .then((recipes) => {
+    //     setAllRecipes(recipes);
+    //     setFilteredRecipes(recipes);
+    //   });
+    // }, []);
+  });
 
   return (
     <GridList
