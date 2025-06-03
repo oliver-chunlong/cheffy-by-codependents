@@ -75,7 +75,7 @@ INSERT INTO user_cooked_recipes (user_id, recipe_id) VALUES
 (5, 4),
 (5, 5);
 
-INSERT INTO user_favorites (user_id, recipe_id) VALUES
+INSERT INTO user_favourites (user_id, recipe_id) VALUES
 (1, 2),
 (1, 5),
 (2, 1),

@@ -8,10 +8,10 @@ const run = require("../utils/updateRecipeLabels");
 beforeEach(async () => {
   await seed();
   await run();
-  await db.query(
-    `INSERT INTO users (user_id, username) VALUES ($1, $2)`,
-    [123, "no_favourites_user"]
-  );
+  await db.query(`INSERT INTO users (user_id, username) VALUES ($1, $2)`, [
+    123,
+    "no_favourites_user",
+  ]);
 });
 
 afterAll(async () => {
@@ -52,12 +52,11 @@ describe("GET /api/recipes", () => {
       .expect(200)
       .then(({ body }) => {
         expect(body.recipes.length).toBeGreaterThan(0);
-        body.recipes.forEach(recipe => {
+        body.recipes.forEach((recipe) => {
           expect(recipe.is_vegan).toBe(true);
         });
       });
   });
-  
 });
 
 describe("GET /api/recipes/:recipe_id", () => {
@@ -137,7 +136,8 @@ describe("POST /api/users/:user_id/favourites", () => {
         expect(body.msg).toBe("Missing recipe_id in body");
       });
   });
-  });
+});
+
 
   test("404: Responds with error if user or recipe does not exist", () => {
     return request(app)
@@ -148,7 +148,6 @@ describe("POST /api/users/:user_id/favourites", () => {
         expect(body.msg).toBe("User or recipe not found");
       });
   });
-
 
 describe("GET /api/users/:user_id/favourites", () => {
   test("200: Responds with an array of the user's favourite recipes", () => {
@@ -168,7 +167,7 @@ describe("GET /api/users/:user_id/favourites", () => {
       });
   });
 
-  test("200: returns a message if the user has no favourite recipes", () => {
+  test("200: Returns a message if the user has no favourite recipes", () => {
     const userId = 123;
 
     return request(app)
@@ -182,7 +181,7 @@ describe("GET /api/users/:user_id/favourites", () => {
       });
   });
 
-  test("404: responds with an error message when user does not exist", () => {
+  test("404: Responds with an error message when user does not exist", () => {
     const invalidUserId = 9999;
 
     return request(app)
@@ -234,6 +233,59 @@ describe("GET /api/users/:user_id/recipes", () => {
       .expect(404)
       .then(({ body }) => {
         expect(body).toEqual({ msg: "User not found" });
+=======
+describe("DELETE /api/users/:user_id/favourites/:recipe_id", () => {
+  test("204: Responds with no content after successful deletion and checks that the recipe is deleted", () => {
+    const userId = 1;
+    const recipeId = 2;
+
+    return request(app)
+      .delete(`/api/users/${userId}/favourites/${recipeId}`)
+      .expect(204)
+      .then((res) => {
+        expect(res.text).toBe("");
+        return request(app)
+          .delete(`/api/users/${userId}/favourites/${recipeId}`)
+          .expect(404)
+          .then(({ body }) => {
+            expect(body.msg).toBe("Favourite not found");
+          });
+      });
+  });
+
+  test("404: Responds with an error message when the user is valid but out of range", () => {
+    const outOfRangeUserId = 9999;
+    const recipeId = 2;
+
+    return request(app)
+      .delete(`/api/users/${outOfRangeUserId}/favourites/${recipeId}`)
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("User not found");
+      });
+  });
+
+  test("404: Responds with an error message when the recipe id is valid but out of range", () => {
+    const userId = 1;
+    const outOfRangeRecipeId = 9999;
+
+    return request(app)
+      .delete(`/api/users/${userId}/favourites/${outOfRangeRecipeId}`)
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Recipe not found");
+      });
+  });
+
+  test("404: Responds with an error message when both user and recipe ids are valid, but corresponding recipe is not favourited", () => {
+    const userId = 1;
+    const notFavouritedRecipeId = 3;
+
+    return request(app)
+      .delete(`/api/users/${userId}/favourites/${notFavouritedRecipeId}`)
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Favourite not found");
       });
   });
 });

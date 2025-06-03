@@ -120,11 +120,11 @@ const selectRecipeById = async (recipe_id) => {
 };
 
 const addRecipeToFavourites = async (user_id, recipe_id) => {
-  const userCheck = await db.query("SELECT * FROM users WHERE user_id = $1", [
+  const userCheck = await db.query(`SELECT * FROM users WHERE user_id = $1`, [
     user_id,
   ]);
   const recipeCheck = await db.query(
-    "SELECT * FROM recipes WHERE recipe_id = $1",
+    `SELECT * FROM recipes WHERE recipe_id = $1`,
     [recipe_id]
   );
 
@@ -133,7 +133,7 @@ const addRecipeToFavourites = async (user_id, recipe_id) => {
   }
 
   const existingFavourites = await db.query(
-    "SELECT * FROM user_favorites WHERE user_id = $1 AND recipe_id = $2",
+    `SELECT * FROM user_favourites WHERE user_id = $1 AND recipe_id = $2`,
     [user_id, recipe_id]
   );
   if (existingFavourites.rowCount > 0) {
@@ -141,7 +141,7 @@ const addRecipeToFavourites = async (user_id, recipe_id) => {
   }
 
   const result = await db.query(
-    `INSERT INTO user_favorites (user_id, recipe_id)
+    `INSERT INTO user_favourites (user_id, recipe_id)
      VALUES ($1, $2)
      RETURNING *`,
     [user_id, recipe_id]
@@ -150,22 +150,61 @@ const addRecipeToFavourites = async (user_id, recipe_id) => {
 };
 
 const selectUserFavourites = async (user_id) => {
-  const user = await db.query(
-    `SELECT * FROM users WHERE user_id = $1`,
-    [user_id]
-  );
+  const user = await db.query(`SELECT * FROM users WHERE user_id = $1`, [
+    user_id,
+  ]);
 
   if (user.rowCount === 0) {
     throw { status: 404, msg: "User not found" };
   }
 
   const result = await db.query(
-    `SELECT user_id, recipe_id FROM user_favorites WHERE user_id = $1`,
+    `SELECT user_id, recipe_id FROM user_favourites WHERE user_id = $1`,
     [user_id]
   );
 
   return result.rows;
 };
 
+const removeFromFavourites = async (user_id, recipe_id) => {
+  const userCheck = await db.query("SELECT * FROM users WHERE user_id = $1", [
+    user_id,
+  ]);
+  const recipeCheck = await db.query(
+    "SELECT * FROM recipes WHERE recipe_id = $1",
+    [recipe_id]
+  );
+  const favouriteCheck = await db.query(
+    "SELECT * FROM user_favourites WHERE user_id = $1 AND recipe_id = $2",
+    [user_id, recipe_id]
+  );
 
-module.exports = { selectRecipes, selectRecipeById, addRecipeToFavourites, selectUserFavourites };
+  if (userCheck.rowCount === 0) {
+    throw { status: 404, msg: "User not found" };
+  }
+
+  if (recipeCheck.rowCount === 0) {
+    throw { status: 404, msg: "Recipe not found" };
+  }
+
+  if (favouriteCheck.rowCount === 0) {
+    throw { status: 404, msg: "Favourite not found" };
+  }
+
+  const result = await db
+    .query(`DELETE FROM user_favourites WHERE user_id = $1 AND recipe_id = $2`, [
+      user_id,
+      recipe_id,
+    ])
+    .then(({ rows }) => {
+      return rows;
+    });
+};
+
+module.exports = {
+  selectRecipes,
+  selectRecipeById,
+  addRecipeToFavourites,
+  selectUserFavourites,
+  removeFromFavourites,
+};

@@ -10,7 +10,7 @@ async function createTables() {
     DROP TABLE IF EXISTS dietary_restrictions CASCADE;
     DROP TABLE IF EXISTS user_dietary_restrictions;
     DROP TABLE IF EXISTS user_cooked_recipes;
-    DROP TABLE IF EXISTS user_favorites;
+    DROP TABLE IF EXISTS user_favourites;
     DROP TABLE IF EXISTS ingredient_dietary_restrictions;
     DROP TABLE IF EXISTS ingredient_quantities CASCADE;
     DROP TABLE IF EXISTS instructions;
@@ -60,7 +60,7 @@ async function createTables() {
     );
 
 
-    CREATE TABLE user_favorites (
+    CREATE TABLE user_favourites (
       user_id INTEGER REFERENCES users(user_id),
       recipe_id INTEGER REFERENCES recipes(recipe_id),
       PRIMARY KEY (user_id, recipe_id)
@@ -200,7 +200,7 @@ async function seedUserAdditionalData() {
       (5, 4),
       (5, 5);
 
-      INSERT INTO user_favorites (user_id, recipe_id) VALUES
+      INSERT INTO user_favourites (user_id, recipe_id) VALUES
       (1, 2),
       (1, 5),
       (2, 1),

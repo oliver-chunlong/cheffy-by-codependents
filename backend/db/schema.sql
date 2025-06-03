@@ -48,7 +48,7 @@ CREATE TABLE user_cooked_recipes (
 );
 
 
-CREATE TABLE user_favorites (
+CREATE TABLE user_favourites (
   user_id INTEGER REFERENCES users(user_id),
   recipe_id INTEGER REFERENCES recipes(recipe_id),
   PRIMARY KEY (user_id, recipe_id)
