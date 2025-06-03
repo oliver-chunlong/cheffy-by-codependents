@@ -1,5 +1,5 @@
-const { get } = require('../app');
-const db = require('../db');
+const { get } = require("../app");
+const db = require("../db");
 const endpointsJson = require("../endpoints.json");
 const {
   selectRecipes,
@@ -67,25 +67,38 @@ const getUserFavourites = async (req, res, next) => {
   }
 };
 
-// const deleteFromFavourites = async (req, res, next) => {
+// const deleteFromFavourites = (req, res, next) => {
 //   const { user_id, recipe_id } = req.params;
 
-//   try {
-//     const recipeToDelete = await removeFromFavourites(recipe_id)
+//   removeFromFavourites(user_id, recipe_id)
+//     .then(() => {
+//       return res.status(204).send();
+//     })
+//     .catch(next);
+// };
 
-//   }
-
-// }
-
-const deleteFromFavourites = (req, res, next) => {
+const deleteFromFavourites = async (req, res, next) => {
   const { user_id, recipe_id } = req.params;
 
-  removeFromFavourites(user_id, recipe_id)
-    .then(() => {
-      return res.status(204).send();
-    })
-    .catch(next);
+  try {
+    await removeFromFavourites(user_id, recipe_id);
+    res.status(204).send();
+  } catch (err) {
+    next(err);
+  }
 };
+
+const deleteUserRecipe = async (req, res, next) => {
+  const {user_id, recipe_id} = req.params
+  console.log(req.params)
+
+  try {
+    await removeUserRecipe(user_id, recipe_id)
+    res.status(204).send();
+  } catch(err) {
+    next(err)
+  }
+}
 
 module.exports = {
   getRecipes,
@@ -94,4 +107,5 @@ module.exports = {
   postRecipeToFavourites,
   getUserFavourites,
   deleteFromFavourites,
+  deleteUserRecipe
 };

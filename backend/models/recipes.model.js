@@ -9,7 +9,9 @@ const validFilters = [
 ];
 
 const selectRecipes = (filters = {}) => {
-  const filterKeys = Object.keys(filters).filter(key => validFilters.includes(key));
+  const filterKeys = Object.keys(filters).filter((key) =>
+    validFilters.includes(key)
+  );
 
   let queryStr = `SELECT * FROM recipes`;
   const queryValues = [];
@@ -24,7 +26,6 @@ const selectRecipes = (filters = {}) => {
 
   return db.query(queryStr, queryValues).then(({ rows }) => rows);
 };
-
 
 const selectRecipeById = async (recipe_id) => {
   if (isNaN(Number(recipe_id))) {
@@ -66,7 +67,7 @@ const selectRecipeById = async (recipe_id) => {
   );
 
   //fetch dietary restrictions for ingredients
-  const ingredientIds = ingredientsRes.rows.map(i => i.ingredient_id);
+  const ingredientIds = ingredientsRes.rows.map((i) => i.ingredient_id);
   const restrictionsRes = await db.query(
     `
     SELECT ingredient_id, restriction_name
@@ -83,10 +84,10 @@ const selectRecipeById = async (recipe_id) => {
     restrictionsMap[ingredient_id].push(restriction_name);
   });
 
-  ingredientsRes.rows.forEach(ingredient => {
-    ingredient.dietary_restrictions = restrictionsMap[ingredient.ingredient_id] || [];
+  ingredientsRes.rows.forEach((ingredient) => {
+    ingredient.dietary_restrictions =
+      restrictionsMap[ingredient.ingredient_id] || [];
   });
-
 
   //third query will connect the instructions with the recipe
   const instructionsRes = await db.query(
@@ -104,15 +105,17 @@ const selectRecipeById = async (recipe_id) => {
 
   //decides if recipe corresponds to a dietary restriction
   const getDietTypes = async () => {
-    const result = await db.query('SELECT restriction_name FROM dietary_restrictions');
-    return result.rows.map(row => row.restriction_name);
+    const result = await db.query(
+      "SELECT restriction_name FROM dietary_restrictions"
+    );
+    return result.rows.map((row) => row.restriction_name);
   };
-  
+
   const dietTypes = await getDietTypes();
 
-  dietTypes.forEach(diet => {
-    recipe[`is_${diet.replace(/-/g, '_')}`] = recipe.ingredients.every(ingredient =>
-      ingredient.dietary_restrictions.includes(diet)
+  dietTypes.forEach((diet) => {
+    recipe[`is_${diet.replace(/-/g, "_")}`] = recipe.ingredients.every(
+      (ingredient) => ingredient.dietary_restrictions.includes(diet)
     );
   });
 
@@ -167,38 +170,55 @@ const selectUserFavourites = async (user_id) => {
 };
 
 const removeFromFavourites = async (user_id, recipe_id) => {
-  const userCheck = await db.query("SELECT * FROM users WHERE user_id = $1", [
+  const userCheck = await db.query(`SELECT * FROM users WHERE user_id = $1`, [
     user_id,
   ]);
   const recipeCheck = await db.query(
-    "SELECT * FROM recipes WHERE recipe_id = $1",
+    `SELECT * FROM recipes WHERE recipe_id = $1`,
     [recipe_id]
   );
   const favouriteCheck = await db.query(
-    "SELECT * FROM user_favourites WHERE user_id = $1 AND recipe_id = $2",
+    `SELECT * FROM user_favourites WHERE user_id = $1 AND recipe_id = $2`,
     [user_id, recipe_id]
   );
 
   if (userCheck.rowCount === 0) {
     throw { status: 404, msg: "User not found" };
   }
-
   if (recipeCheck.rowCount === 0) {
     throw { status: 404, msg: "Recipe not found" };
   }
-
   if (favouriteCheck.rowCount === 0) {
     throw { status: 404, msg: "Favourite not found" };
   }
 
   const result = await db
-    .query(`DELETE FROM user_favourites WHERE user_id = $1 AND recipe_id = $2`, [
-      user_id,
-      recipe_id,
-    ])
+    .query(
+      `DELETE FROM user_favourites WHERE user_id = $1 AND recipe_id = $2`,
+      [user_id, recipe_id]
+    )
     .then(({ rows }) => {
       return rows;
     });
+};
+
+const removeUseRecipe = async (user_id, recipe_id) => {
+  const userCheck = await db.query(`SELECT * FROM users WHERE user_id = $1`, [
+    user_id,
+  ]);
+  const recipeCheck = await db.query(
+    `SELECT * FROM recipes WHERE recipe_id = $1`,
+    [recipe_id]
+  );
+
+  if (userCheck.rowCount === 0) {
+    throw { status: 404, msg: "User not found" };
+  }
+  if (recipeCheck.rowCount === 0) {
+    throw { status: 404, msg: "Recipe not found" };
+  }
+
+  const result = await db.query(`DELETE FROM recipes WHERE user_id = $1 AND recipe_id = $2`,)
 };
 
 module.exports = {
@@ -207,4 +227,5 @@ module.exports = {
   addRecipeToFavourites,
   selectUserFavourites,
   removeFromFavourites,
+  removeUseRecipe,
 };

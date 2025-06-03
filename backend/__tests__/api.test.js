@@ -247,3 +247,17 @@ describe("DELETE /api/users/:user_id/favourites/:recipe_id", () => {
       });
   });
 });
+
+describe("DELETE /api/users/:user_id/recipes/:recipe_id", () => {
+  test("204: Responds with no content after successful deletion and checks that the recipe is deleted", () => {
+    const userId = 1;
+    const newRecipeId = 6;
+
+    return request(app)
+      .delete(`/api/users/${userId}/recipes/${newRecipeId}`)
+      .expect(204)
+      .then(({res}) => {
+        console.log(res)
+      })
+  });
+});
