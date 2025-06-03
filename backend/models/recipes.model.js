@@ -228,6 +228,47 @@ const insertRecipe = async ({ recipe_name, recipe_description, recipe_img_url, c
   return result.rows[0];
 };
 
+const addIngredientsToRecipe = async (recipe_id, ingredients) => {
+  const queryStr = `
+    INSERT INTO ingredient_quantities (recipe_id, ingredient_id, quantity_numerical, quantity_unit)
+    VALUES ${ingredients.map((_, i) => `($1, $${i * 3 + 2}, $${i * 3 + 3}, $${i * 3 + 4})`).join(', ')}
+    RETURNING *;
+  `;
+
+  const values = [recipe_id, ...[].concat(...ingredients.map(({ ingredient_id, quantity, unit }) => [ingredient_id, quantity, unit]))];
+
+  const result = await db.query(queryStr, values);
+  return result.rows;
+};
+
+const addInstructionsToRecipe = async (recipe_id, instructions) => {
+  if (!instructions || instructions.length === 0) return [];
+
+  const queryStr = `
+    INSERT INTO instructions (recipe_id, step_number, step_description, iq_id, time_required, timed_task)
+    VALUES ${instructions.map((_, i) => 
+      `($1, $${i * 5 + 2}, $${i * 5 + 3}, $${i * 5 + 4}, $${i * 5 + 5}, $${i * 5 + 6})`
+    ).join(', ')}
+    RETURNING instruction_id, recipe_id, step_number, step_description, iq_id, time_required, timed_task;
+  `;
+
+  const values = [
+    recipe_id,
+    ...[].concat(...instructions.map(({ step_number, step_description, iq_id = null, time_required = null, timed_task = false }) =>
+      [step_number, step_description, iq_id, time_required, timed_task]
+    ))
+  ];
+
+  const result = await db.query(queryStr, values);
+
+  return result.rows.map(row => ({
+    ...row,
+    time_required: row.time_required === null ? null : Number(row.time_required),
+  }));
+};
+
+
+
 module.exports = {
   selectRecipes,
   selectRecipeById,
@@ -236,5 +277,7 @@ module.exports = {
   removeFromFavourites,
   selectUserRecipes,
   checkUserExists,
-  insertRecipe
+  insertRecipe,
+  addIngredientsToRecipe,
+  addInstructionsToRecipe
 };

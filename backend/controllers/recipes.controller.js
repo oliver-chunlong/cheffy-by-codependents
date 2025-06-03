@@ -9,7 +9,9 @@ const {
   removeFromFavourites,
   selectUserRecipes,
   checkUserExists,
-  insertRecipe
+  insertRecipe,
+  addIngredientsToRecipe,
+  addInstructionsToRecipe
 } = require("../models/recipes.model");
 
 const getApiDocumentation = (req, res) => {
@@ -108,7 +110,7 @@ const getUserRecipes = (req, res, next) => {
 };
 
 const postRecipe = async (req, res, next) => {
-  const { recipe_name, recipe_description, recipe_img_url } = req.body;
+  const { recipe_name, recipe_description, recipe_img_url, ingredients, instructions } = req.body;
   const user_id = Number(req.params.user_id);
 
   if (!recipe_name || !recipe_description || !recipe_img_url) {
@@ -132,7 +134,17 @@ const postRecipe = async (req, res, next) => {
       created_by: user_id 
     });
 
-    res.status(201).json({ recipe });
+    let insertedIngredients = [];
+    if (ingredients && ingredients.length > 0) {
+      insertedIngredients = await addIngredientsToRecipe(recipe.recipe_id, ingredients);
+    }
+
+    let insertedInstructions = [];
+    if (instructions && instructions.length > 0) {
+      insertedInstructions = await addInstructionsToRecipe(recipe.recipe_id, instructions);
+    }
+
+    res.status(201).json({ recipe, ingredients: insertedIngredients, instructions: insertedInstructions });  
   } catch (err) {
     next(err);
   }
