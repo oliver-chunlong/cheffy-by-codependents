@@ -3,19 +3,19 @@ import { useEffect, useState } from "react";
 import TTSSample from "../TTSSample";
 import SpeechRecogSample from "../SpeechRecogSample";
 import RecipeCard from "./RecipeCard";
+import { requestRecipes } from "../..frontend/utils/axios";
 
-export default function RecipeList({ searchQuery, filterBy, category }) {
+export default function RecipeList({ searchQuery, filterBy, category, order }) {
 
-//   useEffect(() => {
-//     /*Function to get recipes from the database*/
-//     /*UtilFunctionHere  .then((recipes) => {*/
-
-//   return (
-//     <View>
-//       {recipes.map((recipe) => (
-//         <RecipeCard key={recipe.id} recipe={recipe} />
-//       ))}
-//     </View>
-//         );
-//     })
-  }
+  useEffect(() => {
+    requestRecipes.then((recipes) => {
+        return (
+          <View>
+            {recipes.map((recipe) => (
+              <RecipeCard key={recipe.id} recipe={recipe} />
+            ))}
+          </View>
+        );
+    })
+  })
+}

@@ -1,4 +1,5 @@
-const { get } = require("../app");
+const { get } = require('../app');
+const db = require('../db');
 const endpointsJson = require("../endpoints.json");
 const {
   selectRecipes,
@@ -13,7 +14,7 @@ const getApiDocumentation = (req, res) => {
 };
 
 const getRecipes = (req, res, next) => {
-  selectRecipes()
+  selectRecipes(req.query)
     .then((recipes) => {
       res.status(200).send({ recipes });
     })
