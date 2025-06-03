@@ -1,13 +1,16 @@
 import { NavigationContainer } from "@react-navigation/native";
 import NavBar from "./components/NavBar";
 import { ShoppingListProvider } from "./context/ShoppingListContext";
+import { UserProvider } from "./context/UserContext";
 
 export default function App() {
   return (
-    <ShoppingListProvider>
-      <NavigationContainer>
-        <NavBar />
-      </NavigationContainer>
-    </ShoppingListProvider>
+    <UserProvider>
+      <ShoppingListProvider>
+        <NavigationContainer>
+          <NavBar />
+        </NavigationContainer>
+      </ShoppingListProvider>
+    </UserProvider>
   );
 }

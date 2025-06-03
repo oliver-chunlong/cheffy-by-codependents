@@ -9,22 +9,24 @@ export default function Homepage() {
   const [searchQuery, setSearchQuery] = useState();
   const [filterBy, setFilterBy] = useState();
   const [category, setCategory] = useState();
+  const [order, setOrder] = useState("asc")
 
   return (
     <View>
       <SearchBar
         setSearchQuery={setSearchQuery}
         setFilterBy={setFilterBy}
-        setCategory={
-          setCategory
-        } /*SearchBar content - Search, FilterBy, and Category*/
+        setCategory={setCategory}
+        setOrder={setOrder} /*SearchBar content - Search, FilterBy, and Category*/
       />
       <ScrollView /*Scroll View houses RecipeList to allow scrollable contnet within section*/
       >
         <RecipeList
           searchQuery={searchQuery}
           filterBy={filterBy}
-          category={category} /*RecipeList calls RecipeCards */
+          category={category}
+          order={order}
+           /*RecipeList calls RecipeCards */
         />
       </ScrollView>
     </View>

@@ -1,4 +1,4 @@
-const db = require('../db');
+const db = require("../db");
 
 const validFilters = [
   "is_vegetarian",
@@ -24,6 +24,7 @@ const selectRecipes = (filters = {}) => {
 
   return db.query(queryStr, queryValues).then(({ rows }) => rows);
 };
+
 
 const selectRecipeById = async (recipe_id) => {
   if (isNaN(Number(recipe_id))) {
@@ -86,6 +87,7 @@ const selectRecipeById = async (recipe_id) => {
     ingredient.dietary_restrictions = restrictionsMap[ingredient.ingredient_id] || [];
   });
 
+
   //third query will connect the instructions with the recipe
   const instructionsRes = await db.query(
     `
@@ -117,4 +119,53 @@ const selectRecipeById = async (recipe_id) => {
   return recipe;
 };
 
-module.exports = { selectRecipes, selectRecipeById };
+const addRecipeToFavourites = async (user_id, recipe_id) => {
+  const userCheck = await db.query("SELECT * FROM users WHERE user_id = $1", [
+    user_id,
+  ]);
+  const recipeCheck = await db.query(
+    "SELECT * FROM recipes WHERE recipe_id = $1",
+    [recipe_id]
+  );
+
+  if (userCheck.rowCount === 0 || recipeCheck.rowCount === 0) {
+    throw { status: 404, msg: "User or recipe not found" };
+  }
+
+  const existingFavourites = await db.query(
+    "SELECT * FROM user_favorites WHERE user_id = $1 AND recipe_id = $2",
+    [user_id, recipe_id]
+  );
+  if (existingFavourites.rowCount > 0) {
+    return existingFavourites.rows[0];
+  }
+
+  const result = await db.query(
+    `INSERT INTO user_favorites (user_id, recipe_id)
+     VALUES ($1, $2)
+     RETURNING *`,
+    [user_id, recipe_id]
+  );
+  return result.rows[0];
+};
+
+const selectUserFavourites = async (user_id) => {
+  const user = await db.query(
+    `SELECT * FROM users WHERE user_id = $1`,
+    [user_id]
+  );
+
+  if (user.rowCount === 0) {
+    throw { status: 404, msg: "User not found" };
+  }
+
+  const result = await db.query(
+    `SELECT user_id, recipe_id FROM user_favorites WHERE user_id = $1`,
+    [user_id]
+  );
+
+  return result.rows;
+};
+
+
+module.exports = { selectRecipes, selectRecipeById, addRecipeToFavourites, selectUserFavourites };
