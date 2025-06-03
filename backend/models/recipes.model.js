@@ -9,7 +9,9 @@ const validFilters = [
 ];
 
 const selectRecipes = (filters = {}) => {
-  const filterKeys = Object.keys(filters).filter(key => validFilters.includes(key));
+  const filterKeys = Object.keys(filters).filter((key) =>
+    validFilters.includes(key)
+  );
 
   let queryStr = `SELECT * FROM recipes`;
   const queryValues = [];
@@ -24,7 +26,6 @@ const selectRecipes = (filters = {}) => {
 
   return db.query(queryStr, queryValues).then(({ rows }) => rows);
 };
-
 
 const selectRecipeById = async (recipe_id) => {
   if (isNaN(Number(recipe_id))) {
@@ -66,7 +67,7 @@ const selectRecipeById = async (recipe_id) => {
   );
 
   //fetch dietary restrictions for ingredients
-  const ingredientIds = ingredientsRes.rows.map(i => i.ingredient_id);
+  const ingredientIds = ingredientsRes.rows.map((i) => i.ingredient_id);
   const restrictionsRes = await db.query(
     `
     SELECT ingredient_id, restriction_name
@@ -83,10 +84,10 @@ const selectRecipeById = async (recipe_id) => {
     restrictionsMap[ingredient_id].push(restriction_name);
   });
 
-  ingredientsRes.rows.forEach(ingredient => {
-    ingredient.dietary_restrictions = restrictionsMap[ingredient.ingredient_id] || [];
+  ingredientsRes.rows.forEach((ingredient) => {
+    ingredient.dietary_restrictions =
+      restrictionsMap[ingredient.ingredient_id] || [];
   });
-
 
   //third query will connect the instructions with the recipe
   const instructionsRes = await db.query(
@@ -104,15 +105,17 @@ const selectRecipeById = async (recipe_id) => {
 
   //decides if recipe corresponds to a dietary restriction
   const getDietTypes = async () => {
-    const result = await db.query('SELECT restriction_name FROM dietary_restrictions');
-    return result.rows.map(row => row.restriction_name);
+    const result = await db.query(
+      "SELECT restriction_name FROM dietary_restrictions"
+    );
+    return result.rows.map((row) => row.restriction_name);
   };
-  
+
   const dietTypes = await getDietTypes();
 
-  dietTypes.forEach(diet => {
-    recipe[`is_${diet.replace(/-/g, '_')}`] = recipe.ingredients.every(ingredient =>
-      ingredient.dietary_restrictions.includes(diet)
+  dietTypes.forEach((diet) => {
+    recipe[`is_${diet.replace(/-/g, "_")}`] = recipe.ingredients.every(
+      (ingredient) => ingredient.dietary_restrictions.includes(diet)
     );
   });
 
@@ -192,10 +195,10 @@ const removeFromFavourites = async (user_id, recipe_id) => {
   }
 
   const result = await db
-    .query(`DELETE FROM user_favourites WHERE user_id = $1 AND recipe_id = $2`, [
-      user_id,
-      recipe_id,
-    ])
+    .query(
+      `DELETE FROM user_favourites WHERE user_id = $1 AND recipe_id = $2`,
+      [user_id, recipe_id]
+    )
     .then(({ rows }) => {
       return rows;
     });
@@ -203,7 +206,9 @@ const removeFromFavourites = async (user_id, recipe_id) => {
 
 //reusable when needed, to save time on error checks
 const checkUserExists = async (user_id) => {
-  const result = await db.query("SELECT * FROM users WHERE user_id = $1", [user_id]);
+  const result = await db.query("SELECT * FROM users WHERE user_id = $1", [
+    user_id,
+  ]);
   return result.rowCount > 0;
 };
 
@@ -216,7 +221,12 @@ const selectUserRecipes = async (user_id) => {
   return result.rows;
 };
 
-const insertRecipe = async ({ recipe_name, recipe_description, recipe_img_url, created_by }) => {
+const insertRecipe = async ({
+  recipe_name,
+  recipe_description,
+  recipe_img_url,
+  created_by,
+}) => {
   const result = await db.query(
     `
     INSERT INTO recipes (recipe_name, recipe_description, recipe_img_url, created_by)
@@ -231,11 +241,22 @@ const insertRecipe = async ({ recipe_name, recipe_description, recipe_img_url, c
 const addIngredientsToRecipe = async (recipe_id, ingredients) => {
   const queryStr = `
     INSERT INTO ingredient_quantities (recipe_id, ingredient_id, quantity_numerical, quantity_unit)
-    VALUES ${ingredients.map((_, i) => `($1, $${i * 3 + 2}, $${i * 3 + 3}, $${i * 3 + 4})`).join(', ')}
+    VALUES ${ingredients
+      .map((_, i) => `($1, $${i * 3 + 2}, $${i * 3 + 3}, $${i * 3 + 4})`)
+      .join(", ")}
     RETURNING *;
   `;
 
-  const values = [recipe_id, ...[].concat(...ingredients.map(({ ingredient_id, quantity, unit }) => [ingredient_id, quantity, unit]))];
+  const values = [
+    recipe_id,
+    ...[].concat(
+      ...ingredients.map(({ ingredient_id, quantity, unit }) => [
+        ingredient_id,
+        quantity,
+        unit,
+      ])
+    ),
+  ];
 
   const result = await db.query(queryStr, values);
   return result.rows;
@@ -246,28 +267,59 @@ const addInstructionsToRecipe = async (recipe_id, instructions) => {
 
   const queryStr = `
     INSERT INTO instructions (recipe_id, step_number, step_description, iq_id, time_required, timed_task)
-    VALUES ${instructions.map((_, i) => 
-      `($1, $${i * 5 + 2}, $${i * 5 + 3}, $${i * 5 + 4}, $${i * 5 + 5}, $${i * 5 + 6})`
-    ).join(', ')}
+    VALUES ${instructions
+      .map(
+        (_, i) =>
+          `($1, $${i * 5 + 2}, $${i * 5 + 3}, $${i * 5 + 4}, $${i * 5 + 5}, $${
+            i * 5 + 6
+          })`
+      )
+      .join(", ")}
     RETURNING instruction_id, recipe_id, step_number, step_description, iq_id, time_required, timed_task;
   `;
 
   const values = [
     recipe_id,
-    ...[].concat(...instructions.map(({ step_number, step_description, iq_id = null, time_required = null, timed_task = false }) =>
-      [step_number, step_description, iq_id, time_required, timed_task]
-    ))
+    ...[].concat(
+      ...instructions.map(
+        ({
+          step_number,
+          step_description,
+          iq_id = null,
+          time_required = null,
+          timed_task = false,
+        }) => [step_number, step_description, iq_id, time_required, timed_task]
+      )
+    ),
   ];
 
   const result = await db.query(queryStr, values);
 
-  return result.rows.map(row => ({
+  return result.rows.map((row) => ({
     ...row,
-    time_required: row.time_required === null ? null : Number(row.time_required),
+    time_required:
+      row.time_required === null ? null : Number(row.time_required),
   }));
 };
 
-
+const removeUserRecipe = async (user_id, recipe_id) => {
+  const userCheck = await db.query(`SELECT * FROM users WHERE user_id = $1`, [
+    user_id,
+  ]);
+  const recipeCheck = await db.query(
+    `SELECT * FROM recipes WHERE recipe_id = $1`,
+    [recipe_id]
+  );
+  if (userCheck.rowCount === 0) {
+    throw { status: 404, msg: "User not found" };
+  }
+  if (recipeCheck.rowCount === 0) {
+    throw { status: 404, msg: "Recipe not found" };
+  }
+  const result = await db.query(
+    `DELETE FROM recipes WHERE user_id = $1 AND recipe_id = $2`
+  );
+};
 
 module.exports = {
   selectRecipes,
@@ -279,5 +331,6 @@ module.exports = {
   checkUserExists,
   insertRecipe,
   addIngredientsToRecipe,
-  addInstructionsToRecipe
+  addInstructionsToRecipe,
+  removeUserRecipe,
 };
