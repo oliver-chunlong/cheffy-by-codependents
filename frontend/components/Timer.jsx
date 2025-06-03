@@ -39,24 +39,26 @@ export default function Timer({ seconds, isRunning, onFinish }) {
       onFinish && onFinish();
     }
   }, [secondsLeft]);
-
-  if (isRunning && !timer && secondsLeft.valueOf() > start.valueOf()) {
-    const interval = setInterval(() => {
-      setSecondsLeft((prev) => {
-        if (prev.valueOf() > start.valueOf()) {
-          const date = new Date(prev.getTime());
-          date.setSeconds(date.getSeconds() - 1);
-          return date;
-        } else {
-          clearInterval(t);
-          return 0;
-        }
-      });
-    }, 1000);
-    setTimer(interval);
-  } else if (timer && !isRunning) {
-    clearInterval(timer);
-  }
+  useEffect(() => {
+    if (isRunning && !timer && secondsLeft.valueOf() > start.valueOf()) {
+      const interval = setInterval(() => {
+        setSecondsLeft((prev) => {
+          if (prev.valueOf() > start.valueOf()) {
+            const date = new Date(prev.getTime());
+            date.setSeconds(date.getSeconds() - 1);
+            return date;
+          } else {
+            clearInterval(interval);
+            return start;
+          }
+        });
+      }, 1000);
+      setTimer(interval);
+    } else if (timer && !isRunning) {
+      clearInterval(timer);
+      setTimer(null);
+    }
+  }, [isRunning]);
 
   let text = toTimeArray(secondsLeft);
   text = removingLeadingEmpty(text);
