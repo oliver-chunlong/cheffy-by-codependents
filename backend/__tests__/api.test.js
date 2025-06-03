@@ -3,9 +3,11 @@ const db = require("../db/index.js");
 const seed = require("../db/seed");
 const request = require("supertest");
 const app = require("../app");
+const run = require("../utils/updateRecipeLabels");
 
-beforeEach(() => {
-  return seed();
+beforeEach(async () => {
+  await seed();
+  await run();
 });
 
 afterAll(async () => {
@@ -40,6 +42,18 @@ describe("GET /api/recipes", () => {
         });
       });
   });
+  test("200: Filters recipes by is_vegan=true", () => {
+    return request(app)
+      .get("/api/recipes?is_vegan=true")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.recipes.length).toBeGreaterThan(0);
+        body.recipes.forEach(recipe => {
+          expect(recipe.is_vegan).toBe(true);
+        });
+      });
+  });
+  
 });
 
 describe("GET /api/recipes/:recipe_id", () => {
@@ -89,3 +103,5 @@ describe("GET /api/recipes/:recipe_id", () => {
     });
   });
   });
+
+  

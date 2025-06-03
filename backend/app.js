@@ -1,6 +1,6 @@
 const express = require("express");
 const db = require("./db/connection");
-const { getRecipes, getRecipeById, getApiDocumentation } = require('./controllers/recipes.controller');
+const { getRecipes, getRecipeById, getApiDocumentation, getRecipesByDietHandler} = require('./controllers/recipes.controller');
 
 const app = express();
 app.use(express.json());
