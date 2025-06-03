@@ -465,3 +465,38 @@ describe('POST /api/users/:user_id/recipes with instructions', () => {
       });
   });
 });
+
+describe('PATCH /api/users/:user_id/recipes/:recipe_id', () => {
+  test('200: updates recipe details', () => {
+    const updatedRecipe = {
+      recipe_name: 'Updated Recipe Name',
+      recipe_description: 'Updated description',
+      recipe_img_url: 'https://updated-image.jpg'
+    };
+
+    return request(app)
+      .patch('/api/users/1/recipes/2')
+      .send(updatedRecipe)
+      .expect(200)
+      .then(({ body }) => {
+        expect(body).toEqual(
+          expect.objectContaining({
+            recipe_id: 2,
+            recipe_name: updatedRecipe.recipe_name,
+            recipe_description: updatedRecipe.recipe_description,
+            recipe_img_url: updatedRecipe.recipe_img_url,
+            created_by: 1
+          })
+        );
+      });
+  });
+
+  test('404: recipe not found', () => {
+    const updatedRecipe = { recipe_name: 'No Recipe' };
+
+    return request(app)
+      .patch('/api/users/1/recipes/9999')
+      .send(updatedRecipe)
+      .expect(404);
+  });
+});
