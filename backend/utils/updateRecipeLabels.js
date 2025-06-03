@@ -1,4 +1,4 @@
-const db = require('../db');
+const db = require('../db/connection.js');
 
 const getDietTypes = async () => {
   const result = await db.query('SELECT restriction_name FROM dietary_restrictions');

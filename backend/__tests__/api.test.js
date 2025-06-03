@@ -1,5 +1,5 @@
 const endpointsJson = require("../endpoints.json");
-const db = require("../db/index.js");
+const db = require("../db/connection.js");
 const seed = require("../db/seed");
 const request = require("supertest");
 const app = require("../app");
@@ -148,7 +148,7 @@ describe("POST /api/users/:user_id/favourites", () => {
         expect(body.msg).toBe("User or recipe not found");
       });
   });
-});
+
 
 describe("GET /api/users/:user_id/favourites", () => {
   test("200: Responds with an array of the user's favourite recipes", () => {
@@ -187,6 +187,50 @@ describe("GET /api/users/:user_id/favourites", () => {
 
     return request(app)
       .get(`/api/users/${invalidUserId}/favourites`)
+      .expect(404)
+      .then(({ body }) => {
+        expect(body).toEqual({ msg: "User not found" });
+      });
+  });
+});
+
+describe("GET /api/users/:user_id/recipes", () => {
+  test("200: Responds with an array of recipes created by the user", () => {
+    const userId = 1;
+    return request(app)
+      .get(`/api/users/${userId}/recipes`)
+      .expect(200)
+      .then(({ body }) => {
+        expect(Array.isArray(body.recipes)).toBe(true);
+        body.recipes.forEach((recipe) => {
+          expect(recipe).toMatchObject({
+            recipe_id: expect.any(Number),
+            recipe_name: expect.any(String),
+            recipe_img_url: expect.any(String),
+            recipe_description: expect.any(String),
+            created_by: userId,
+          });
+        });
+      });
+  });
+
+  test("200: Responds with message and empty array if user has no recipes", () => {
+    const userId = 2; 
+    return request(app)
+      .get(`/api/users/${userId}/recipes`)
+      .expect(200)
+      .then(({ body }) => {
+        expect(body).toEqual({
+          msg: "User has no recipes",
+          recipes: [],
+        });
+      });
+  });
+
+  test("404: Responds with error if user does not exist", () => {
+    const invalidUserId = 9999;
+    return request(app)
+      .get(`/api/users/${invalidUserId}/recipes`)
       .expect(404)
       .then(({ body }) => {
         expect(body).toEqual({ msg: "User not found" });
