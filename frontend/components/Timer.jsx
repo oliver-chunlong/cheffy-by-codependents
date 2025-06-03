@@ -3,7 +3,7 @@ import { Text } from "react-native";
 
 function removingLeading0(text) {
   if (text[0].startsWith("0")) {
-    const leading = text.shift().charAt(-1);
+    const leading = text.shift();
     return [leading, ...text];
   }
   return text;
