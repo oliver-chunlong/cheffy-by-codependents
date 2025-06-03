@@ -1,5 +1,5 @@
 const { get } = require('../app');
-const db = require('../db');
+const db = require('../db/connection.js');
 const endpointsJson = require("../endpoints.json");
 const {
   selectRecipes,
