@@ -15,11 +15,17 @@ export default function SearchBar({
   setSearchQuery,
   setFilterBy,
   setCategory,
+  setOrder,
 }) {
   const searchInput = useRef(null);
   const [isModalVisible, setIsVisible] = useState(false);
 
-  const options = [
+  //temporary states for search input and filters
+  const [tempFilter, setTempFilter] = useState("");
+  const [tempCategory, setTempCategory] = useState("");
+  const [tempOrder, setTempOrder] = useState("");
+
+  const filterOptions = [
     { label: "Vegan", value: "js", labelStyle: Typography.text65 },
     { label: "Gluten-Free", value: "java", labelStyle: Typography.text65 },
     { label: "Vegetarian", value: "python", labelStyle: Typography.text65 },
@@ -30,6 +36,23 @@ export default function SearchBar({
       labelStyle: Typography.text65,
     },
     { label: "Nut-Free", value: "perl", labelStyle: Typography.text65 },
+  ];
+
+  const sortOptions = [
+    { label: "Ascending", value: "js", labelStyle: Typography.text65 },
+    { label: "Descending", value: "python", labelStyle: Typography.text65 },
+  ];
+
+  const categoryOptions = [
+    { label: "Breakfast", value: "js", labelStyle: Typography.text65 },
+    { label: "Lunch", value: "java", labelStyle: Typography.text65 },
+    { label: "Dinner", value: "python", labelStyle: Typography.text65 },
+    {
+      label: "Dessert",
+      value: "c++",
+      disabled: true,
+      labelStyle: Typography.text65,
+    },
   ];
 
   return (
@@ -58,37 +81,24 @@ export default function SearchBar({
         <View useSafeArea>
           <Picker
             placeholder="Filter By"
-            // floatingPlaceholder
-            // value={"js"}
+            // value={tempFilter}
             useDialog
-            // enableModalBlur={false}
-            onChange={(item) => setCategory?.(item.value)}
-            // topBarProps={{ title: "Languages" }}
-            // showSearch
-            // searchPlaceholder={"Search a restriction"}
-            // searchStyle={{
-            //   color: Colors.blue30,
-            //   placeholderTextColor: Colors.grey50,
-            // }}
-            // onSearchChange={value => console.warn('value', value)}
-            items={options}
+            // onChange={(item) => setFilterBy(item.value)}
+            items={filterOptions}
           />
           <Picker
-            placeholder="Filter By"
-            // floatingPlaceholder
+            placeholder="Category"
+            // value={tempCategory}
+            useDialog
+            // onChange={(item) => setCategory?.(item.value)}
+            items={categoryOptions}
+          />
+          <Picker
+            placeholder="Order by"
             // value={"js"}
             useDialog
-            // enableModalBlur={false}
-            onChange={(item) => setCategory?.(item.value)}
-            // topBarProps={{ title: "Languages" }}
-            // showSearch
-            // searchPlaceholder={"Search a restriction"}
-            // searchStyle={{
-            //   color: Colors.blue30,
-            //   placeholderTextColor: Colors.grey50,
-            // }}
-            // onSearchChange={value => console.warn('value', value)}
-            items={options}
+            // onChange={(item) => setCategory?.(item.value)}
+            items={sortOptions}
           />
         </View>
       </Modal>

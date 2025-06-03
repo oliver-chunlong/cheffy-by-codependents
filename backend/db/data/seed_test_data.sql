@@ -11,7 +11,7 @@ INSERT INTO recipes (recipe_name, recipe_description, recipe_img_url, created_by
 ('Chana Masala', 'Spiced chickpeas in a tomato-based curry', 'https://example.jpg', 1),
 ('Pepperoni Pizza', 'Classic pizza topped with pepperoni and cheese', 'https://example.jpg', 1),
 ('Vegan Tofu Stir-Fry', 'Crispy tofu with vegetables and soy sauce', 'https://example.jpg', 1),
-('Gluten-Free Pancakes', 'Fluffy pancakes made with gluten-free flour', 'https://example.jpg', 1),
+('Fluffy Pancakes', 'Fluffy pancakes that everyone will love', 'https://example.jpg', 1),
 ('Vegan Tacos', 'Tacos with black beans, avocado, and lime', 'https://example.jpg', 1);
   
   INSERT INTO ingredients (ingredient_name, img_url, calories_per_100g, protein_g_per_100g, carbs_g_per_100g, fat_g_per_100g, fiber_g_per_100g, sugar_g_per_100g) VALUES
@@ -40,7 +40,7 @@ INSERT INTO recipes (recipe_name, recipe_description, recipe_img_url, created_by
   ('tofu', 'https://example.jpg', 76, 8, 1.9, 4.8, 0.3, 0.3),
   ('broccoli', 'https://example.jpg', 34, 2.8, 7, 0.4, 2.6, 1.7),
   ('carrot', 'https://example.jpg', 41, 0.9, 10, 0.2, 2.8, 4.7),
-  ('gluten-free flour', 'https://example.jpg', 366, 10, 76, 1.4, 6, 1.5),
+  ('flour', 'https://example.jpg', 366, 10, 76, 1.4, 6, 1.5),
   ('coconut milk', 'https://example.jpg', 230, 2.3, 6, 24, 2.2, 3.3),
   ('chilli pepper', 'https://example.jpg', 40, 2, 9, 0.4, 1.5, 5.3);
   
@@ -75,7 +75,7 @@ INSERT INTO user_cooked_recipes (user_id, recipe_id) VALUES
 (5, 4),
 (5, 5);
 
-INSERT INTO user_favorites (user_id, recipe_id) VALUES
+INSERT INTO user_favourites (user_id, recipe_id) VALUES
 (1, 2),
 (1, 5),
 (2, 1),
@@ -86,78 +86,35 @@ INSERT INTO user_favorites (user_id, recipe_id) VALUES
 (5, 1),
 (5, 3);
 
-
-
-    INSERT INTO ingredient_dietary_restrictions (ingredient_id, restriction_id) VALUES
-    (1, 1), -- chickpeas vegan
-    (1, 3), -- chickpeas gluten-free
-    (1, 4), -- chickpeas dairy-free
-    (2, 1), -- onion vegan
-    (2, 3), -- onion gluten-free
-    (2, 4), -- onion dairy-free
-    (3, 1), -- garlic vegan
-    (3, 3), -- garlic gluten-free
-    (3, 4), -- garlic dairy-free
-    (4, 1), -- ginger vegan
-    (4, 3), -- ginger gluten-free
-    (4, 4), -- ginger dairy-free
-    (5, 1), -- tomato vegan
-    (5, 3), -- tomato gluten-free
-    (5, 4), -- tomato dairy-free
-    (6, 1), -- cumin vegan
-    (6, 3), -- cumin gluten-free
-    (6, 4), -- cumin dairy-free
-    (7, 1), -- coriander vegan
-    (7, 3), -- coriander gluten-free
-    (7, 4), -- coriander dairy-free
-    (8, 1), -- turmeric vegan
-    (8, 3), -- turmeric gluten-free
-    (8, 4), -- turmeric dairy-free
-    (9, 1), -- olive oil vegan
-    (9, 3), -- olive oil gluten-free
-    (9, 4), -- olive oil dairy-free
-    (10, 1), -- basmati rice vegan
-    (10, 3), -- basmati rice gluten-free
-    (10, 4), -- basmati rice dairy-free
-    (11, 4), -- mozzarella dairy (not vegan)
-    (13, 1), -- basil vegan
-    (13, 3), -- basil gluten-free
-    (13, 4), -- basil dairy-free
-    (14, 4), -- pasta contains gluten (not gluten-free)
-    (15, 4), -- milk dairy (not vegan)
-    (16, 4), -- butter dairy (not vegan)
-    (17, 4), -- cheddar dairy (not vegan)
-    (18, 1), -- tortilla vegan
-    (18, 4), -- tortilla dairy-free
-    (19, 1), -- black beans vegan
-    (19, 3), -- black beans gluten-free
-    (19, 4), -- black beans dairy-free
-    (20, 1), -- avocado vegan
-    (20, 3), -- avocado gluten-free
-    (20, 4), -- avocado dairy-free
-    (21, 1), -- lime vegan
-    (21, 3), -- lime gluten-free
-    (21, 4), -- lime dairy-free
-    (22, 1), -- soy sauce vegan (though watch gluten in some brands)
-    (22, 4), -- soy sauce dairy-free
-    (23, 1), -- tofu vegan
-    (23, 3), -- tofu gluten-free
-    (23, 4), -- tofu dairy-free
-    (24, 1), -- broccoli vegan
-    (24, 3), -- broccoli gluten-free
-    (24, 4), -- broccoli dairy-free
-    (25, 1), -- carrot vegan
-    (25, 3), -- carrot gluten-free
-    (25, 4), -- carrot dairy-free
-    (26, 1), -- gluten-free flour vegan
-    (26, 3), -- gluten-free flour gluten-free
-    (26, 4), -- gluten-free flour dairy-free
-    (27, 1), -- coconut milk vegan
-    (27, 3), -- coconut milk gluten-free
-    (27, 4), -- coconut milk dairy-free
-    (28, 1), -- chilli pepper vegan
-    (28, 3), -- chilli pepper gluten-free
-    (28, 4); -- chilli pepper dairy-free
+INSERT INTO ingredient_dietary_restrictions (ingredient_id, restriction_id) VALUES
+(1,1),(1,2),(1,4),(1,5),
+(2,1),(2,2),(2,4),(2,5),
+(3,1),(3,2),(3,4),(3,5),
+(4,1),(4,2),(4,4),(4,5),
+(5,1),(5,2),(5,4),(5,5),
+(6,1),(6,2),(6,4),(6,5),
+(7,1),(7,2),(7,4),(7,5),
+(8,1),(8,2),(8,4),(8,5),
+(9,1),(9,2),(9,4),(9,5),
+(10,1),(10,2),(10,4),(10,5),
+(11,1),(11,5),
+(12,4),(12,5),
+(13,1),(13,2),(13,4),(13,5),
+(14,1),(14,2),(14,4),(14,5),
+(15,1),(15,5),
+(16,1),(16,5),
+(17,1),(17,5),
+(18,1),(18,2),(18,4),(18,5),
+(19,1),(19,2),(19,4),(19,5),
+(20,1),(20,2),(20,4),(20,5),
+(21,1),(21,2),(21,4),(21,5),
+(22,1),(22,2),(22,4),(22,5),
+(23,1),(23,2),(23,4),(23,5),
+(24,1),(24,2),(24,4),(24,5),
+(25,1),(25,2),(25,4),(25,5),
+(26,1),(26,2),(26,3),(26,4),(26,5),
+(27,1),(27,2),(27,4),(27,5),
+(28,1),(28,2),(28,4),(28,5);
   
     
 INSERT INTO equipment (equipment_name) VALUES
@@ -191,8 +148,8 @@ INSERT INTO ingredient_quantities (recipe_id, ingredient_id, quantity_numerical,
   (3, 4, 10, 'grams', true),      -- ginger (optional)
   (3, 3, 2, 'cloves', false),     -- garlic
 
-  -- Gluten-Free Pancakes
-  (4, 26, 150, 'grams', false),   -- gluten-free flour
+  -- Fluffy Pancakes
+  (4, 26, 150, 'grams', false),   -- flour
   (4, 15, 200, 'ml', false),      -- milk
   (4, 16, 50, 'grams', false),    -- butter
   (4, 21, 1, 'piece', true),      -- lime (optional)
@@ -235,7 +192,7 @@ INSERT INTO instructions (recipe_id, step_number, step_description, iq_id, time_
 (3, 6, 'Add soy sauce and toss everything together for 1–2 minutes.', (SELECT iq_id FROM ingredient_quantities WHERE recipe_id = 3 AND ingredient_id = 22), 2, TRUE),
 (3, 7, 'Serve hot.', NULL, NULL, FALSE),
 
--- Gluten-Free Pancakes (recipe_id 4)
+-- Pancakes (recipe_id 4)
 (4, 1, 'Mix gluten-free flour, milk, and melted butter into a batter.', (SELECT iq_id FROM ingredient_quantities WHERE recipe_id = 4 AND ingredient_id = 26), 5, TRUE),
 (4, 2, 'Heat a lightly oiled griddle or pan over medium-high heat.', NULL, 2, TRUE),
 (4, 3, 'Pour about 1/4 cup of batter onto the griddle.', (SELECT iq_id FROM ingredient_quantities WHERE recipe_id = 4 AND ingredient_id = 26), NULL, FALSE),

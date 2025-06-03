@@ -8,8 +8,14 @@ CREATE TABLE recipes (
   recipe_name TEXT NOT NULL,
   recipe_description TEXT,
   recipe_img_url TEXT,
-  created_by INTEGER REFERENCES users(user_id)
+  created_by INTEGER REFERENCES users(user_id),
+  is_vegetarian BOOLEAN DEFAULT FALSE,
+  is_vegan BOOLEAN DEFAULT FALSE,
+  is_gluten_free BOOLEAN DEFAULT FALSE,
+  is_dairy_free BOOLEAN DEFAULT FALSE,
+  is_nut_free BOOLEAN DEFAULT FALSE
 );
+
 
 CREATE TABLE ingredients (
   id SERIAL PRIMARY KEY,
@@ -42,7 +48,7 @@ CREATE TABLE user_cooked_recipes (
 );
 
 
-CREATE TABLE user_favorites (
+CREATE TABLE user_favourites (
   user_id INTEGER REFERENCES users(user_id),
   recipe_id INTEGER REFERENCES recipes(recipe_id),
   PRIMARY KEY (user_id, recipe_id)

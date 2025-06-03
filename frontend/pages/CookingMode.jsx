@@ -1,7 +1,12 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { StyleSheet } from "react-native";
-import Timer from "../components/Timer";
+import CookingModeStep from "../components/CookingModeComponents/CookingModeStep";
 import Progressbar from "../components/Progressbar";
+import Completed from "../components/CookingModeComponents/Completed";
+import { useFocusEffect } from "@react-navigation/native";
+import { useContext } from "react";
+import { CurrentRecipeContext } from "../context/CurrentRecipeContext";
+import { useNavigation } from "@react-navigation/native";
 import { Card, Button, View, Text } from "react-native-ui-lib";
 
 const sample = [
@@ -51,15 +56,45 @@ const sample = [
   },
 ];
 
-export default function CookingMode({ instructions = sample }) {
+export default function CookingMode() {
+  const navigation = useNavigation();
   const [step, setStep] = useState(0);
-  const [isTimerRunning, setIsTimerRunning] = useState(false);
+  const [complete, setComplete] = useState(false);
+  const { currentRecipe, setCurrentRecipe } = useContext(CurrentRecipeContext);
+  const currentStep = currentRecipe[step];
+  const handleNext = () => {
+    setStep(step + 1);
+    if (step === currentRecipe.length - 1) {
+      setComplete(true);
+      setStep(0);
+    }
+  };
+  useFocusEffect(
+    React.useCallback(() => {
+      return () => {
+        if (complete) {
+          setStep(0);
+          setComplete(false);
+          setCurrentRecipe([]);
+        }
+      };
+    }, [complete])
+  );
 
-  function hasMoreSteps() {
-    return step < instructions.length - 1;
+  if (currentRecipe.length === 0) {
+    return (
+      <View>
+        <Text>Select a recipe to get started!</Text>
+        <Button
+          title="return to homepage"
+          onPress={() => navigation.navigate("Home")}
+        />
+      </View>
+    );
   }
-
-  return (
+  return complete ? (
+    <Completed />
+  ) : (
     <View style={styles.container}>
       <Progressbar step={step} totalSteps={instructions.length} />
       <Card>
@@ -78,14 +113,7 @@ export default function CookingMode({ instructions = sample }) {
             )}
           </Card>
         )}
-        <Button
-          onPress={() => {
-            setIsTimerRunning(false);
-            if (hasMoreSteps) {
-              setStep((prev) => prev + 1);
-            }
-          }}
-        >
+        <Button onPress={handleNext}>
           <Text>{hasMoreSteps ? "Next step" : "Bon appetit"}</Text>
         </Button>
       </Card>
