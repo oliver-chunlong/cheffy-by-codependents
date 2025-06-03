@@ -8,10 +8,10 @@ const run = require("../utils/updateRecipeLabels");
 beforeEach(async () => {
   await seed();
   await run();
-  await db.query(
-    `INSERT INTO users (user_id, username) VALUES ($1, $2)`,
-    [123, "no_favourites_user"]
-  );
+  await db.query(`INSERT INTO users (user_id, username) VALUES ($1, $2)`, [
+    123,
+    "no_favourites_user",
+  ]);
 });
 
 afterAll(async () => {
@@ -52,12 +52,11 @@ describe("GET /api/recipes", () => {
       .expect(200)
       .then(({ body }) => {
         expect(body.recipes.length).toBeGreaterThan(0);
-        body.recipes.forEach(recipe => {
+        body.recipes.forEach((recipe) => {
           expect(recipe.is_vegan).toBe(true);
         });
       });
   });
-  
 });
 
 describe("GET /api/recipes/:recipe_id", () => {
@@ -137,17 +136,16 @@ describe("POST /api/users/:user_id/favourites", () => {
         expect(body.msg).toBe("Missing recipe_id in body");
       });
   });
-  });
+});
 
-  test("404: Responds with error if user or recipe does not exist", () => {
-    return request(app)
-      .post("/api/users/9999/favourites")
-      .send({ recipe_id: 9999 })
-      .expect(404)
-      .then(({ body }) => {
-        expect(body.msg).toBe("User or recipe not found");
-      });
-  });
+test("404: Responds with error if user or recipe does not exist", () => {
+  return request(app)
+    .post("/api/users/9999/favourites")
+    .send({ recipe_id: 9999 })
+    .expect(404)
+    .then(({ body }) => {
+      expect(body.msg).toBe("User or recipe not found");
+    });
 });
 
 describe("GET /api/users/:user_id/favourites", () => {
@@ -194,7 +192,7 @@ describe("GET /api/users/:user_id/favourites", () => {
   });
 });
 
-describe.only("DELETE /api/users/:user_id/favourites/:recipe_id", () => {
+describe("DELETE /api/users/:user_id/favourites/:recipe_id", () => {
   test("204: Responds with no content after successful deletion and checks that the recipe is deleted", () => {
     const userId = 1;
     const recipeId = 2;
