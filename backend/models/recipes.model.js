@@ -1,8 +1,30 @@
 const db = require("../db");
 
-const selectRecipes = () => {
-  return db.query("SELECT * FROM recipes").then((result) => result.rows);
+const validFilters = [
+  "is_vegetarian",
+  "is_vegan",
+  "is_gluten_free",
+  "is_dairy_free",
+  "is_nut_free",
+];
+
+const selectRecipes = (filters = {}) => {
+  const filterKeys = Object.keys(filters).filter(key => validFilters.includes(key));
+
+  let queryStr = `SELECT * FROM recipes`;
+  const queryValues = [];
+
+  if (filterKeys.length) {
+    const conditions = filterKeys.map((key, index) => {
+      queryValues.push(filters[key]);
+      return `${key} = $${index + 1}`;
+    });
+    queryStr += ` WHERE ` + conditions.join(" AND ");
+  }
+
+  return db.query(queryStr, queryValues).then(({ rows }) => rows);
 };
+
 
 const selectRecipeById = async (recipe_id) => {
   if (isNaN(Number(recipe_id))) {
@@ -43,6 +65,29 @@ const selectRecipeById = async (recipe_id) => {
     [recipe_id]
   );
 
+  //fetch dietary restrictions for ingredients
+  const ingredientIds = ingredientsRes.rows.map(i => i.ingredient_id);
+  const restrictionsRes = await db.query(
+    `
+    SELECT ingredient_id, restriction_name
+    FROM ingredient_dietary_restrictions idr
+    JOIN dietary_restrictions dr ON idr.restriction_id = dr.restriction_id
+    WHERE ingredient_id = ANY($1)
+    `,
+    [ingredientIds]
+  );
+
+  const restrictionsMap = {};
+  restrictionsRes.rows.forEach(({ ingredient_id, restriction_name }) => {
+    if (!restrictionsMap[ingredient_id]) restrictionsMap[ingredient_id] = [];
+    restrictionsMap[ingredient_id].push(restriction_name);
+  });
+
+  ingredientsRes.rows.forEach(ingredient => {
+    ingredient.dietary_restrictions = restrictionsMap[ingredient.ingredient_id] || [];
+  });
+
+
   //third query will connect the instructions with the recipe
   const instructionsRes = await db.query(
     `
@@ -56,6 +101,20 @@ const selectRecipeById = async (recipe_id) => {
 
   recipe.ingredients = ingredientsRes.rows;
   recipe.instructions = instructionsRes.rows;
+
+  //decides if recipe corresponds to a dietary restriction
+  const getDietTypes = async () => {
+    const result = await db.query('SELECT restriction_name FROM dietary_restrictions');
+    return result.rows.map(row => row.restriction_name);
+  };
+  
+  const dietTypes = await getDietTypes();
+
+  dietTypes.forEach(diet => {
+    recipe[`is_${diet.replace(/-/g, '_')}`] = recipe.ingredients.every(ingredient =>
+      ingredient.dietary_restrictions.includes(diet)
+    );
+  });
 
   return recipe;
 };
