@@ -12,7 +12,8 @@ const {
   insertRecipe,
   addIngredientsToRecipe,
   addInstructionsToRecipe,
-  removeUserRecipe
+  removeUserRecipe,
+  updateUserRecipe,
 } = require("../models/recipes.model");
 
 const getApiDocumentation = (req, res) => {
@@ -20,12 +21,15 @@ const getApiDocumentation = (req, res) => {
 };
 
 const getRecipes = (req, res, next) => {
-  selectRecipes(req.query)
+  const { order_by, sort_order, ...filters } = req.query;
+
+  selectRecipes(filters, order_by, sort_order)
     .then((recipes) => {
       res.status(200).send({ recipes });
     })
     .catch(next);
 };
+
 
 const getRecipeById = (req, res, next) => {
   const { recipe_id } = req.params;
@@ -151,6 +155,7 @@ const postRecipe = async (req, res, next) => {
   }
 };
 
+
 const deleteUserRecipe = async (req, res, next) => {
   const {user_id, recipe_id} = req.params
   console.log(req.params)
@@ -162,6 +167,21 @@ const deleteUserRecipe = async (req, res, next) => {
   }
 }
 
+
+const editUserRecipe = async (req, res) => {
+  const { user_id, recipe_id } = req.params;
+  const updateData = req.body;
+
+  try {
+    const updated = await updateUserRecipe(user_id, recipe_id, updateData);
+    res.status(200).json(updated);
+  } catch (error) {
+    console.error('Error in editUserRecipe:', error);
+    res.status(error.status || 500).json({ msg: error.msg || 'Failed to update recipe' });
+  }
+};
+
+
 module.exports = {
   getRecipes,
   getRecipeById,
@@ -171,5 +191,6 @@ module.exports = {
   deleteFromFavourites,
   getUserRecipes,
   postRecipe,
-  deleteUserRecipe
+  deleteUserRecipe,
+  editUserRecipe
 };

@@ -1,4 +1,5 @@
 const express = require("express");
+const cors = require("cors");
 const db = require("./db/connection");
 const { 
   getRecipes, 
@@ -8,11 +9,18 @@ const {
   getUserFavourites, 
   deleteFromFavourites,
   getUserRecipes,
-  postRecipe
-  deleteUserRecipe
+  postRecipe,
+  deleteUserRecipe,
+  editUserRecipe,
  } = require('./controllers/recipes.controller');
 
 const app = express();
+
+app.use(cors({
+  origin: 'http://localhost:8081',
+  methods: ['GET', 'POST', 'PATCH', 'DELETE'],
+  credentials: true}));
+  
 app.use(express.json());
 
 app.get('/api', getApiDocumentation);
@@ -22,7 +30,7 @@ app.get('/api/users/:user_id/recipes', getUserRecipes);
 app.post('/api/users/:user_id/recipes', postRecipe);
 app.get('/api/users/:user_id/favourites', getUserFavourites);
 app.post('/api/users/:user_id/favourites', postRecipeToFavourites);
-// app.patch('/api/users/:user_id/recipes/:recipe_id', editUserRecipe);
+app.patch('/api/users/:user_id/recipes/:recipe_id', editUserRecipe);
 app.delete('/api/users/:user_id/recipes/:recipe_id', deleteUserRecipe);
 app.delete('/api/users/:user_id/favourites/:recipe_id', deleteFromFavourites);
 

@@ -14,14 +14,18 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.anonymous.Cheffy"
+      "bundleIdentifier": "com.anonymous.Cheffy",
+      "automaticPodsInstallation": true,
+      "appleTeamId": "7ZA9MJ2AAN"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "permissions": ["RECORD_AUDIO"],
+      "permissions": [
+        "RECORD_AUDIO"
+      ],
       "edgeToEdgeEnabled": true,
       "package": "com.anonymous.Cheffy"
     },
