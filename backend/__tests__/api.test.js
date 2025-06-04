@@ -157,7 +157,8 @@ describe("POST /api/users/:user_id/favourites", () => {
       .then(({ body }) => {
         expect(body.msg).toBe("User or recipe not found");
       });
-  });});
+  });
+});
 
 describe("GET /api/users/:user_id/favourites", () => {
   test("200: Responds with an array of the user's favourite recipes", () => {
@@ -224,7 +225,7 @@ describe("GET /api/users/:user_id/recipes", () => {
   });
 
   test("200: Responds with message and empty array if user has no recipes", () => {
-    const userId = 2; 
+    const userId = 2;
     return request(app)
       .get(`/api/users/${userId}/recipes`)
       .expect(200)
@@ -244,9 +245,9 @@ describe("GET /api/users/:user_id/recipes", () => {
       .then(({ body }) => {
         expect(body).toEqual({ msg: "User not found" });
       });
-    });
   });
-  
+});
+
 describe("DELETE /api/users/:user_id/favourites/:recipe_id", () => {
   test("204: Responds with no content after successful deletion and checks that the recipe is deleted", () => {
     const userId = 1;
@@ -303,16 +304,17 @@ describe("DELETE /api/users/:user_id/favourites/:recipe_id", () => {
   });
 });
 
-describe('POST /api/users/:user_id/recipes', () => {
-  test('201: creates and returns a new recipe', () => {
+describe("POST /api/users/:user_id/recipes", () => {
+  test("201: creates and returns a new recipe", () => {
     const newRecipe = {
-      recipe_name: 'Spicy Coconut Chickpea Curry',
-      recipe_description: 'Creamy coconut curry with chickpeas, tomato, and warming spices',
-      recipe_img_url: 'https://example.jpg'
+      recipe_name: "Spicy Coconut Chickpea Curry",
+      recipe_description:
+        "Creamy coconut curry with chickpeas, tomato, and warming spices",
+      recipe_img_url: "https://example.jpg",
     };
-    
+
     return request(app)
-      .post('/api/users/1/recipes')
+      .post("/api/users/1/recipes")
       .send(newRecipe)
       .expect(201)
       .then(({ body }) => {
@@ -320,87 +322,88 @@ describe('POST /api/users/:user_id/recipes', () => {
         expect(recipe).toEqual(
           expect.objectContaining({
             recipe_id: expect.any(Number),
-            recipe_name: 'Spicy Coconut Chickpea Curry',
-            recipe_description: 'Creamy coconut curry with chickpeas, tomato, and warming spices',
-            recipe_img_url: 'https://example.jpg',
+            recipe_name: "Spicy Coconut Chickpea Curry",
+            recipe_description:
+              "Creamy coconut curry with chickpeas, tomato, and warming spices",
+            recipe_img_url: "https://example.jpg",
             created_by: 1,
             is_vegetarian: expect.any(Boolean),
             is_vegan: expect.any(Boolean),
             is_gluten_free: expect.any(Boolean),
             is_dairy_free: expect.any(Boolean),
-            is_nut_free: expect.any(Boolean)
+            is_nut_free: expect.any(Boolean),
           })
         );
-    
       });
   });
 
-  test('400: missing required fields', () => {
+  test("400: missing required fields", () => {
     return request(app)
-      .post('/api/users/1/recipes')
-      .send({ recipe_name: 'No Description' }) // missing fields
+      .post("/api/users/1/recipes")
+      .send({ recipe_name: "No Description" }) // missing fields
       .expect(400)
       .then(({ body }) => {
-        expect(body.msg).toBe('Missing required fields');
+        expect(body.msg).toBe("Missing required fields");
       });
   });
 
-  test('404: non-existent user ID', () => {
+  test("404: non-existent user ID", () => {
     const newRecipe = {
-      recipe_name: 'Ghost Recipe',
-      recipe_description: 'Vanishing ingredients',
-      recipe_img_url: 'https://example.jpg',
+      recipe_name: "Ghost Recipe",
+      recipe_description: "Vanishing ingredients",
+      recipe_img_url: "https://example.jpg",
     };
 
     return request(app)
-      .post('/api/users/9999/recipes')
+      .post("/api/users/9999/recipes")
       .send(newRecipe)
       .expect(404)
       .then(({ body }) => {
-        expect(body.msg).toBe('User not found');
+        expect(body.msg).toBe("User not found");
       });
   });
 
-  test('400: invalid user ID type', () => {
+  test("400: invalid user ID type", () => {
     const newRecipe = {
-      recipe_name: 'Bad User',
-      recipe_description: 'Wrong ID type',
-      recipe_img_url: 'https://example.jpg',
+      recipe_name: "Bad User",
+      recipe_description: "Wrong ID type",
+      recipe_img_url: "https://example.jpg",
     };
-  
+
     return request(app)
-      .post('/api/users/not-a-number/recipes')
+      .post("/api/users/not-a-number/recipes")
       .send(newRecipe)
       .expect(400)
       .then(({ body }) => {
-        expect(body.msg).toBe('Invalid user ID');
+        expect(body.msg).toBe("Invalid user ID");
       });
   });
 });
 
-describe('POST /api/users/:user_id/recipes with ingredients', () => {
-  test('201: creates recipe and adds full list of ingredients', () => {
+describe("POST /api/users/:user_id/recipes with ingredients", () => {
+  test("201: creates recipe and adds full list of ingredients", () => {
     const newRecipe = {
-      recipe_name: 'Spicy Coconut Chickpea Curry',
-      recipe_description: 'Creamy coconut curry with chickpeas, tomato, and warming spices',
-      recipe_img_url: 'https://example.jpg',
+      recipe_name: "Spicy Coconut Chickpea Curry",
+      recipe_description:
+        "Creamy coconut curry with chickpeas, tomato, and warming spices",
+      recipe_img_url: "https://example.jpg",
       ingredients: [
-        { ingredient_id: 1, quantity: 400, unit: 'g' },
-        { ingredient_id: 26, quantity: 200, unit: 'ml' },
-        { ingredient_id: 2, quantity: 1, unit: 'medium' },
-        { ingredient_id: 3, quantity: 3, unit: 'cloves' },
-        { ingredient_id: 4, quantity: 1, unit: 'tbsp' },
-        { ingredient_id: 5, quantity: 2, unit: 'whole' },
-        { ingredient_id: 6, quantity: 1, unit: 'tsp' },
-        { ingredient_id: 7, quantity: 1, unit: 'tsp' },
-        { ingredient_id: 8, quantity: 0.5, unit: 'tsp' },
-        { ingredient_id: 27, quantity: 1, unit: 'whole' },
-        { ingredient_id: 10, quantity: 1, unit: 'tbsp' }
-      ]
+        { ingredient_id: 1, quantity: 400, unit: "g" },
+        { ingredient_id: 26, quantity: 200, unit: "ml" },
+        { ingredient_id: 2, quantity: 1, unit: "medium" },
+        { ingredient_id: 3, quantity: 3, unit: "cloves" },
+        { ingredient_id: 4, quantity: 1, unit: "tbsp" },
+        { ingredient_id: 5, quantity: 2, unit: "whole" },
+        { ingredient_id: 6, quantity: 1, unit: "tsp" },
+        { ingredient_id: 7, quantity: 1, unit: "tsp" },
+        { ingredient_id: 8, quantity: 0.5, unit: "tsp" },
+        { ingredient_id: 27, quantity: 1, unit: "whole" },
+        { ingredient_id: 10, quantity: 1, unit: "tbsp" },
+      ],
     };
 
     return request(app)
-      .post('/api/users/1/recipes')
+      .post("/api/users/1/recipes")
       .send(newRecipe)
       .expect(201)
       .then(({ body }) => {
@@ -422,7 +425,7 @@ describe('POST /api/users/:user_id/recipes with ingredients', () => {
               ingredient_id: expect.any(Number),
               quantity_numerical: expect.any(String),
               quantity_unit: expect.any(String),
-              optional: expect.any(Boolean)            
+              optional: expect.any(Boolean),
             })
           );
         });
@@ -430,25 +433,71 @@ describe('POST /api/users/:user_id/recipes with ingredients', () => {
   });
 });
 
-describe('POST /api/users/:user_id/recipes with instructions', () => {
-  test('201: creates recipe with instructions', () => {
+describe("POST /api/users/:user_id/recipes with instructions", () => {
+  test("201: creates recipe with instructions", () => {
     const newRecipeWithInstructions = {
-      recipe_name: 'Spicy Coconut Chickpea Curry',
-      recipe_description: 'Creamy coconut curry with chickpeas, tomato, and warming spices',
-      recipe_img_url: 'https://example.jpg',
+      recipe_name: "Spicy Coconut Chickpea Curry",
+      recipe_description:
+        "Creamy coconut curry with chickpeas, tomato, and warming spices",
+      recipe_img_url: "https://example.jpg",
       instructions: [
-        { step_number: 1, step_description: 'Heat olive oil in a pan.', iq_id: null, time_required: 2, timed_task: true },
-        { step_number: 2, step_description: 'Add chopped onion and sauté until translucent.', iq_id: null, time_required: 5, timed_task: true },
-        { step_number: 3, step_description: 'Add minced garlic and grated ginger. Cook for 1 minute.', iq_id: null, time_required: 1, timed_task: true },
-        { step_number: 4, step_description: 'Stir in cumin, coriander, turmeric, and chili pepper. Cook spices for 30 seconds.', iq_id: null, time_required: 0.5, timed_task: true },
-        { step_number: 5, step_description: 'Add chopped tomatoes and cook until soft.', iq_id: null, time_required: 7, timed_task: true },
-        { step_number: 6, step_description: 'Add chickpeas and coconut milk. Simmer for 20 minutes.', iq_id: null, time_required: 20, timed_task: true },
-        { step_number: 7, step_description: 'Adjust salt and spices to taste. Serve hot.', iq_id: null, time_required: null, timed_task: false }
-      ]
+        {
+          step_number: 1,
+          step_description: "Heat olive oil in a pan.",
+          iq_id: null,
+          time_required: 2,
+          timed_task: true,
+        },
+        {
+          step_number: 2,
+          step_description: "Add chopped onion and sauté until translucent.",
+          iq_id: null,
+          time_required: 5,
+          timed_task: true,
+        },
+        {
+          step_number: 3,
+          step_description:
+            "Add minced garlic and grated ginger. Cook for 1 minute.",
+          iq_id: null,
+          time_required: 1,
+          timed_task: true,
+        },
+        {
+          step_number: 4,
+          step_description:
+            "Stir in cumin, coriander, turmeric, and chili pepper. Cook spices for 30 seconds.",
+          iq_id: null,
+          time_required: 0.5,
+          timed_task: true,
+        },
+        {
+          step_number: 5,
+          step_description: "Add chopped tomatoes and cook until soft.",
+          iq_id: null,
+          time_required: 7,
+          timed_task: true,
+        },
+        {
+          step_number: 6,
+          step_description:
+            "Add chickpeas and coconut milk. Simmer for 20 minutes.",
+          iq_id: null,
+          time_required: 20,
+          timed_task: true,
+        },
+        {
+          step_number: 7,
+          step_description: "Adjust salt and spices to taste. Serve hot.",
+          iq_id: null,
+          time_required: null,
+          timed_task: false,
+        },
+      ],
     };
 
     return request(app)
-      .post('/api/users/1/recipes')
+      .post("/api/users/1/recipes")
       .send(newRecipeWithInstructions)
       .expect(201)
       .then(({ body }) => {
@@ -462,15 +511,20 @@ describe('POST /api/users/:user_id/recipes with instructions', () => {
             created_by: 1,
           })
         );
-        expect(instructions).toHaveLength(newRecipeWithInstructions.instructions.length);
+        expect(instructions).toHaveLength(
+          newRecipeWithInstructions.instructions.length
+        );
         instructions.forEach((inst, i) => {
           expect(inst).toEqual(
             expect.objectContaining({
               recipe_id: recipe.recipe_id,
-              step_number: newRecipeWithInstructions.instructions[i].step_number,
-              step_description: newRecipeWithInstructions.instructions[i].step_description,
+              step_number:
+                newRecipeWithInstructions.instructions[i].step_number,
+              step_description:
+                newRecipeWithInstructions.instructions[i].step_description,
               iq_id: newRecipeWithInstructions.instructions[i].iq_id,
-              time_required: newRecipeWithInstructions.instructions[i].time_required,
+              time_required:
+                newRecipeWithInstructions.instructions[i].time_required,
               timed_task: newRecipeWithInstructions.instructions[i].timed_task,
             })
           );
@@ -574,3 +628,53 @@ describe('PATCH /api/users/:user_id/recipes/:recipe_id with ingredients and inst
       });
   });
 });
+
+describe("DELETE /api/users/:user_id/recipes/:recipe_id", () => {
+  test("204: Responds with no content after successful deletion and checks that the recipe is deleted", () => {
+    const userId = 1;
+    const recipeToDeleteId = 1;
+    return request(app)
+      .delete(`/api/users/${userId}/recipes/${recipeToDeleteId}`)
+      .expect(204)
+      .then(({ res }) => {
+        expect(res.text).toBe("");
+        return request(app)
+          .delete(`/api/users/${userId}/recipes/${recipeToDeleteId}`)
+          .expect(404)
+          .then(({ body }) => {
+            expect(body.msg).toBe("Recipe not found");
+          });
+      });
+  });
+
+  test("404: Responds with an error message if the user id is valid but out of range", () => {
+    const userId = 9999;
+    const recipeToDeleteId = 1;
+    return request(app)
+      .delete(`/api/users/${userId}/recipes/${recipeToDeleteId}`)
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("User not found");
+      });
+  });
+
+  test("404: Responds with an error message if the recipe id is valid but out of range", () => {
+    const userId = 1;
+    const recipeToDeleteId = 9999;
+    return request(app)
+      .delete(`/api/users/${userId}/recipes/${recipeToDeleteId}`)
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Recipe not found");
+      });
+  });
+
+  test("404: Responds with an error message if both user and recipe ids are valid but the recipe does not belong to the user", () => {
+    const userId = 1;
+    const recipeToDeleteId = 5;
+    return request(app)
+      .delete(`/api/users/${userId}/recipes/${recipeToDeleteId}`)
+      .expect(404)
+      .then(({ body }) => {
+        console.log(body.msg, "<<< log")
+        expect(body.msg).toBe("Recipe not owned by the user");
