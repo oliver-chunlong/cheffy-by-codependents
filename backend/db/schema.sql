@@ -43,14 +43,14 @@ CREATE TABLE user_dietary_restrictions (
 
 CREATE TABLE user_cooked_recipes (
   user_id INTEGER REFERENCES users(user_id),
-  recipe_id INTEGER REFERENCES recipes(recipe_id),
+  recipe_id INTEGER REFERENCES recipes(recipe_id) ON DELETE CASCADE,
   PRIMARY KEY (user_id, recipe_id)
 );
 
 
 CREATE TABLE user_favourites (
   user_id INTEGER REFERENCES users(user_id),
-  recipe_id INTEGER REFERENCES recipes(recipe_id),
+  recipe_id INTEGER REFERENCES recipes(recipe_id) ON DELETE CASCADE,
   PRIMARY KEY (user_id, recipe_id)
 );
 
@@ -69,7 +69,7 @@ CREATE TABLE equipment (
 
 CREATE TABLE ingredient_quantities (
   iq_id SERIAL PRIMARY KEY,
-  recipe_id INTEGER REFERENCES recipes(recipe_id),
+  recipe_id INTEGER REFERENCES recipes(recipe_id) ON DELETE CASCADE,
   ingredient_id INTEGER REFERENCES ingredients(id),
   quantity_numerical NUMERIC,
   quantity_unit TEXT,
@@ -79,7 +79,7 @@ CREATE TABLE ingredient_quantities (
 
 CREATE TABLE instructions (
   instruction_id SERIAL PRIMARY KEY,
-  recipe_id INTEGER REFERENCES recipes(recipe_id),
+  recipe_id INTEGER REFERENCES recipes(recipe_id) ON DELETE CASCADE,
   step_number INTEGER NOT NULL,
   step_description TEXT NOT NULL,
   iq_id INTEGER REFERENCES ingredient_quantities(iq_id),

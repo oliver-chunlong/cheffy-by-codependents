@@ -12,7 +12,7 @@ INSERT INTO recipes (recipe_name, recipe_description, recipe_img_url, created_by
 ('Pepperoni Pizza', 'Classic pizza topped with pepperoni and cheese', 'https://example.jpg', 1),
 ('Vegan Tofu Stir-Fry', 'Crispy tofu with vegetables and soy sauce', 'https://example.jpg', 1),
 ('Fluffy Pancakes', 'Fluffy pancakes that everyone will love', 'https://example.jpg', 1),
-('Vegan Tacos', 'Tacos with black beans, avocado, and lime', 'https://example.jpg', 1);
+('Vegan Tacos', 'Tacos with black beans, avocado, and lime', 'https://example.jpg', 5);
   
   INSERT INTO ingredients (ingredient_name, img_url, calories_per_100g, protein_g_per_100g, carbs_g_per_100g, fat_g_per_100g, fiber_g_per_100g, sugar_g_per_100g) VALUES
   ('chickpeas', 'https://example.jpg', 164, 8.9, 27.4, 2.6, 7.6, 4.8),
