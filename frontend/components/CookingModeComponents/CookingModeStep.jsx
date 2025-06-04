@@ -1,7 +1,8 @@
 import Timer from "../Timer";
 import { useEffect } from "react";
-import { View, StyleSheet, Text, Button } from "react-native";
+import { StyleSheet } from "react-native";
 import * as Speech from "expo-speech";
+import { Card, View, Text, Button } from "react-native-ui-lib";
 
 export default function CookingModeStep({
   step_number,
@@ -18,19 +19,18 @@ export default function CookingModeStep({
   }, [step_number, repeat]);
 
   return (
-    <View style={styles.container}>
+    <Card>
       <Text>step {step_number}</Text>
       <Text>{step_description}</Text>
-      {time_required ? (
-        <View>
-          <Timer seconds={time_required * 60} isRunning={isTimerRunning} />
-          <Button
-            title={isTimerRunning ? "Pause Timer" : "Start Timer"}
-            onPress={() => setIsTimerRunning((prev) => !prev)}
-          />
-        </View>
-      ) : null}
-    </View>
+      {time_required && (
+        <Card>
+          <Timer seconds={time_required} isRunning={isTimerRunning} />
+          <Button onPress={() => setIsTimerRunning((prev) => !prev)}>
+            {isTimerRunning ? "Pause Timer" : "Start Timer"}
+          </Button>
+        </Card>
+      )}
+    </Card>
   );
 }
 
