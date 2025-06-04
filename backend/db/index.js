@@ -7,6 +7,8 @@
 
 // module.exports = pool;
 
+//this file is NOT IN USE, use connection.js
+
 const { Pool } = require('pg');
 require('dotenv').config();
 
