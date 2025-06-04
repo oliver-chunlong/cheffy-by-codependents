@@ -78,7 +78,8 @@ export default function SpeechRecognition({
     if (complete) {
       ExpoSpeechRecognitionModule.stop();
     } else if (!complete && start) {
-      handleStart();
+      // TODO: this handleStart function is the reason app crashes
+      //   handleStart();
     }
   }, [complete, start]);
   useEffect(() => {
