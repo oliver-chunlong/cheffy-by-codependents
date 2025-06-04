@@ -1,16 +1,22 @@
 import Timer from "../Timer";
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { View, StyleSheet, Text, Button } from "react-native";
+import * as Speech from "expo-speech";
 
 export default function CookingModeStep({
   step_number,
   step_description,
   time_required,
+  isTimerRunning,
+  setIsTimerRunning,
+  repeat,
 }) {
-  const [isTimerRunning, setIsTimerRunning] = useState(false);
   useEffect(() => {
     setIsTimerRunning(false);
-  }, [step_number]);
+    Speech.stop();
+    Speech.speak(step_description);
+  }, [step_number, repeat]);
+
   return (
     <View style={styles.container}>
       <Text>step {step_number}</Text>

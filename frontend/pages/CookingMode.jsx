@@ -1,26 +1,41 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { View, StyleSheet, Text, Button } from "react-native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
+import { CurrentRecipeContext } from "../context/CurrentRecipeContext";
+
 import CookingModeStep from "../components/CookingModeComponents/CookingModeStep";
 import Progressbar from "../components/Progressbar";
 import Completed from "../components/CookingModeComponents/Completed";
-import { useFocusEffect } from "@react-navigation/native";
-import { useContext } from "react";
-import { CurrentRecipeContext } from "../context/CurrentRecipeContext";
-import { useNavigation } from "@react-navigation/native";
+import SpeechRecognition from "../components/CookingModeComponents/SpeechRecognition";
 
 export default function CookingMode() {
   const navigation = useNavigation();
-  const [step, setStep] = useState(0);
-  const [complete, setComplete] = useState(false);
   const { currentRecipe, setCurrentRecipe } = useContext(CurrentRecipeContext);
+
+  const [step, setStep] = useState(0);
+  const [start, setStart] = useState(false);
+  const [complete, setComplete] = useState(false);
   const currentStep = currentRecipe[step];
+
+  const [isTimerRunning, setIsTimerRunning] = useState(false);
+  const [repeat, setRepeat] = useState(0);
+
   const handleNext = () => {
-    setStep(step + 1);
+    setStep((prev) => prev + 1);
     if (step === currentRecipe.length - 1) {
       setComplete(true);
       setStep(0);
     }
   };
+
+  const handleBack = () => {
+    if (step > 0) setStep((prev) => prev - 1);
+  };
+
+  const handleRepeat = () => {
+    setRepeat((prev) => prev + 1);
+  };
+
   useFocusEffect(
     React.useCallback(() => {
       return () => {
@@ -28,6 +43,7 @@ export default function CookingMode() {
           setStep(0);
           setComplete(false);
           setCurrentRecipe([]);
+          setStart(false);
         }
       };
     }, [complete])
@@ -44,9 +60,19 @@ export default function CookingMode() {
       </View>
     );
   }
-  return complete ? (
-    <Completed />
-  ) : (
+  if (complete) return <Completed />;
+
+  if (!start)
+    return (
+      <Button
+        title="Start Cooking"
+        onPress={() => {
+          setStart(true);
+        }}
+      />
+    );
+
+  return (
     <View style={styles.container}>
       <Text>Cooking Mode</Text>
       <Progressbar step={step} totalSteps={currentRecipe.length - 1} />
@@ -54,8 +80,24 @@ export default function CookingMode() {
         step_number={currentStep.step_number}
         step_description={currentStep.step_description}
         time_required={currentStep.time_required}
+        isTimerRunning={isTimerRunning}
+        setIsTimerRunning={setIsTimerRunning}
+        repeat={repeat}
       />
       <Button title="Next Step" onPress={handleNext} />
+      <Button title="Previous Step" onPress={handleBack} />
+
+      <SpeechRecognition
+        setStep={setStep}
+        complete={complete}
+        step={step}
+        setIsTimerRunning={setIsTimerRunning}
+        setRepeat={setRepeat}
+        handleNext={handleNext}
+        handleBack={handleBack}
+        handleRepeat={handleRepeat}
+        start={start}
+      />
     </View>
   );
 }
