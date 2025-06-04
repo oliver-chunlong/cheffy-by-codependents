@@ -24,9 +24,7 @@ export default function SearchBar({
     setFilterBy(tempFilter);
     setCategory(tempCategory);
     setOrder(tempOrder);
-    console.log("search button pressed", tempQuery, tempFilter, tempCategory )
     setTempQuery("");
-    console.log("search button pressed", tempQuery, tempFilter, tempCategory )
     setShowFilters(false); // closes filter window
   };
   return (
@@ -58,12 +56,12 @@ export default function SearchBar({
         // style={styles.filterSelect}
         >
         <Picker.Item label="Filter By" value="" />
-        <Picker.Item label="Vegan" value="vegan" />
-        <Picker.Item label="Gluten-Free" value="gluten-free" />
-        <Picker.Item label="Vegetarian" value="vegetarian" />
-        <Picker.Item label="Dairy-Free" value="dairy-free" />
-        <Picker.Item label="Nut-Free" value="nut-free" />
-        <Picker.Item label="Pescatarian" value="pescatarian" />
+        <Picker.Item label="Vegan" value="is_vegan" />
+        <Picker.Item label="Gluten-Free" value="is_gluten-free" />
+        <Picker.Item label="Vegetarian" value="is_vegetarian" />
+        <Picker.Item label="Dairy-Free" value="is_dairy-free" />
+        <Picker.Item label="Nut-Free" value="is_nut-free" />
+        <Picker.Item label="Pescatarian" value="is_pescatarian" />
       </Picker>
       {/* Category Dropdown */}
       <Picker

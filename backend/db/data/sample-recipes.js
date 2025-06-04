@@ -72,11 +72,11 @@ INSERT INTO equipment (id, name) VALUES
 (4, 'saucepan');
 
 INSERT INTO recipes (id, name, cuisine, description, img_url, created_by) VALUES
-(1, 'Chana Masala', 1, 'Spiced chickpeas in a tomato-based curry', 'https://example.jpg', 'Team Cheffy'),
-(2, 'Pepperoni Pizza', 2, 'Classic pizza topped with pepperoni and cheese', 'https://example.jpg', 'Team Cheffy'),
-(3, 'Vegan Tofu Stir-Fry', 3, 'Crispy tofu with vegetables and soy sauce', 'https://example.jpg', 'Team Cheffy'),
-(4, 'Gluten-Free Pancakes', 4, 'Fluffy pancakes made with gluten-free flour', 'https://example.jpg', 'Team Cheffy'),
-(5, 'Vegan Tacos', 5, 'Tacos with black beans, avocado, and lime', 'https://example.jpg', 'Team Cheffy');
+(1, 'Chana Masala', 1, 'Spiced chickpeas in a tomato-based curry', 'https://plus.unsplash.com/premium_photo-1695456064603-aa7568121827?q=80&w=1964&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', 'Team Cheffy'),
+(2, 'Pepperoni Pizza', 2, 'Classic pizza topped with pepperoni and cheese', 'https://images.unsplash.com/photo-1628840042765-356cda07504e?q=80&w=2080&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', 'Team Cheffy'),
+(3, 'Vegan Tofu Stir-Fry', 3, 'Crispy tofu with vegetables and soy sauce', 'https://plus.unsplash.com/premium_photo-1712604940796-1a1dd9021bf1?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', 'Team Cheffy'),
+(4, 'Gluten-Free Pancakes', 4, 'Fluffy pancakes made with gluten-free flour', 'https://images.unsplash.com/photo-1612182062633-9ff3b3598e96?q=80&w=1919&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', 'Team Cheffy'),
+(5, 'Vegan Tacos', 5, 'Tacos with black beans, avocado, and lime', 'https://images.unsplash.com/photo-1615870216519-2f9fa575fa5c?q=80&w=1932&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', 'Team Cheffy');
 
 INSERT INTO recipe_ingredients (recipe_id, ingredient_id, quantity_number, quantity_unit, is_optional) VALUES
 (1, 1, 320, 'g', FALSE),

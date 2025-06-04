@@ -7,15 +7,18 @@ import { requestRecipes } from "../../utils/axios";
 
 export default function RecipeList({ searchQuery, filterBy, category, order }) {
 
+  const [recipes, setRecipes] = useState([])
+
   useEffect(() => {
-    requestRecipes().then((recipes) => {
-        return (
-          <View>
-            {recipes.map((recipe) => (
-              <RecipeCard key={recipe.id} recipe={recipe} />
-            ))}
-          </View>
-        );
+    requestRecipes(searchQuery, filterBy, category, order).then((recipes) => {
+      setRecipes(recipes)
     })
-  })
+  }, [searchQuery, filterBy, category, order])
+  return (
+    <View>
+      {recipes.map((recipe) => (
+        <RecipeCard key={recipe.recipe_id} recipe={recipe} />
+      ))}
+    </View>
+  );
 }
