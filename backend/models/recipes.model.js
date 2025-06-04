@@ -8,11 +8,26 @@ const validFilters = [
   "is_nut_free",
 ];
 
-const selectRecipes = (filters = {}) => {
+const selectRecipes = (filters = {}, order_by, sort_order = "asc") => {
   const filterKeys = Object.keys(filters).filter(key => validFilters.includes(key));
-
-  let queryStr = `SELECT * FROM recipes`;
   const queryValues = [];
+
+  let selectPart = `SELECT *`;
+  let joinPart = ``;
+
+  if (order_by === "time") {
+    selectPart += `, t.total_time AS total_time`;
+    joinPart = `
+      LEFT JOIN (
+        SELECT recipe_id, SUM(time_required) AS total_time
+        FROM instructions
+        WHERE time_required IS NOT NULL
+        GROUP BY recipe_id
+      ) t ON recipes.recipe_id = t.recipe_id
+    `;
+  }
+
+  let queryStr = `${selectPart} FROM recipes ${joinPart}`;
 
   if (filterKeys.length) {
     const conditions = filterKeys.map((key, index) => {
@@ -20,6 +35,12 @@ const selectRecipes = (filters = {}) => {
       return `${key} = $${index + 1}`;
     });
     queryStr += ` WHERE ` + conditions.join(" AND ");
+  }
+
+  if (order_by === "name") {
+    queryStr += ` ORDER BY recipe_name ${sort_order === "desc" ? "DESC" : "ASC"}`;
+  } else if (order_by === "time") {
+    queryStr += ` ORDER BY total_time ${sort_order === "desc" ? "DESC" : "ASC"}`;
   }
 
   return db.query(queryStr, queryValues).then(({ rows }) => rows);
@@ -266,7 +287,6 @@ const addInstructionsToRecipe = async (recipe_id, instructions) => {
   }));
 };
 
-
 const updateUserRecipe = async (user_id, recipe_id, updateData) => {
   if (isNaN(Number(user_id))) throw { status: 400, msg: "Invalid user ID" }
   if (isNaN(Number(recipe_id))) throw { status: 400, msg: "Invalid recipe ID" }
@@ -352,7 +372,6 @@ const updateUserRecipe = async (user_id, recipe_id, updateData) => {
     instructions: instructionsRes.rows,
   }
 }
-
 
 
 

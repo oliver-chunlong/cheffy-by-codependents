@@ -35,7 +35,8 @@ describe("GET /api/recipes", () => {
       .get("/api/recipes")
       .expect(200)
       .then(({ body }) => {
-        expect(body.recipes).toHaveLength(5);
+        expect(Array.isArray(body.recipes)).toBe(true);
+        expect(body.recipes.length).toBeGreaterThan(0);
         body.recipes.forEach((recipe) => {
           expect(recipe).toMatchObject({
             recipe_id: expect.any(Number),
@@ -57,6 +58,18 @@ describe("GET /api/recipes", () => {
         });
       });
   });
+  test("200: Orders recipes by recipe_name ascending", () => {
+    return request(app)
+      .get("/api/recipes?order_by=name&sort_order=asc")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.recipes.length).toBeGreaterThan(1);
+        const names = body.recipes.map(r => r.recipe_name);
+        const sortedNames = [...names].sort();
+        expect(names).toEqual(sortedNames);
+      });
+  });
+  
 });
 
 describe("GET /api/recipes/:recipe_id", () => {

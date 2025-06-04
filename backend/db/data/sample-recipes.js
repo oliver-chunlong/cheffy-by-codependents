@@ -1,3 +1,8 @@
+//DO NOT USE THIS FILE
+//THIS IS AN OLD VERSION THAT IS NOT FACT CHECKED
+//POSSIBLY INCOMPATIBLE WITH DB AND CAN CAUSE ERRORS
+//ALSO ITS THE WRONG FILE FORMAT
+
 INSERT INTO ingredients (id, name, img_url, calories_per_100g, protein_g_per_100g, carbs_g_per_100g, fat_g_per_100g, fiber_g_per_100g, sugar_g_per_100g) VALUES
 (1, 'chickpeas', 'https://example.jpg', 164, 8.9, 27.4, 2.6, 7.6, 4.8),
 (2, 'onion', 'https://example.jpg', 40, 1.1, 9.3, 0.1, 1.7, 4.2),

@@ -20,12 +20,15 @@ const getApiDocumentation = (req, res) => {
 };
 
 const getRecipes = (req, res, next) => {
-  selectRecipes(req.query)
+  const { order_by, sort_order, ...filters } = req.query;
+
+  selectRecipes(filters, order_by, sort_order)
     .then((recipes) => {
       res.status(200).send({ recipes });
     })
     .catch(next);
 };
+
 
 const getRecipeById = (req, res, next) => {
   const { recipe_id } = req.params;
