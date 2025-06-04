@@ -1,12 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { StyleSheet } from "react-native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
+import { CurrentRecipeContext } from "../context/CurrentRecipeContext";
+
 import CookingModeStep from "../components/CookingModeComponents/CookingModeStep";
 import Progressbar from "../components/Progressbar";
 import Completed from "../components/CookingModeComponents/Completed";
-import { useFocusEffect } from "@react-navigation/native";
-import { useContext } from "react";
-import { CurrentRecipeContext } from "../context/CurrentRecipeContext";
-import { useNavigation } from "@react-navigation/native";
+import SpeechRecognition from "../components/CookingModeComponents/SpeechRecognition";
 import { Card, Button, View, Text } from "react-native-ui-lib";
 import Timer from "../components/Timer";
 
@@ -64,18 +64,32 @@ function hasMoreSteps(step, totalSteps) {
 export default function CookingMode() {
   const instructions = sample;
   const navigation = useNavigation();
+
   const [step, setStep] = useState(0);
+  const [start, setStart] = useState(false);
   const [complete, setComplete] = useState(false);
   const [isTimerRunning, setIsTimerRunning] = useState(false);
   const { currentRecipe, setCurrentRecipe } = useContext(CurrentRecipeContext);
   const currentStep = currentRecipe[step];
+
+  const [repeat, setRepeat] = useState(0);
+
   const handleNext = () => {
-    setStep(step + 1);
+    setStep((prev) => prev + 1);
     if (step === currentRecipe.length - 1) {
       setComplete(true);
       setStep(0);
     }
   };
+
+  const handleBack = () => {
+    if (step > 0) setStep((prev) => prev - 1);
+  };
+
+  const handleRepeat = () => {
+    setRepeat((prev) => prev + 1);
+  };
+
   useFocusEffect(
     React.useCallback(() => {
       return () => {
@@ -83,6 +97,7 @@ export default function CookingMode() {
           setStep(0);
           setComplete(false);
           setCurrentRecipe([]);
+          setStart(false);
         }
       };
     }, [complete])
@@ -99,32 +114,49 @@ export default function CookingMode() {
       </View>
     );
   }
-  console.log(instructions);
-  return complete ? (
-    <Completed />
-  ) : (
+  if (complete) return <Completed />;
+
+  if (!start)
+    return (
+      <Button
+        onPress={() => {
+          setStart(true);
+        }}
+      >
+        <Text>Start Cooking</Text>
+      </Button>
+    );
+
+  return (
     <View style={styles.container}>
-      <Progressbar step={step} totalSteps={instructions.length} />
-      <Card>
-        <Text>Step {instructions[step].step_number}</Text>
-        <Text>{instructions[step].step_description}</Text>
-        {instructions[step].timed_task && (
-          <Card>
-            <Timer
-              seconds={instructions[step].time_required}
-              isRunning={isTimerRunning}
-            />
-            {!isTimerRunning && (
-              <Button onPress={() => setIsTimerRunning(true)}>
-                <Text>Start</Text>
-              </Button>
-            )}
-          </Card>
-        )}
-        <Button onPress={handleNext}>
-          <Text>{hasMoreSteps ? "Next step" : "Bon appetit"}</Text>
-        </Button>
-      </Card>
+      <Text>Cooking Mode</Text>
+      <Progressbar step={step} totalSteps={currentRecipe.length - 1} />
+      <CookingModeStep
+        step_number={currentStep.step_number}
+        step_description={currentStep.step_description}
+        time_required={currentStep.time_required}
+        isTimerRunning={isTimerRunning}
+        setIsTimerRunning={setIsTimerRunning}
+        repeat={repeat}
+      />
+      <Button onPress={handleNext}>
+        <Text>Next Step</Text>
+      </Button>
+      <Button title="Previous Step" onPress={handleBack}>
+        <Text>Previous Step</Text>
+      </Button>
+
+      <SpeechRecognition
+        setStep={setStep}
+        complete={complete}
+        step={step}
+        setIsTimerRunning={setIsTimerRunning}
+        setRepeat={setRepeat}
+        handleNext={handleNext}
+        handleBack={handleBack}
+        handleRepeat={handleRepeat}
+        start={start}
+      />
     </View>
   );
 }
