@@ -1,7 +1,6 @@
-import React from "react";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { Button } from "react-native";
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { Button, Icon } from 'react-native-ui-lib';
 
 import Home from "../pages/Homepage.jsx";
 import CookingMode from "../pages/CookingMode.jsx";
@@ -21,15 +20,29 @@ function HomeStack() {
         component={Home}
         options={({ navigation }) => ({
           headerRight: () => (
-            <Button
-              title="profile"
-              onPress={() => navigation.navigate("Profile")}
-            />
+          <Button
+          label="Profile"
+          onPress={() => navigation.navigate("Profile")}
+          style={{ marginRight: 12 }}
+          />
           ),
         })}
       />
       <Stack.Screen name="RecipeDetail" component={RecipeDetail} />
-      <Stack.Screen name="Profile" component={Profile} />
+
+      <Stack.Screen 
+      name="Profile" 
+      component={Profile} 
+      options={({ navigation }) => ({
+        headerRight: () => (
+          <Button 
+          label="Home"
+          onPress={() => navigation.navigate("Homepage")}
+          style={{ marginRight: 12 }}
+          />
+        ),
+        })}
+        />
     </Stack.Navigator>
   );
 }
@@ -42,8 +55,15 @@ export default function NavBar() {
         component={HomeStack}
         options={{ headerShown: false }}
       />
-      <Tab.Screen name="Cooking Mode" component={CookingMode} />
-      <Tab.Screen name="Shopping List" component={ShoppingList} />
+
+      <Tab.Screen name="Cooking Mode" 
+      component={CookingMode} 
+      />
+
+      <Tab.Screen 
+      name="Shopping List" 
+      component={ShoppingList} 
+      />
     </Tab.Navigator>
   );
 }
