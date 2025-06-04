@@ -1,13 +1,16 @@
-import { View, StyleSheet } from "react-native";
-import TTSSample from "../TTSSample";
-import SpeechRecogSample from "../SpeechRecogSample";
+import { View } from "react-native";
+import { GridListItem } from "react-native-ui-lib";
+
+import { useNavigation } from "@react-navigation/native";
 
 export default function RecipeCard({ recipe }) {
+  const navigation = useNavigation();
   return (
-    <View>
-      <Image source={{ uri: recipe.img.url }} />
-      <Header>{recipe.title}</Header>
-      <Text>{recipe.description}</Text>
-    </View>
+    <GridListItem
+      title={recipe.recipe_name}
+      description={recipe.recipe_description}
+      imageProps={{ source: { uri: recipe.recipe_img_url } }}
+      onPress={() => navigation.navigate("RecipeDetail")}
+    />
   );
 }
