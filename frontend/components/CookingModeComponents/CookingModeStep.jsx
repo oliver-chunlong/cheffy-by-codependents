@@ -26,7 +26,7 @@ export default function CookingModeStep({
         <Card>
           <Timer seconds={time_required} isRunning={isTimerRunning} />
           <Button onPress={() => setIsTimerRunning((prev) => !prev)}>
-            {isTimerRunning ? "Pause Timer" : "Start Timer"}
+            <Text>{isTimerRunning ? "Pause Timer" : "Start Timer"}</Text>
           </Button>
         </Card>
       )}
