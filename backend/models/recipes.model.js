@@ -46,7 +46,6 @@ const selectRecipes = (filters = {}, order_by, sort_order = "asc") => {
   return db.query(queryStr, queryValues).then(({ rows }) => rows);
 };
 
-
 const selectRecipeById = async (recipe_id) => {
   if (isNaN(Number(recipe_id))) {
     return Promise.reject({ status: 400, msg: "Invalid recipe ID" });

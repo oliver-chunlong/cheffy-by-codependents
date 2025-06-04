@@ -69,6 +69,16 @@ describe("GET /api/recipes", () => {
         expect(names).toEqual(sortedNames);
       });
   });
+  test("200: Orders recipes by recipe_name descending", () => {
+    return request(app)
+      .get("/api/recipes?order_by=name&sort_order=desc")
+      .expect(200)
+      .then(({ body }) => {
+        const names = body.recipes.map(r => r.recipe_name);
+        const sortedNames = [...names].sort().reverse();
+        expect(names).toEqual(sortedNames);
+      });
+  });
   
 });
 
@@ -508,7 +518,6 @@ describe('PATCH /api/users/:user_id/recipes/:recipe_id', () => {
 
   test('404: recipe not found', () => {
     const updatedRecipe = { recipe_name: 'No Recipe' };
-
     return request(app)
       .patch('/api/users/1/recipes/9999')
       .send(updatedRecipe)
