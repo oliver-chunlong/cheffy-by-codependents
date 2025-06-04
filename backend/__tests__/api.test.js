@@ -159,6 +159,7 @@ describe("POST /api/users/:user_id/favourites", () => {
         expect(body.msg).toBe("Missing recipe_id in body");
       });
   });
+
   test("404: Responds with error if user or recipe does not exist", () => {
     return request(app)
       .post("/api/users/9999/favourites")
@@ -179,7 +180,6 @@ describe("GET /api/users/:user_id/favourites", () => {
       .expect(200)
       .then(({ body }) => {
         expect(Array.isArray(body.favourites)).toBe(true);
-
         body.favourites.forEach((favourite) => {
           expect(favourite).toHaveProperty("user_id", userId);
           expect(favourite).toHaveProperty("recipe_id");
@@ -646,6 +646,7 @@ describe("DELETE /api/users/:user_id/recipes/:recipe_id", () => {
       .delete(`/api/users/${userId}/recipes/${recipeToDeleteId}`)
       .expect(204)
       .then(({ res }) => {
+        
         expect(res.text).toBe("");
         return request(app)
           .delete(`/api/users/${userId}/recipes/${recipeToDeleteId}`)
