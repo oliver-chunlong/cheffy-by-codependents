@@ -1,4 +1,4 @@
-const db = require('../db');
+const db = require('../db/connection.js');
 
 const getDietTypes = async () => {
   const result = await db.query('SELECT restriction_name FROM dietary_restrictions');
@@ -69,7 +69,7 @@ const run = async () => {
     await updateRecipeFlags(recipe_id, labels);
   }
 
-  console.log('Recipe dietary labels updated.');
+  // console.log('Recipe dietary labels updated.');
 };
 
 run().catch(console.error);

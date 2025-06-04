@@ -1,9 +1,16 @@
-import { useState } from "react";
-import { View, StyleSheet, Text, Button } from "react-native";
-import Timer from "../components/Timer";
+import React, { useState } from "react";
+import { StyleSheet } from "react-native";
+import CookingModeStep from "../components/CookingModeComponents/CookingModeStep";
 import Progressbar from "../components/Progressbar";
+import Completed from "../components/CookingModeComponents/Completed";
+import { useFocusEffect } from "@react-navigation/native";
+import { useContext } from "react";
+import { CurrentRecipeContext } from "../context/CurrentRecipeContext";
+import { useNavigation } from "@react-navigation/native";
+import { Card, Button, View, Text } from "react-native-ui-lib";
+import Timer from "../components/Timer";
 
-const exampleData = [
+const sample = [
   {
     step_number: 1,
     step_description: "Heat olive oil in a pan.",
@@ -49,18 +56,75 @@ const exampleData = [
     timed_task: false,
   },
 ];
+
+function hasMoreSteps(step, totalSteps) {
+  return step < totalSteps - 1;
+}
+
 export default function CookingMode() {
-  const [step, setStep] = useState(2);
+  const instructions = sample;
+  const navigation = useNavigation();
+  const [step, setStep] = useState(0);
+  const [complete, setComplete] = useState(false);
   const [isTimerRunning, setIsTimerRunning] = useState(false);
-  return (
+  const { currentRecipe, setCurrentRecipe } = useContext(CurrentRecipeContext);
+  const currentStep = currentRecipe[step];
+  const handleNext = () => {
+    setStep(step + 1);
+    if (step === currentRecipe.length - 1) {
+      setComplete(true);
+      setStep(0);
+    }
+  };
+  useFocusEffect(
+    React.useCallback(() => {
+      return () => {
+        if (complete) {
+          setStep(0);
+          setComplete(false);
+          setCurrentRecipe([]);
+        }
+      };
+    }, [complete])
+  );
+
+  if (currentRecipe.length === 0) {
+    return (
+      <View>
+        <Text>Select a recipe to get started!</Text>
+        <Button
+          title="return to homepage"
+          onPress={() => navigation.navigate("Home")}
+        />
+      </View>
+    );
+  }
+  console.log(instructions);
+  return complete ? (
+    <Completed />
+  ) : (
     <View style={styles.container}>
-      <Text>Cooking Mode</Text>
-      <Progressbar step={step} totalSteps={10} />
-      <Timer seconds={3} isRunning={isTimerRunning} />
-      <Button
-        title="Start"
-        onPress={() => setIsTimerRunning((prev) => !prev)}
-      />
+      <Progressbar step={step} totalSteps={instructions.length} />
+      <Card>
+        <Text>Step {instructions[step].step_number}</Text>
+        <Text>{instructions[step].step_description}</Text>
+        {instructions[step].timed_task && (
+          <Card>
+            <Timer
+              seconds={instructions[step].time_required}
+              isRunning={isTimerRunning}
+            />
+            {!isTimerRunning && (
+              <Button onPress={() => setIsTimerRunning(true)}>
+                <Text>Start</Text>
+              </Button>
+            )}
+          </Card>
+        )}
+        <Button onPress={handleNext}>
+          <Text>{hasMoreSteps ? "Next step" : "Bon appetit"}</Text>
+        </Button>
+      </Card>
     </View>
   );
 }

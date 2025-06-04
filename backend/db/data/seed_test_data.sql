@@ -12,7 +12,7 @@ INSERT INTO recipes (recipe_name, recipe_description, recipe_img_url, created_by
 ('Pepperoni Pizza', 'Classic pizza topped with pepperoni and cheese', 'https://example.jpg', 1),
 ('Vegan Tofu Stir-Fry', 'Crispy tofu with vegetables and soy sauce', 'https://example.jpg', 1),
 ('Fluffy Pancakes', 'Fluffy pancakes that everyone will love', 'https://example.jpg', 1),
-('Vegan Tacos', 'Tacos with black beans, avocado, and lime', 'https://example.jpg', 1);
+('Vegan Tacos', 'Tacos with black beans, avocado, and lime', 'https://example.jpg', 5);
   
   INSERT INTO ingredients (ingredient_name, img_url, calories_per_100g, protein_g_per_100g, carbs_g_per_100g, fat_g_per_100g, fiber_g_per_100g, sugar_g_per_100g) VALUES
   ('chickpeas', 'https://example.jpg', 164, 8.9, 27.4, 2.6, 7.6, 4.8),
@@ -75,7 +75,7 @@ INSERT INTO user_cooked_recipes (user_id, recipe_id) VALUES
 (5, 4),
 (5, 5);
 
-INSERT INTO user_favorites (user_id, recipe_id) VALUES
+INSERT INTO user_favourites (user_id, recipe_id) VALUES
 (1, 2),
 (1, 5),
 (2, 1),
@@ -192,7 +192,7 @@ INSERT INTO instructions (recipe_id, step_number, step_description, iq_id, time_
 (3, 6, 'Add soy sauce and toss everything together for 1–2 minutes.', (SELECT iq_id FROM ingredient_quantities WHERE recipe_id = 3 AND ingredient_id = 22), 2, TRUE),
 (3, 7, 'Serve hot.', NULL, NULL, FALSE),
 
--- Gluten-Free Pancakes (recipe_id 4)
+-- Pancakes (recipe_id 4)
 (4, 1, 'Mix gluten-free flour, milk, and melted butter into a batter.', (SELECT iq_id FROM ingredient_quantities WHERE recipe_id = 4 AND ingredient_id = 26), 5, TRUE),
 (4, 2, 'Heat a lightly oiled griddle or pan over medium-high heat.', NULL, 2, TRUE),
 (4, 3, 'Pour about 1/4 cup of batter onto the griddle.', (SELECT iq_id FROM ingredient_quantities WHERE recipe_id = 4 AND ingredient_id = 26), NULL, FALSE),
