@@ -10,6 +10,7 @@ const {
   deleteFromFavourites,
   getUserRecipes,
   postRecipe,
+  deleteUserRecipe,
   editUserRecipe,
  } = require('./controllers/recipes.controller');
 
@@ -30,7 +31,7 @@ app.post('/api/users/:user_id/recipes', postRecipe);
 app.get('/api/users/:user_id/favourites', getUserFavourites);
 app.post('/api/users/:user_id/favourites', postRecipeToFavourites);
 app.patch('/api/users/:user_id/recipes/:recipe_id', editUserRecipe);
-// app.delete('/api/users/:user_id/recipes/:recipe_id', deleteRecipe);
+app.delete('/api/users/:user_id/recipes/:recipe_id', deleteUserRecipe);
 app.delete('/api/users/:user_id/favourites/:recipe_id', deleteFromFavourites);
 
 app.use((err, req, res, next) => {

@@ -676,5 +676,7 @@ describe("DELETE /api/users/:user_id/recipes/:recipe_id", () => {
       .delete(`/api/users/${userId}/recipes/${recipeToDeleteId}`)
       .expect(404)
       .then(({ body }) => {
-        console.log(body.msg, "<<< log")
         expect(body.msg).toBe("Recipe not owned by the user");
+      });
+  });
+});
