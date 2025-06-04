@@ -55,6 +55,17 @@ export default function SearchBar({
     },
   ];
 
+  // functionality to trigger re-render of RecipeList with search/filters, invoked by Search button
+  const handleSearch = () => {
+    setSearchQuery(tempQuery);
+    setFilterBy(tempFilter);
+    setCategory(tempCategory);
+    setOrder(tempOrder);
+    console.log("search button pressed", tempQuery, tempFilter, tempCategory);
+    setTempQuery("");
+    console.log("search button pressed", tempQuery, tempFilter, tempCategory);
+    setShowFilters(false); // closes filter window
+  };
   return (
     <View>
       <View row spread>

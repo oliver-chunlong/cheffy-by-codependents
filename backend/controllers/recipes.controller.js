@@ -9,7 +9,10 @@ const {
   removeFromFavourites,
   selectUserRecipes,
   checkUserExists,
-  insertRecipe
+  insertRecipe,
+  addIngredientsToRecipe,
+  addInstructionsToRecipe,
+  updateUserRecipe
 } = require("../models/recipes.model");
 
 const getApiDocumentation = (req, res) => {
@@ -17,12 +20,15 @@ const getApiDocumentation = (req, res) => {
 };
 
 const getRecipes = (req, res, next) => {
-  selectRecipes(req.query)
+  const { order_by, sort_order, ...filters } = req.query;
+
+  selectRecipes(filters, order_by, sort_order)
     .then((recipes) => {
       res.status(200).send({ recipes });
     })
     .catch(next);
 };
+
 
 const getRecipeById = (req, res, next) => {
   const { recipe_id } = req.params;
@@ -108,7 +114,7 @@ const getUserRecipes = (req, res, next) => {
 };
 
 const postRecipe = async (req, res, next) => {
-  const { recipe_name, recipe_description, recipe_img_url } = req.body;
+  const { recipe_name, recipe_description, recipe_img_url, ingredients, instructions } = req.body;
   const user_id = Number(req.params.user_id);
 
   if (!recipe_name || !recipe_description || !recipe_img_url) {
@@ -132,11 +138,37 @@ const postRecipe = async (req, res, next) => {
       created_by: user_id 
     });
 
-    res.status(201).json({ recipe });
+    let insertedIngredients = [];
+    if (ingredients && ingredients.length > 0) {
+      insertedIngredients = await addIngredientsToRecipe(recipe.recipe_id, ingredients);
+    }
+
+    let insertedInstructions = [];
+    if (instructions && instructions.length > 0) {
+      insertedInstructions = await addInstructionsToRecipe(recipe.recipe_id, instructions);
+    }
+
+    res.status(201).json({ recipe, ingredients: insertedIngredients, instructions: insertedInstructions });  
   } catch (err) {
     next(err);
   }
 };
+
+const editUserRecipe = async (req, res) => {
+  const { user_id, recipe_id } = req.params;
+  const updateData = req.body;
+
+  try {
+    const updated = await updateUserRecipe(user_id, recipe_id, updateData);
+    res.status(200).json(updated);
+  } catch (error) {
+    console.error('Error in editUserRecipe:', error);
+    res.status(error.status || 500).json({ msg: error.msg || 'Failed to update recipe' });
+  }
+};
+
+
+
 
 module.exports = {
   getRecipes,
@@ -146,5 +178,6 @@ module.exports = {
   getUserFavourites,
   deleteFromFavourites,
   getUserRecipes,
-  postRecipe
+  postRecipe,
+  editUserRecipe
 };

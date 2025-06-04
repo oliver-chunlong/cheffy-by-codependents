@@ -69,7 +69,7 @@ const run = async () => {
     await updateRecipeFlags(recipe_id, labels);
   }
 
-  console.log('Recipe dietary labels updated.');
+  // console.log('Recipe dietary labels updated.');
 };
 
 run().catch(console.error);

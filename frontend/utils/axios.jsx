@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const endpoint = "SUPABASE_URL_GOES_HERE";
+const endpoint = "https://cheffy-by-codependents.onrender.com/api";
 
 export const requestRecipes = (searchQuery, filterBy, category, order) => {
     const params = new URLSearchParams ();
