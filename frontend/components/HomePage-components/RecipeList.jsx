@@ -1,21 +1,36 @@
-import { View, StyleSheet } from "react-native";
 import { useEffect, useState } from "react";
-import TTSSample from "../TTSSample";
-import SpeechRecogSample from "../SpeechRecogSample";
 import RecipeCard from "./RecipeCard";
+import { GridList, Spacings } from "react-native-ui-lib";
+import SearchBar from "./SearchBar";
 import { requestRecipes } from "../../utils/axios";
 
-export default function RecipeList({ searchQuery, filterBy, category, order }) {
+export default function RecipeList({ searchQuery, filterBy, category }) {
+  //changes to filtering logic required
 
-  useEffect(() => {
-    requestRecipes().then((recipes) => {
-        return (
-          <View>
-            {recipes.map((recipe) => (
-              <RecipeCard key={recipe.id} recipe={recipe} />
-            ))}
-          </View>
-        );
-    })
-  })
+  const [allRecipes, setAllRecipes] = useState([]);
+
+  useEffect(async () => {
+    const recipes = await requestRecipes();
+    setAllRecipes(recipes);
+    // useEffect(() => {
+    //   /*Function to get recipes from the database*/
+    //   /*UtilFunctionHere*/ .then((recipes) => {
+    //     setAllRecipes(recipes);
+    //     setFilteredRecipes(recipes);
+    //   });
+    // }, []);
+  }, []);
+
+  return (
+    <GridList
+      ListHeaderComponent={() => <SearchBar />}
+      data={allRecipes}
+      renderItem={({ item }) => <RecipeCard recipe={item} />}
+      // numColumns={2}
+      maxItemWidth={140}
+      itemSpacing={Spacings.s3}
+      listPadding={Spacings.s5}
+      // keepItemSize
+    />
+  );
 }

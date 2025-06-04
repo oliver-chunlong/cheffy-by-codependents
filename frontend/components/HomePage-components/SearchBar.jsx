@@ -1,92 +1,118 @@
-import { View, StyleSheet, TextInput, TouchableOpacity, Modal, Text } from "react-native";
-import React from "react";
-import { Picker } from "@react-native-picker/picker";
-import { Ionicons } from "@expo/vector-icons";
-import { useState } from "react";
+import { useRef, useState } from "react";
+
+import {
+  SearchInput,
+  Typography,
+  Colors,
+  Picker,
+  Modal,
+  Button,
+  Text,
+  View,
+} from "react-native-ui-lib";
 
 export default function SearchBar({
   setSearchQuery,
   setFilterBy,
   setCategory,
-  setOrder
+  setOrder,
 }) {
-    const [showFilters, setShowFilters] = useState(false);
+  const searchInput = useRef(null);
+  const [isModalVisible, setIsVisible] = useState(false);
 
-    //temporary states for search input and filters
-    const [tempQuery, setTempQuery] = useState("");
-    const [tempFilter, setTempFilter] = useState("");
-    const [tempCategory, setTempCategory] = useState("");
-    const [tempOrder, setTempOrder] = useState("");
+  //temporary states for search input and filters
+  const [tempFilter, setTempFilter] = useState("");
+  const [tempCategory, setTempCategory] = useState("");
+  const [tempOrder, setTempOrder] = useState("");
 
-    // functionality to trigger re-render of RecipeList with search/filters, invoked by Search button
-    const handleSearch = () => {
+  const filterOptions = [
+    { label: "Vegan", value: "js", labelStyle: Typography.text65 },
+    { label: "Gluten-Free", value: "java", labelStyle: Typography.text65 },
+    { label: "Vegetarian", value: "python", labelStyle: Typography.text65 },
+    {
+      label: "Dairy-Free",
+      value: "c++",
+      disabled: true,
+      labelStyle: Typography.text65,
+    },
+    { label: "Nut-Free", value: "perl", labelStyle: Typography.text65 },
+  ];
+
+  const sortOptions = [
+    { label: "Ascending", value: "js", labelStyle: Typography.text65 },
+    { label: "Descending", value: "python", labelStyle: Typography.text65 },
+  ];
+
+  const categoryOptions = [
+    { label: "Breakfast", value: "js", labelStyle: Typography.text65 },
+    { label: "Lunch", value: "java", labelStyle: Typography.text65 },
+    { label: "Dinner", value: "python", labelStyle: Typography.text65 },
+    {
+      label: "Dessert",
+      value: "c++",
+      disabled: true,
+      labelStyle: Typography.text65,
+    },
+  ];
+
+  // functionality to trigger re-render of RecipeList with search/filters, invoked by Search button
+  const handleSearch = () => {
     setSearchQuery(tempQuery);
     setFilterBy(tempFilter);
     setCategory(tempCategory);
     setOrder(tempOrder);
-    console.log("search button pressed", tempQuery, tempFilter, tempCategory )
+    console.log("search button pressed", tempQuery, tempFilter, tempCategory);
     setTempQuery("");
-    console.log("search button pressed", tempQuery, tempFilter, tempCategory )
+    console.log("search button pressed", tempQuery, tempFilter, tempCategory);
     setShowFilters(false); // closes filter window
   };
   return (
-    <View /*container for whole section*/ >
-      <View>
-      {/* Search Input */}
-      <TextInput
-        type="text"
-        placeholder="Search recipes..."
-        onChangeText={setTempQuery}
-        // style={styles.searchInput}
+    <View>
+      <View row spread>
+        <SearchInput
+          style={{ minWidth: "50%" }}
+          ref={searchInput}
+          placeholder={"Search recipes..."}
+          // onChange={(e) => setSearchQuery(e.target.value)}
         />
-        <TouchableOpacity onPress={() => setShowFilters(!showFilters) }>
-            <Ionicons name="filter" size={24} color="#fff" />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={handleSearch}>
-            <Text>Search</Text>
-        </TouchableOpacity>
-    </View>
-
-    
+        <Button
+          round
+          onPress={() => {
+            setIsVisible(true);
+          }}
+          iconSource={() => <Text>E</Text>}
+        />
+      </View>
       {/* Filter By Dropdown */}
-      {showFilters && (
-      <View /*overlay styling to be added*/>
-        <View /*content styling to be added*/>
-      <Picker
-        selectedValue={tempFilter}
-        onValueChange={(value) => setTempFilter(value)}
-        // style={styles.filterSelect}
-        >
-        <Picker.Item label="Filter By" value="" />
-        <Picker.Item label="Vegan" value="vegan" />
-        <Picker.Item label="Gluten-Free" value="gluten-free" />
-        <Picker.Item label="Vegetarian" value="vegetarian" />
-        <Picker.Item label="Dairy-Free" value="dairy-free" />
-        <Picker.Item label="Nut-Free" value="nut-free" />
-        <Picker.Item label="Pescatarian" value="pescatarian" />
-      </Picker>
-      {/* Category Dropdown */}
-      <Picker
-        selectedValue={tempCategory}
-        onValueChange={(value) => setTempCategory(value)}
-        // style={styles.categorySelect}
-        >
-        <Picker.Item label="Category" value="" />
-        <Picker.Item label="Breakfast" value="breakfast" />
-        <Picker.Item label="Lunch" value="lunch" />
-        <Picker.Item label="Dinner" value="dinner" />
-        <Picker.Item label="Dessert" value="dessert" />
-      </Picker>
-      <Picker
-        selectedValue={tempOrder}
-        onValueChange={(value) => setTempOrder(value)}>
-            <Picker.Item label="Order By" value="asc" />
-            <Picker.Item label="Ascending" value="asc" />
-            <Picker.Item label="Descending" value="desc" />
-        </Picker>
-            </View>
+      <Modal
+        visible={isModalVisible}
+        onBackgroundPress={() => setIsVisible(false)}
+        overlayBackgroundColor="rgba(141, 141, 141, 0.34)"
+      >
+        <View useSafeArea>
+          <Picker
+            placeholder="Filter By"
+            // value={tempFilter}
+            useDialog
+            // onChange={(item) => setFilterBy(item.value)}
+            items={filterOptions}
+          />
+          <Picker
+            placeholder="Category"
+            // value={tempCategory}
+            useDialog
+            // onChange={(item) => setCategory?.(item.value)}
+            items={categoryOptions}
+          />
+          <Picker
+            placeholder="Order by"
+            // value={"js"}
+            useDialog
+            // onChange={(item) => setCategory?.(item.value)}
+            items={sortOptions}
+          />
         </View>
-        )}
-  </View>
+      </Modal>
+    </View>
   );
 }
