@@ -1,7 +1,6 @@
 import React, { useState, useContext, useEffect } from "react";
 import { StyleSheet } from "react-native";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
-import { CurrentRecipeContext } from "../context/CurrentRecipeContext";
 import { Card, Button, View, Text } from "react-native-ui-lib";
 
 import CookingModeStep from "../components/CookingModeComponents/CookingModeStep";
