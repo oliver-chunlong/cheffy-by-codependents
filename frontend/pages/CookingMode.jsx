@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { StyleSheet } from "react-native";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { CurrentRecipeContext } from "../context/CurrentRecipeContext";
@@ -9,17 +9,26 @@ import Progressbar from "../components/Progressbar";
 import Completed from "../components/CookingModeComponents/Completed";
 import SpeechRecognition from "../components/CookingModeComponents/SpeechRecognition";
 
-export default function CookingMode() {
+export default function CookingMode({
+  route: {
+    params: { recipe },
+  },
+}) {
   const navigation = useNavigation();
 
   const [step, setStep] = useState(0);
   const [start, setStart] = useState(false);
   const [complete, setComplete] = useState(false);
   const [isTimerRunning, setIsTimerRunning] = useState(false);
-  const { currentRecipe, setCurrentRecipe } = useContext(CurrentRecipeContext);
-  const currentStep = currentRecipe.instructions[step];
+  const [currentRecipe, setCurrentRecipe] = useState(recipe);
+  const currentStep = currentRecipe?.instructions[step];
 
   const [repeat, setRepeat] = useState(0);
+
+  useEffect(() => {
+    setStep(0);
+    setCurrentRecipe(recipe);
+  }, [recipe]);
 
   const handleNext = () => {
     setStep((prev) => prev + 1);
@@ -50,7 +59,7 @@ export default function CookingMode() {
     }, [complete])
   );
 
-  if (currentRecipe.length === 0) {
+  if (currentRecipe?.length === 0) {
     return (
       <View>
         <Text>Select a recipe to get started!</Text>
@@ -79,16 +88,18 @@ export default function CookingMode() {
       <Text>Cooking Mode</Text>
       <Progressbar
         step={step}
-        totalSteps={currentRecipe.instructions.length - 1}
+        totalSteps={currentRecipe?.instructions?.length - 1}
       />
-      <CookingModeStep
-        step_number={currentStep.step_number}
-        step_description={currentStep.step_description}
-        time_required={currentStep.time_required}
-        isTimerRunning={isTimerRunning}
-        setIsTimerRunning={setIsTimerRunning}
-        repeat={repeat}
-      />
+      {currentStep && (
+        <CookingModeStep
+          step_number={currentStep.step_number}
+          step_description={currentStep.step_description}
+          time_required={currentStep.time_required}
+          isTimerRunning={isTimerRunning}
+          setIsTimerRunning={setIsTimerRunning}
+          repeat={repeat}
+        />
+      )}
       <Button onPress={handleNext}>
         <Text>Next Step</Text>
       </Button>

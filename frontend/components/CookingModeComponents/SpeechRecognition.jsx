@@ -25,7 +25,6 @@ export default function SpeechRecognition({
   });
   useSpeechRecognitionEvent("error", (event) => {
     console.log("error code:", event.error, "error message:", event.message);
-    handleStart();
   });
 
   //restart after every command

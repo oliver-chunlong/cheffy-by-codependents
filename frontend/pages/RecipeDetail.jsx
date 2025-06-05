@@ -168,7 +168,6 @@ export default function RecipeDetail({
 
   useEffect(() => {
     requestRecipeById(recipe.recipe_id).then((recipe) => {
-      console.log(recipe);
       setRecipeState(recipe);
     });
   }, [recipe]);
@@ -190,7 +189,11 @@ export default function RecipeDetail({
           <Text>Add to Shopping List</Text>
         </Button>
         <Button
-          onPress={() => navigation.getParent()?.navigate("Cooking Mode")}
+          onPress={() =>
+            navigation
+              .getParent()
+              ?.navigate("Cooking Mode", { recipe: recipeState })
+          }
         >
           <Text>Cooking Mode</Text>
         </Button>
