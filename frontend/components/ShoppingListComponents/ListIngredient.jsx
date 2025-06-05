@@ -7,9 +7,8 @@ export default function ListIngredient({ ingredient }) {
   return (
     <ListItem.Part row style={styles.item}>
       <Checkbox value={isChecked} onValueChange={setIsChecked} />
-      <Text>{ingredient.ingredient_name}</Text>
-      <Text>{ingredient.quantity_numerical}</Text>
-      <Text>{ingredient.quantity_unit}</Text>
+      <Text>{`${ingredient.quantity_numerical} ${ingredient.quantity_unit} ${ingredient.ingredient_name}`}
+</Text>
     </ListItem.Part>
   );
 }

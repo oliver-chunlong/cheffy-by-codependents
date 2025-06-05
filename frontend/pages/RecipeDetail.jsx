@@ -93,9 +93,9 @@ export default function RecipeDetail({
             activeOpacity={0.3}
             onPress={() => console.log(`pressed on order #${id + 1}`)}
           >
-            <Text>{item.ingredient_name}</Text>
-            <Text>{item.quantity_numerical}</Text>
-            <Text>{item.quantity_unit}</Text>
+            <Text>
+              {`${item.quantity_numerical} ${item.quantity_unit} ${item.ingredient_name}`}
+            </Text>
           </ListItem.Part>
         )}
       />

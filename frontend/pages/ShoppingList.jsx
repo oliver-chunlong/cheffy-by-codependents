@@ -34,7 +34,7 @@ export default function ShoppingList() {
         </Text>
       ) : (
         <View>
-          <Text>Ingridients for:</Text>
+          <Text>Ingredients for:</Text>
           <FlatList
             data={shoppingList}
             keyExtractor={(item) => item.recipe_id}
