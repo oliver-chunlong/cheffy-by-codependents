@@ -49,130 +49,130 @@
     "exampleResponse": {
       "recipe": {
         "recipe_id": 3,
-    "recipe_name": "Vegan Tofu Stir-Fry",
-    "recipe_description": "Crispy tofu with vegetables and soy sauce",
-    "recipe_img_url": "https://plus.unsplash.com/premium_photo-1712604940796-1a1dd9021bf1?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    "created_by": 1,
-    "created_by_username": "Team Cheffy",
-    "ingredients": [
-      {
-        "ingredient_id": 23,
-        "ingredient_name": "tofu",
-        "quantity_numerical": 200,
-        "quantity_unit": "grams",
-        "optional": false,
-        "dietary_restrictions": [
-          "vegetarian",
-          "vegan",
-          "dairy-free",
-          "nut-free"
-        ]
-      },
-      {
-        "ingredient_id": 24,
-        "ingredient_name": "broccoli",
-        "quantity_numerical": 100,
-        "quantity_unit": "grams",
-        "optional": false,
-        "dietary_restrictions": [
-          "vegetarian",
-          "vegan",
-          "dairy-free",
-          "nut-free"
-        ]
-      },
-      {
-        "ingredient_id": 22,
-        "ingredient_name": "soy sauce",
-        "quantity_numerical": 30,
-        "quantity_unit": "ml",
-        "optional": false,
-        "dietary_restrictions": [
-          "vegetarian",
-          "vegan",
-          "dairy-free",
-          "nut-free"
-        ]
-      },
-      {
-        "ingredient_id": 4,
-        "ingredient_name": "ginger",
-        "quantity_numerical": 10,
-        "quantity_unit": "grams",
-        "optional": true,
-        "dietary_restrictions": [
-          "vegetarian",
-          "vegan",
-          "dairy-free",
-          "nut-free"
-        ]
-      },
-      {
-        "ingredient_id": 3,
-        "ingredient_name": "garlic",
-        "quantity_numerical": 2,
-        "quantity_unit": "cloves",
-        "optional": false,
-        "dietary_restrictions": [
-          "vegetarian",
-          "vegan",
-          "dairy-free",
-          "nut-free"
-        ]
+        "recipe_name": "Vegan Tofu Stir-Fry",
+        "recipe_description": "Crispy tofu with vegetables and soy sauce",
+        "recipe_img_url": "https://plus.unsplash.com/premium_photo-1712604940796-1a1dd9021bf1?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        "created_by": 1,
+        "created_by_username": "Team Cheffy",
+        "ingredients": [
+          {
+            "ingredient_id": 23,
+            "ingredient_name": "tofu",
+            "quantity_numerical": 200,
+            "quantity_unit": "grams",
+            "optional": false,
+            "dietary_restrictions": [
+              "vegetarian",
+              "vegan",
+              "dairy-free",
+              "nut-free"
+            ]
+          },
+          {
+            "ingredient_id": 24,
+            "ingredient_name": "broccoli",
+            "quantity_numerical": 100,
+            "quantity_unit": "grams",
+            "optional": false,
+            "dietary_restrictions": [
+              "vegetarian",
+              "vegan",
+              "dairy-free",
+              "nut-free"
+            ]
+          },
+          {
+            "ingredient_id": 22,
+            "ingredient_name": "soy sauce",
+            "quantity_numerical": 30,
+            "quantity_unit": "ml",
+            "optional": false,
+            "dietary_restrictions": [
+              "vegetarian",
+              "vegan",
+              "dairy-free",
+              "nut-free"
+            ]
+          },
+          {
+            "ingredient_id": 4,
+            "ingredient_name": "ginger",
+            "quantity_numerical": 10,
+            "quantity_unit": "grams",
+            "optional": true,
+            "dietary_restrictions": [
+              "vegetarian",
+              "vegan",
+              "dairy-free",
+              "nut-free"
+            ]
+          },
+          {
+            "ingredient_id": 3,
+            "ingredient_name": "garlic",
+            "quantity_numerical": 2,
+            "quantity_unit": "cloves",
+            "optional": false,
+            "dietary_restrictions": [
+              "vegetarian",
+              "vegan",
+              "dairy-free",
+              "nut-free"
+            ]
+          }
+        ],
+        "instructions": [
+          {
+            "step_number": 1,
+            "step_description": "Cut tofu into cubes and pan-fry until golden.",
+            "time_required": 7,
+            "timed_task": true
+          },
+          {
+            "step_number": 2,
+            "step_description": "Remove tofu and set aside.",
+            "time_required": 1,
+            "timed_task": true
+          },
+          {
+            "step_number": 3,
+            "step_description": "In the same pan, add garlic and ginger, sauté briefly.",
+            "time_required": 1,
+            "timed_task": true
+          },
+          {
+            "step_number": 4,
+            "step_description": "Add chopped broccoli and carrot. Stir-fry until tender-crisp.",
+            "time_required": 6,
+            "timed_task": true
+          },
+          {
+            "step_number": 5,
+            "step_description": "Add tofu back to pan.",
+            "time_required": null,
+            "timed_task": false
+          },
+          {
+            "step_number": 6,
+            "step_description": "Add soy sauce and toss everything together for 1–2 minutes.",
+            "time_required": 2,
+            "timed_task": true
+          },
+          {
+            "step_number": 7,
+            "step_description": "Serve hot.",
+            "time_required": null,
+            "timed_task": false
+          }
+        ],
+        "is_vegetarian": true,
+        "is_vegan": true,
+        "is_gluten_free": false,
+        "is_dairy_free": true,
+        "is_nut_free": true
       }
-    ],
-    "instructions": [
-      {
-        "step_number": 1,
-        "step_description": "Cut tofu into cubes and pan-fry until golden.",
-        "time_required": 7,
-        "timed_task": true
-      },
-      {
-        "step_number": 2,
-        "step_description": "Remove tofu and set aside.",
-        "time_required": 1,
-        "timed_task": true
-      },
-      {
-        "step_number": 3,
-        "step_description": "In the same pan, add garlic and ginger, sauté briefly.",
-        "time_required": 1,
-        "timed_task": true
-      },
-      {
-        "step_number": 4,
-        "step_description": "Add chopped broccoli and carrot. Stir-fry until tender-crisp.",
-        "time_required": 6,
-        "timed_task": true
-      },
-      {
-        "step_number": 5,
-        "step_description": "Add tofu back to pan.",
-        "time_required": null,
-        "timed_task": false
-      },
-      {
-        "step_number": 6,
-        "step_description": "Add soy sauce and toss everything together for 1–2 minutes.",
-        "time_required": 2,
-        "timed_task": true
-      },
-      {
-        "step_number": 7,
-        "step_description": "Serve hot.",
-        "time_required": null,
-        "timed_task": false
-      }
-    ],
-    "is_vegetarian": true,
-    "is_vegan": true,
-    "is_gluten_free": false,
-    "is_dairy_free": true,
-    "is_nut_free": true
-  }
-      }
-    },
+    }
+  },
 
   "GET /api/users/:user_id/recipes": {
     "description": "serves all recipes created by the specified user",
@@ -195,37 +195,179 @@
       ]
     }
   },
-  
+
   "POST /api/users/:user_id/recipes": {
     "description": "creates a new recipe for the specified user",
     "exampleResponse": {
-      "recipe": {}
+      "recipe": {
+        "recipe_id": 6,
+        "recipe_name": "Spicy Coconut Chickpea Curry",
+        "recipe_description": "Creamy coconut curry with chickpeas, tomato, and warming spices",
+        "recipe_img_url": "https://example.jpg",
+        "created_by": 1,
+        "is_vegetarian": false,
+        "is_vegan": false,
+        "is_gluten_free": false,
+        "is_dairy_free": false,
+        "is_nut_free": false
+      }
     }
   },
+
   "GET /api/users/:user_id/favourites": {
     "description": "serves all favourite recipes for the specified user",
     "exampleResponse": {
-      "favourites": []
+      "favourites": [
+        { "user_id": 1, "recipe_id": 2 },
+        { "user_id": 1, "recipe_id": 5 }
+      ]
     }
   },
+
   "POST /api/users/:user_id/favourites": {
     "description": "adds a recipe to the user's favourites",
     "exampleResponse": {
-      "favourite": {}
+      "favourite": { "user_id": 1, "recipe_id": 2 }
     }
   },
+
   "PATCH /api/users/:user_id/recipes/:recipe_id": {
     "description": "updates details of a user's recipe by recipe ID",
     "exampleResponse": {
-      "recipe": {}
+      "recipe": {
+        "recipe_id": 2,
+        "recipe_name": "Updated Recipe Name",
+        "recipe_description": "Updated description",
+        "recipe_img_url": "https://updated-image.jpg",
+        "created_by": 1,
+        "is_vegetarian": false,
+        "is_vegan": false,
+        "is_gluten_free": false,
+        "is_dairy_free": false,
+        "is_nut_free": true
+      },
+      "ingredients": [
+        {
+          "iq_id": 10,
+          "recipe_id": 2,
+          "ingredient_id": 11,
+          "quantity_numerical": "150",
+          "quantity_unit": "grams",
+          "optional": false,
+          "ingredient_name": "mozzarella"
+        },
+        {
+          "iq_id": 9,
+          "recipe_id": 2,
+          "ingredient_id": 12,
+          "quantity_numerical": "100",
+          "quantity_unit": "grams",
+          "optional": false,
+          "ingredient_name": "pepperoni"
+        },
+        {
+          "iq_id": 11,
+          "recipe_id": 2,
+          "ingredient_id": 13,
+          "quantity_numerical": "5",
+          "quantity_unit": "grams",
+          "optional": true,
+          "ingredient_name": "basil"
+        },
+        {
+          "iq_id": 8,
+          "recipe_id": 2,
+          "ingredient_id": 14,
+          "quantity_numerical": "200",
+          "quantity_unit": "grams",
+          "optional": false,
+          "ingredient_name": "pasta"
+        },
+        {
+          "iq_id": 12,
+          "recipe_id": 2,
+          "ingredient_id": 16,
+          "quantity_numerical": "10",
+          "quantity_unit": "grams",
+          "optional": true,
+          "ingredient_name": "butter"
+        }
+      ],
+      "instructions": [
+        {
+          "instruction_id": 8,
+          "recipe_id": 2,
+          "step_number": 1,
+          "step_description": "Cook pasta according to package instructions. Drain and set aside.",
+          "iq_id": 8,
+          "time_required": "10",
+          "timed_task": true
+        },
+        {
+          "instruction_id": 9,
+          "recipe_id": 2,
+          "step_number": 2,
+          "step_description": "Heat olive oil in a pan over medium heat.",
+          "iq_id": null,
+          "time_required": "2",
+          "timed_task": true
+        },
+        {
+          "instruction_id": 10,
+          "recipe_id": 2,
+          "step_number": 3,
+          "step_description": "Add minced garlic and chopped tomatoes. Cook until tomatoes soften.",
+          "iq_id": null,
+          "time_required": "6",
+          "timed_task": true
+        },
+        {
+          "instruction_id": 11,
+          "recipe_id": 2,
+          "step_number": 4,
+          "step_description": "Add sliced pepperoni and stir for 2 minutes.",
+          "iq_id": 9,
+          "time_required": "2",
+          "timed_task": true
+        },
+        {
+          "instruction_id": 12,
+          "recipe_id": 2,
+          "step_number": 5,
+          "step_description": "Toss in the cooked pasta and stir to coat.",
+          "iq_id": 8,
+          "time_required": "1",
+          "timed_task": true
+        },
+        {
+          "instruction_id": 13,
+          "recipe_id": 2,
+          "step_number": 6,
+          "step_description": "Add fresh mozzarella and torn basil leaves. Stir gently.",
+          "iq_id": 10,
+          "time_required": "1",
+          "timed_task": true
+        },
+        {
+          "instruction_id": 14,
+          "recipe_id": 2,
+          "step_number": 7,
+          "step_description": "Serve warm.",
+          "iq_id": null,
+          "time_required": null,
+          "timed_task": false
+        }
+      ]
     }
   },
+
   "DELETE /api/users/:user_id/recipes/:recipe_id": {
     "description": "deletes the user's recipe by recipe ID, responds with status 204 and no content",
     "exampleResponse": {
       "status": 204
     }
   },
+
   "DELETE /api/users/:user_id/favourites/:recipe_id": {
     "description": "removes a recipe from the user's favourites, responds with status 204 and no content",
     "exampleResponse": {
