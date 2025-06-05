@@ -94,7 +94,7 @@ export default function RecipeDetail({
             onPress={() => console.log(`pressed on order #${id + 1}`)}
           >
             <Text>
-              {`${item.quantity_numerical} ${item.quantity_unit} ${item.ingredient_name}`}
+              {`${item.quantity_numerical}${item.quantity_unit ? ' ' + item.quantity_unit : ''} ${item.ingredient_name}`}
             </Text>
           </ListItem.Part>
         )}
