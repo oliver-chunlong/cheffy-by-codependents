@@ -32,7 +32,7 @@ INSERT INTO recipes (recipe_name, recipe_description, recipe_img_url, created_by
   ('milk', 'https://example.jpg', 42, 3.4, 5, 1, 0, 5),
   ('butter', 'https://example.jpg', 717, 0.9, 0.1, 81, 0, 0.1),
   ('cheddar', 'https://example.jpg', 403, 25, 1.3, 33, 0, 0.5),
-  ('tortilla', 'https://example.jpg', 237, 6.8, 42, 4.7, 3.6, 1.2),
+  ('tortillas', 'https://example.jpg', 237, 6.8, 42, 4.7, 3.6, 1.2),
   ('black beans', 'https://example.jpg', 339, 21, 62, 0.9, 16.6, 0.3),
   ('avocado', 'https://example.jpg', 160, 2, 9, 15, 7, 0.7),
   ('lime', 'https://example.jpg', 30, 0.7, 11, 0.2, 2.8, 1.7),
@@ -128,11 +128,11 @@ INSERT INTO ingredient_quantities (recipe_id, ingredient_id, quantity_numerical,
   -- Chana Masala
   (1, 1, 250, 'grams', false),    -- chickpeas
   (1, 5, 150, 'grams', false),    -- tomato
-  (1, 2, 1, 'piece', false),      -- onion
+  (1, 2, 1, '', false),      -- onion
   (1, 3, 3, 'cloves', false),     -- garlic
-  (1, 6, 1, 'teaspoon', false),   -- cumin
-  (1, 8, 0.5, 'teaspoon', false), -- turmeric
-  (1, 9, 2, 'tablespoons', false), -- olive oil
+  (1, 6, 1, 'tsp', false),   -- cumin
+  (1, 8, 0.5, 'tsp', false), -- turmeric
+  (1, 9, 2, 'tbsp', false), -- olive oil
 
   -- Pepperoni Pizza
   (2, 14, 200, 'grams', false),   -- pasta (dough)
@@ -152,14 +152,14 @@ INSERT INTO ingredient_quantities (recipe_id, ingredient_id, quantity_numerical,
   (4, 26, 150, 'grams', false),   -- flour
   (4, 15, 200, 'ml', false),      -- milk
   (4, 16, 50, 'grams', false),    -- butter
-  (4, 21, 1, 'piece', true),      -- lime (optional)
+  (4, 21, 1, '', true),      -- lime (optional)
 
   -- Vegan Tacos
   (5, 19, 150, 'grams', false),   -- black beans
   (5, 20, 100, 'grams', false),   -- avocado
-  (5, 21, 1, 'piece', false),     -- lime
-  (5, 18, 3, 'pieces', false),    -- tortilla
-  (5, 28, 1, 'piece', true);      -- chilli pepper (optional)
+  (5, 21, 1, '', false),     -- lime
+  (5, 18, 3, '', false),    -- tortilla
+  (5, 28, 1, '', true);      -- chilli pepper (optional)
 
 
 
