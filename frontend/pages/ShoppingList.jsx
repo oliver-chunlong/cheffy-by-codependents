@@ -49,7 +49,7 @@ export default function ShoppingList() {
           />
           <Button
             onPress={() => {
-              setShoppingList([]);
+              setShoppingList((prev) => []);
             }}
           >
             <Text>Clear List</Text>
