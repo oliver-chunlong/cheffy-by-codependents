@@ -4,10 +4,11 @@ import { Text, View, Checkbox, ListItem } from "react-native-ui-lib";
 
 export default function ListIngredient({ ingredient }) {
   const [isChecked, setIsChecked] = useState(false);
+
   return (
     <ListItem.Part row style={styles.item}>
       <Checkbox value={isChecked} onValueChange={setIsChecked} />
-      <Text>{`${ingredient.quantity_numerical} ${ingredient.quantity_unit} ${ingredient.ingredient_name}`}
+      <Text>{`${ingredient.quantity_numerical}${ingredient.quantity_unit ? ' ' + ingredient.quantity_unit : ''} ${ingredient.ingredient_name}`}
 </Text>
     </ListItem.Part>
   );
