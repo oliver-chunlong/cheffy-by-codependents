@@ -9,11 +9,8 @@ import Progressbar from "../components/Progressbar";
 import Completed from "../components/CookingModeComponents/Completed";
 import SpeechRecognition from "../components/CookingModeComponents/SpeechRecognition";
 
-export default function CookingMode({
-  route: {
-    params: { recipe },
-  },
-}) {
+export default function CookingMode(props) {
+  const recipe = props?.route?.params?.recipe;
   const navigation = useNavigation();
 
   const [step, setStep] = useState(0);
@@ -59,14 +56,13 @@ export default function CookingMode({
     }, [complete])
   );
 
-  if (currentRecipe?.length === 0) {
+  if (!currentRecipe) {
     return (
       <View>
         <Text>Select a recipe to get started!</Text>
-        <Button
-          title="return to homepage"
-          onPress={() => navigation.navigate("Home")}
-        />
+        <Button onPress={() => navigation.navigate("Home")}>
+          <Text>return to homepage</Text>
+        </Button>
       </View>
     );
   }
