@@ -10,7 +10,7 @@ export default function ShoppingList() {
   const { shoppingList, setShoppingList } = useContext(ShoppingListContext);
   const navigation = useNavigation();
   const sumedUpIngredients = Object.values(
-    shoppingList.reduce((ingredients, recipe) => {
+    shoppingList?.reduce((ingredients, recipe) => {
       for (const ingridient of recipe.ingredients) {
         if (!ingredients[ingridient.ingredient_id]) {
           ingredients[ingridient.ingredient_id] = ingridient;
@@ -20,12 +20,12 @@ export default function ShoppingList() {
         }
       }
       return ingredients;
-    }, {})
+    }, {}) ?? {}
   );
   return (
     <View style={styles.container}>
       <Text>Shopping List</Text>
-      {shoppingList.length === 0 ? (
+      {shoppingList?.length === 0 ? (
         <Text
           style={{ color: "blue" }}
           onPress={() => navigation.navigate("Home")}

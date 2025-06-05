@@ -63,7 +63,12 @@ export default function RecipeDetail({
       <View row>
         <Button
           onPress={() => {
-            setShoppingList((prev) => [...prev, recipeState]);
+            setShoppingList((prev) => {
+              if (prev) {
+                return [...prev, recipeState];
+              }
+              return [recipeState];
+            });
           }}
         >
           <Text>Add to Shopping List</Text>

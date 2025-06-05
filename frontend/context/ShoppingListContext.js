@@ -9,9 +9,8 @@ const storeData = async (value) => {
   try {
     const jsonValue = JSON.stringify(value);
     await AsyncStorage.setItem(storageKey, jsonValue);
-    console.log("Works");
   } catch (e) {
-    console.log("Not Works", e);
+    console.log(e);
     // saving error
   }
 };
@@ -21,7 +20,7 @@ const getData = async () => {
     const jsonValue = await AsyncStorage.getItem(storageKey);
     return jsonValue != null ? JSON.parse(jsonValue) : null;
   } catch (e) {
-    console.log("Not Works", e);
+    console.log(e);
     // error reading value
   }
 };
