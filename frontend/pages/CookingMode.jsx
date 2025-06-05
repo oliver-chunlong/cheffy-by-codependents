@@ -17,13 +17,13 @@ export default function CookingMode() {
   const [complete, setComplete] = useState(false);
   const [isTimerRunning, setIsTimerRunning] = useState(false);
   const { currentRecipe, setCurrentRecipe } = useContext(CurrentRecipeContext);
-  const currentStep = currentRecipe[step];
+  const currentStep = currentRecipe.instructions[step];
 
   const [repeat, setRepeat] = useState(0);
 
   const handleNext = () => {
     setStep((prev) => prev + 1);
-    if (step === currentRecipe.length - 1) {
+    if (step === currentRecipe.instructions - 1) {
       setComplete(true);
       setStep(0);
     }
@@ -43,7 +43,7 @@ export default function CookingMode() {
         if (complete) {
           setStep(0);
           setComplete(false);
-          setCurrentRecipe([]);
+          setCurrentRecipe({});
           setStart(false);
         }
       };
@@ -77,7 +77,10 @@ export default function CookingMode() {
   return (
     <View style={styles.container}>
       <Text>Cooking Mode</Text>
-      <Progressbar step={step} totalSteps={currentRecipe.length - 1} />
+      <Progressbar
+        step={step}
+        totalSteps={currentRecipe.instructions.length - 1}
+      />
       <CookingModeStep
         step_number={currentStep.step_number}
         step_description={currentStep.step_description}
