@@ -9,16 +9,17 @@ export default function RecipeList({ searchQuery, filterBy, category }) {
 
   const [allRecipes, setAllRecipes] = useState([]);
 
-  useEffect(async () => {
-    const recipes = await requestRecipes();
-    setAllRecipes(recipes);
-    // useEffect(() => {
-    //   /*Function to get recipes from the database*/
-    //   /*UtilFunctionHere*/ .then((recipes) => {
-    //     setAllRecipes(recipes);
-    //     setFilteredRecipes(recipes);
-    //   });
-    // }, []);
+  useEffect(() => {
+    requestRecipes().then((recipes) => {
+      setAllRecipes(recipes);
+      // useEffect(() => {
+      //   /*Function to get recipes from the database*/
+      //   /*UtilFunctionHere*/ .then((recipes) => {
+      //     setAllRecipes(recipes);
+      //     setFilteredRecipes(recipes);
+      //   });
+      // }, []);
+    });
   }, []);
 
   return (

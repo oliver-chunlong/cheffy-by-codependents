@@ -10,7 +10,7 @@ export default function RecipeCard({ recipe }) {
       title={recipe.recipe_name}
       description={recipe.recipe_description}
       imageProps={{ source: { uri: recipe.recipe_img_url } }}
-      onPress={() => navigation.navigate("RecipeDetail")}
+      onPress={() => navigation.navigate("RecipeDetail", { recipe })}
     />
   );
 }

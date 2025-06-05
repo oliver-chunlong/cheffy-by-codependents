@@ -5,13 +5,14 @@
   "scripts": {
     "start": "expo start",
     "android": "expo run:android",
-    "ios": "expo run:ios",
+    "ios": "expo run:ios --device",
     "web": "expo start --web"
   },
   "dependencies": {
     "@babel/plugin-proposal-export-namespace-from": "^7.18.9",
     "@expo/metro-runtime": "~5.0.4",
     "@jamsch/expo-speech-recognition": "^0.2.15",
+    "@react-native-async-storage/async-storage": "^2.1.2",
     "@react-native-picker/picker": "^2.11.0",
     "@react-navigation/bottom-tabs": "^7.3.14",
     "@react-navigation/elements": "^2.4.3",
