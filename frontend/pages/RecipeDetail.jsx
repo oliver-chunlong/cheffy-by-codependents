@@ -14,6 +14,8 @@ import {
   Timeline,
   ListItem,
 } from "react-native-ui-lib";
+import { useEffect, useState } from "react";
+import { requestRecipeById } from "../utils/axios";
 
 const sample = {
   recipe: {
@@ -155,19 +157,32 @@ function Step({ instruction }) {
   );
 }
 
-export default function RecipeDetail({ recipe = sample.recipe }) {
+export default function RecipeDetail({
+  route: {
+    params: { recipe },
+  },
+}) {
   const navigation = useNavigation();
+
+  const [recipeState, setRecipeState] = useState(recipe);
+
+  useEffect(() => {
+    requestRecipeById(recipe.recipe_id).then((recipe) => {
+      console.log(recipe);
+      setRecipeState(recipe);
+    });
+  }, [recipe]);
 
   return (
     <View style={styles.container}>
       <Image
         source={{
-          uri: recipe.recipe_img_url,
+          uri: recipeState.recipe_img_url,
         }}
       />
-      <Text>{recipe.recipe_name}</Text>
-      <Text>By {recipe.created_by_username}</Text>
-      <Text>{recipe.recipe_description}</Text>
+      <Text>{recipeState.recipe_name}</Text>
+      <Text>By {recipeState.created_by_username}</Text>
+      <Text>{recipeState.recipe_description}</Text>
       <View row>
         <Button
           onPress={() => navigation.getParent()?.navigate("Shopping List")}
@@ -182,7 +197,7 @@ export default function RecipeDetail({ recipe = sample.recipe }) {
       </View>
       <FlatList
         scrollEnabled={false}
-        data={recipe.ingredients}
+        data={recipeState.ingredients}
         keyExtractor={(item) => item.ingredient_id}
         renderItem={({ item, index }) => (
           <ListItem.Part
@@ -196,7 +211,7 @@ export default function RecipeDetail({ recipe = sample.recipe }) {
           </ListItem.Part>
         )}
       />
-      {recipe.instructions.map((instruction) => (
+      {recipeState.instructions?.map((instruction) => (
         <Step key={instruction.step_number} instruction={instruction} />
       ))}
     </View>
