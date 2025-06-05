@@ -1,5 +1,7 @@
 import { StyleSheet, FlatList } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import { useContext } from "react";
+import { ShoppingListContext } from "../context/ShoppingListContext";
 import {
   Colors,
   Card,
@@ -40,6 +42,7 @@ export default function RecipeDetail({
   const navigation = useNavigation();
 
   const [recipeState, setRecipeState] = useState(recipe);
+  const { setShoppingList } = useContext(ShoppingListContext);
 
   useEffect(() => {
     requestRecipeById(recipe.recipe_id).then((recipe) => {
@@ -59,7 +62,9 @@ export default function RecipeDetail({
       <Text>{recipeState.recipe_description}</Text>
       <View row>
         <Button
-          onPress={() => navigation.getParent()?.navigate("Shopping List")}
+          onPress={() => {
+            setShoppingList((prev) => [...prev, recipeState]);
+          }}
         >
           <Text>Add to Shopping List</Text>
         </Button>
