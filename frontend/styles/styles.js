@@ -65,9 +65,9 @@ card: {
   // Navbar styles
   header: {
     backgroundColor: shared.backgroundColor,
-    height: 140,
-    borderTopLeftRadius: 14,
-    borderTopRightRadius: 14,
+    height: 120,
+    borderTopLeftRadius: 18,
+    borderTopRightRadius: 18,
   },
   titleWrapper: {
     position: 'relative',
@@ -79,31 +79,29 @@ card: {
     backgroundColor: shared.backgroundColor,
     minHeight: 100,
     paddingHorizontal: 16,
-  },
-  profileButton: {
+},
+profileButton: {
     position: 'absolute',
     right: 16,
     top: '50%',
-    transform: [{ translateY: -14 }],
     justifyContent: 'center',
     height: 28,
     width: 28,
     alignItems: 'center',
-  },
-  titleText: {
+},
+titleText: {
     fontSize: 40,
-    // fontWeight: 'bold',ç
     color: 'white',
     fontFamily: shared.fontFamily,
-  },
-  searchWrapper: {
+},
+searchWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
-    // marginTop: 4,
-    marginBottom: 8,
+    marginBottom: 18,
     backgroundColor: shared.backgroundColor,
     width: '100%',
-    paddingHorizontal: 8,
+    paddingHorizontal: 18,
+    paddingBottom: 10,
   },
   searchIconImage: {
     width: 32,
@@ -122,8 +120,8 @@ card: {
     fontFamily: shared.fontFamily,
   },
   profileIcon: {
-    width: 28,
-    height: 28,
+    width: 36,
+    height: 36,
   },
   homeButton: {
     marginRight: 12,
