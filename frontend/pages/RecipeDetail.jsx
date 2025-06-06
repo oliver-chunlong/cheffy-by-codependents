@@ -116,9 +116,8 @@ export default function RecipeDetail({
 
               Toast.show({
                 type: "success",
-                text1: "Ingredients added to shopping list!",
+                text1: "Ingredients added to shopping list",
                 position: "bottom",
-                visibilityTime: 3000,
               });
             } catch (error) {
               Toast.show({
@@ -126,7 +125,6 @@ export default function RecipeDetail({
                 text1: "Oh no! Something went wrong!",
                 text2: "Please try again later.",
                 position: "bottom",
-                visibilityTime: 3000,
               });
             }
           }}

@@ -38,7 +38,6 @@ export default function ShoppingList() {
 
   return (
     <View style={styles.container}>
-      <Text>Shopping List</Text>
       {shoppingList?.length === 0 ? (
         <Text
           style={{ color: "blue" }}
@@ -56,8 +55,8 @@ export default function ShoppingList() {
               <Text key={item.recipe_id}>
                 {`${
                   item.count > 1
-                    ? item.count + " orders of"
-                    : item.count + " order of"
+                    ? item.count + " batches of"
+                    : item.count + " batch of"
                 } ${item.recipe_name} `}
               </Text>
             )}
