@@ -11,10 +11,11 @@ import {
   View,
   Timeline,
   ListItem,
+  Stepper,
 } from "react-native-ui-lib";
 import { useEffect, useState } from "react";
 import { requestRecipeById } from "../utils/axios";
-import Toast from "react-native-toast-message";
+import { Toast } from "react-native-toast-message";
 
 function Step({ instruction }) {
   return (
@@ -44,6 +45,7 @@ export default function RecipeDetail({
 
   const [recipeState, setRecipeState] = useState(recipe);
   const { setShoppingList } = useContext(ShoppingListContext);
+  const [ingredientQuantity, setIngredientQuantity] = useState(1);
   const countableIngredients = ["onion", "lime", "tortilla", "chilli pepper"];
 
   useEffect(() => {
@@ -63,20 +65,38 @@ export default function RecipeDetail({
       <Text>By {recipeState.created_by_username}</Text>
       <Text>{recipeState.recipe_description}</Text>
       <View row>
+        <View flex center>
+          <Stepper
+            minValue={0}
+            maxValue={1000}
+            value={ingredientQuantity}
+            onValueChange={setIngredientQuantity}
+          />
+        </View>
+
         <Button
           onPress={() => {
-            setShoppingList((prev) => {
-              if (prev) {
-                return [...prev, recipeState];
-              }
-              return [recipeState];
-            });
-            Toast.show({
-              type: "success",
-              text1: "Ingredients added to shopping list!",
-              position: "bottom",
-              visibilityTime: 3000,
-            });
+            try {
+              setShoppingList((prev) => {
+                const newIngredients =
+                  Array(ingredientQuantity).fill(recipeState);
+                return prev ? [...prev, ...newIngredients] : newIngredients;
+              });
+              Toast.show({
+                type: "success",
+                text1: "Ingredients added to shopping list!",
+                position: "bottom",
+                visibilityTime: 3000,
+              });
+            } catch (error) {
+              Toast.show({
+                type: "error",
+                text1: "Oh no! Something went wrong!",
+                text2: "Please try again later.",
+                position: "bottom",
+                visibilityTime: 3000,
+              });
+            }
           }}
         >
           <Text>Add to Shopping List</Text>
