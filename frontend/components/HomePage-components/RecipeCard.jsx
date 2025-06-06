@@ -15,12 +15,16 @@ export default function RecipeCard({ recipe }) {
         style={styles.image}
       />
       <View style={styles.textWrapper}>
-        <Text style={styles.title} numberOfLines={1}>
+        <Text style={styles.recipeTitle} numberOfLines={1}>
           {recipe.recipe_name}
         </Text>
-        <Text style={styles.description} numberOfLines={2}>
-          {recipe.recipe_description}
-        </Text>
+        <View style={styles.iconRow}>
+          {recipe.is_vegetarian && <Text style={styles.icon}>🥦</Text>}
+          {recipe.is_vegan && <Text style={styles.icon}>🌱</Text>}
+          {recipe.is_gluten_free && <Text style={styles.icon}>🚫🌾</Text>}
+          {!recipe.is_dairy_free && <Text style={styles.icon}>🥛</Text>}
+          {!recipe.is_nut_free && <Text style={styles.icon}>🥜</Text>}
+        </View>
       </View>
     </TouchableOpacity>
   );

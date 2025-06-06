@@ -37,7 +37,7 @@
     "react-native-screens": "^4.11.1",
     "react-native-svg": "15.11.2",
     "react-native-toast-message": "^2.3.0",
-    "react-native-ui-lib": "^7.43.0-snapshot.7041",
+    "react-native-ui-lib": "^7.43.0",
     "react-native-web": "^0.20.0"
   },
   "devDependencies": {
