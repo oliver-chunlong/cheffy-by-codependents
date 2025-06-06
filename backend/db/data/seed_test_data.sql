@@ -128,11 +128,11 @@ INSERT INTO ingredient_quantities (recipe_id, ingredient_id, quantity_numerical,
   -- Chana Masala
   (1, 1, 250, 'grams', false),    -- chickpeas
   (1, 5, 150, 'grams', false),    -- tomato
-  (1, 2, 1, 'piece', false),      -- onion
+  (1, 2, 1, '', false),      -- onion
   (1, 3, 3, 'cloves', false),     -- garlic
-  (1, 6, 1, 'teaspoon', false),   -- cumin
-  (1, 8, 0.5, 'teaspoon', false), -- turmeric
-  (1, 9, 2, 'tablespoons', false), -- olive oil
+  (1, 6, 1, 'tsp', false),   -- cumin
+  (1, 8, 0.5, 'tsp', false), -- turmeric
+  (1, 9, 2, 'tbsp', false), -- olive oil
 
   -- Pepperoni Pizza
   (2, 14, 200, 'grams', false),   -- pasta (dough)
@@ -152,14 +152,14 @@ INSERT INTO ingredient_quantities (recipe_id, ingredient_id, quantity_numerical,
   (4, 26, 150, 'grams', false),   -- flour
   (4, 15, 200, 'ml', false),      -- milk
   (4, 16, 50, 'grams', false),    -- butter
-  (4, 21, 1, 'piece', true),      -- lime (optional)
+  (4, 21, 1, '', true),      -- lime (optional)
 
   -- Vegan Tacos
   (5, 19, 150, 'grams', false),   -- black beans
   (5, 20, 100, 'grams', false),   -- avocado
-  (5, 21, 1, 'piece', false),     -- lime
-  (5, 18, 3, 'pieces', false),    -- tortilla
-  (5, 28, 1, 'piece', true);      -- chilli pepper (optional)
+  (5, 21, 1, '', false),     -- lime
+  (5, 18, 3, '', false),    -- tortilla
+  (5, 28, 1, '', true);      -- chilli pepper (optional)
 
 
 

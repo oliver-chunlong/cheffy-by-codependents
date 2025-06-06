@@ -11,9 +11,11 @@ import {
   View,
   Timeline,
   ListItem,
+  Stepper,
 } from "react-native-ui-lib";
 import { useEffect, useState } from "react";
 import { requestRecipeById } from "../utils/axios";
+import { Toast } from "react-native-toast-message";
 import Loading from "../components/Loading";
 
 function Step({ instruction }) {
@@ -44,6 +46,8 @@ export default function RecipeDetail({
 
   const [recipeState, setRecipeState] = useState(recipe);
   const { setShoppingList } = useContext(ShoppingListContext);
+  const [ingredientQuantity, setIngredientQuantity] = useState(1);
+  const countableIngredients = ["onion", "lime", "tortilla", "chilli pepper"];
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
@@ -65,15 +69,39 @@ export default function RecipeDetail({
       <Text>By {recipeState.created_by_username}</Text>
       <Text>{recipeState.recipe_description}</Text>
       <View row>
+        <View flex center>
+          <Stepper
+            minValue={0}
+            maxValue={1000}
+            value={ingredientQuantity}
+            onValueChange={setIngredientQuantity}
+          />
+        </View>
+
         <Button
           disabled={isLoading}
           onPress={() => {
-            setShoppingList((prev) => {
-              if (prev) {
-                return [...prev, recipeState];
-              }
-              return [recipeState];
-            });
+            try {
+              setShoppingList((prev) => {
+                const newIngredients =
+                  Array(ingredientQuantity).fill(recipeState);
+                return prev ? [...prev, ...newIngredients] : newIngredients;
+              });
+              Toast.show({
+                type: "success",
+                text1: "Ingredients added to shopping list!",
+                position: "bottom",
+                visibilityTime: 3000,
+              });
+            } catch (error) {
+              Toast.show({
+                type: "error",
+                text1: "Oh no! Something went wrong!",
+                text2: "Please try again later.",
+                position: "bottom",
+                visibilityTime: 3000,
+              });
+            }
           }}
         >
           <Text>Add to Shopping List</Text>
@@ -100,9 +128,14 @@ export default function RecipeDetail({
               activeOpacity={0.3}
               onPress={() => console.log(`pressed on order #${id + 1}`)}
             >
-              <Text>{item.ingredient_name}</Text>
-              <Text>{item.quantity_numerical}</Text>
-              <Text>{item.quantity_unit}</Text>
+              <Text>{`${item.quantity_numerical}${
+                item.quantity_unit ? " " + item.quantity_unit : ""
+              } ${
+                item.quantity_numerical > 1 &&
+                countableIngredients.includes(item.ingredient_name)
+                  ? item.ingredient_name + "s"
+                  : item.ingredient_name
+              }`}</Text>
             </ListItem.Part>
           )}
         />
