@@ -1,4 +1,4 @@
-import { StyleSheet, FlatList, Alert } from "react-native";
+import { StyleSheet, FlatList } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { useContext } from "react";
 import { ShoppingListContext } from "../context/ShoppingListContext";
@@ -14,6 +14,7 @@ import {
 } from "react-native-ui-lib";
 import { useEffect, useState } from "react";
 import { requestRecipeById } from "../utils/axios";
+import Toast from "react-native-toast-message";
 
 function Step({ instruction }) {
   return (
@@ -69,6 +70,12 @@ export default function RecipeDetail({
                 return [...prev, recipeState];
               }
               return [recipeState];
+            });
+            Toast.show({
+              type: "success",
+              text1: "Ingredients added to shopping list!",
+              position: "bottom",
+              visibilityTime: 3000,
             });
           }}
         >
