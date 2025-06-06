@@ -17,7 +17,7 @@ export default function CookingMode(props) {
   const [complete, setComplete] = useState(false);
   const [isTimerRunning, setIsTimerRunning] = useState(false);
   const [currentRecipe, setCurrentRecipe] = useState(recipe);
-  const currentStep = currentRecipe?.instructions[step];
+  const currentStep = currentRecipe?.instructions?.[step];
 
   const [repeat, setRepeat] = useState(0);
 
@@ -59,7 +59,11 @@ export default function CookingMode(props) {
     return (
       <View>
         <Text>Select a recipe to get started!</Text>
-        <Button onPress={() => navigation.navigate("Home")}>
+        <Button
+          onPress={() => {
+            navigation.navigate("Home");
+          }}
+        >
           <Text>return to homepage</Text>
         </Button>
       </View>
