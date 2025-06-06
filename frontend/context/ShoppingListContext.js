@@ -29,12 +29,22 @@ export const ShoppingListProvider = ({ children }) => {
   const [shoppingList, setShoppingList] = useState([]);
 
   useEffect(() => {
-    getData().then((list) => setShoppingList(list));
+    getData().then((list) => {
+      if (Array.isArray(list)) {
+        setShoppingList(list);
+      } else {
+        setShoppingList([]);
+      }
+    });
   }, []);
 
-  const setAndSaveShoppingList = (getNewValue) => {
+  const setAndSaveShoppingList = (newValueOrUpdater) => {
     setShoppingList((prev) => {
-      const newValue = getNewValue(prev);
+      const newValue =
+        typeof newValueOrUpdater === "function"
+          ? newValueOrUpdater(prev)
+          : newValueOrUpdater;
+
       storeData(newValue);
       return newValue;
     });
