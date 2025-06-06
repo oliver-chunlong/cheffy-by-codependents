@@ -47,13 +47,16 @@ export default function FavouriteButton({ recipe_id }) {
           text1: newClickedState
             ? "Added to favourites"
             : "Removed from favourites",
+          position: "bottom",
         });
       })
       .catch(() => {
         setIsClicked(!newClickedState);
         Toast.show({
           type: "error",
-          text1: "Something went wrong...",
+          text1: "Oh no! Something went wrong!",
+          text2: "Please try again later.",
+          position: "bottom",
         });
       });
   };
