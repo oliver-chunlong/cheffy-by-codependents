@@ -1,7 +1,8 @@
 import React, { useState, useContext, useEffect } from "react";
-import { StyleSheet } from "react-native";
+import { StyleSheet, ScrollView } from "react-native";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { Card, Button, View, Text } from "react-native-ui-lib";
+import { styles } from "../styles/styles";
 
 import CookingModeStep from "../components/CookingModeComponents/CookingModeStep";
 import Progressbar from "../components/Progressbar";
@@ -57,14 +58,15 @@ export default function CookingMode(props) {
 
   if (!currentRecipe) {
     return (
-      <View>
-        <Text>Select a recipe to get started!</Text>
+      <View style={styles.cookingContainerNoRecipe}>
+        <Text style={styles.cookingNoRecipeText}>Select a recipe to get started!</Text>
         <Button
           onPress={() => {
             navigation.navigate("Home");
           }}
+          style={styles.cookingModeButton}
         >
-          <Text>return to homepage</Text>
+          <Text style={styles.cookingModeButtonText}>return to homepage</Text>
         </Button>
       </View>
     );
@@ -73,18 +75,21 @@ export default function CookingMode(props) {
 
   if (!start)
     return (
+      <View style={styles.cookingContainerNoRecipe}>
       <Button
         onPress={() => {
           setStart(true);
         }}
+        style={styles.cookingModeButton}
       >
-        <Text>Start Cooking</Text>
+        <Text style={styles.cookingModeButtonText}>Start Cooking</Text>
       </Button>
+      </View>
     );
 
   return (
-    <View style={styles.container}>
-      <Text>Cooking Mode</Text>
+    <ScrollView contentContainerStyle={styles.cookingModeContainer}>
+      <Text style={styles.cookingModeText}>Cooking Mode</Text>
       <Progressbar
         step={step}
         totalSteps={currentRecipe?.instructions?.length - 1}
@@ -99,12 +104,21 @@ export default function CookingMode(props) {
           repeat={repeat}
         />
       )}
-      <Button onPress={handleNext}>
-        <Text>Next Step</Text>
+      <Button 
+        onPress={handleNext} 
+        style={styles.cookingModeButton}>
+        <Text
+          style={styles.cookingModeButtonText}>Next Step</Text>
       </Button>
-      <Button title="Previous Step" onPress={handleBack}>
-        <Text>Previous Step</Text>
+      <Button 
+        title="Previous Step" 
+        onPress={handleBack}
+        style={styles.cookingModeButton}>
+        <Text
+          style={styles.cookingModeButtonText}>Previous Step</Text>
       </Button>
+
+      <View style={{ height: 150 }} />  {/* Spacer */}
 
       <SpeechRecognition
         setStep={setStep}
@@ -117,15 +131,15 @@ export default function CookingMode(props) {
         handleRepeat={handleRepeat}
         start={start}
       />
-    </View>
+    </ScrollView>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    backgroundColor: "#ecf0f1",
-    padding: 8,
-  },
-});
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//     justifyContent: "center",
+//     backgroundColor: "#ecf0f1",
+//     padding: 8,
+//   },
+// });

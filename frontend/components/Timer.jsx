@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Text } from "react-native";
+import { styles } from "../styles/styles";
 
 function removingLeading0(text) {
   if (text[0].startsWith("0")) {
@@ -64,5 +65,5 @@ export default function Timer({ seconds, isRunning, onFinish }) {
   text = removingLeadingEmpty(text);
   text = removingLeading0(text);
 
-  return <Text>{text.join(":")}</Text>;
+  return <Text style={styles.cookingTimerText}>{text.join(":")}</Text>;
 }
