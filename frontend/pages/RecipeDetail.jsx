@@ -11,12 +11,12 @@ import {
   View,
   Timeline,
   ListItem,
-  Stepper,
 } from "react-native-ui-lib";
 import { useEffect, useState } from "react";
 import { requestRecipeById } from "../utils/axios";
-import { Toast } from "react-native-toast-message";
+import Toast from "react-native-toast-message";
 import Loading from "../components/Loading";
+import Stepper from "../components/Stepper";
 import FavouriteButton from "../components/FavouriteButton";
 
 function Step({ instruction }) {
@@ -48,8 +48,8 @@ export default function RecipeDetail({
   const [recipeState, setRecipeState] = useState(recipe);
   const { setShoppingList } = useContext(ShoppingListContext);
   const [ingredientQuantity, setIngredientQuantity] = useState(1);
-  const countableIngredients = ["onion", "lime", "tortilla", "chilli pepper"];
   const [isLoading, setIsLoading] = useState(false);
+  const countableIngredients = ["onion", "lime", "tortilla", "chilli pepper"];
 
   useEffect(() => {
     setIsLoading(true);
@@ -66,19 +66,44 @@ export default function RecipeDetail({
           uri: recipeState.recipe_img_url,
         }}
       />
-      <Text>{recipeState.recipe_name}</Text>
-      <Text>By {recipeState.created_by_username}</Text>
+      <h1>{recipeState.recipe_name}</h1>
       <Text>{recipeState.recipe_description}</Text>
-      <View row>
-        <View flex center>
-          <Stepper
-            minValue={0}
-            maxValue={1000}
-            value={ingredientQuantity}
-            onValueChange={setIngredientQuantity}
-          />
-        </View>
+      <Text>
+        <i>By {recipeState.created_by_username}</i>
+      </Text>
+      {recipeState.ingredients && recipeState.ingredients.length > 0 ? (
+        <FlatList
+          scrollEnabled={false}
+          data={recipeState.ingredients}
+          keyExtractor={(item) => item.ingredient_id}
+          renderItem={({ item, index }) => (
+            <ListItem.Part
+              activeBackgroundColor={Colors.grey60}
+              activeOpacity={0.3}
+              onPress={() => console.log(`pressed on order #${id + 1}`)}
+            >
+              <Text>{`${item.quantity_numerical}${
+                item.quantity_unit ? " " + item.quantity_unit : ""
+              } ${
+                item.quantity_numerical > 1 &&
+                countableIngredients.includes(item.ingredient_name)
+                  ? item.ingredient_name + "s"
+                  : item.ingredient_name
+              }`}</Text>
+            </ListItem.Part>
+          )}
+        />
+      ) : (
+        <Loading />
+      )}
 
+      <View row>
+        <Stepper
+          value={ingredientQuantity}
+          onValueChange={setIngredientQuantity}
+          min={1}
+          max={1000}
+        />
         <Button
           disabled={isLoading}
           onPress={() => {
@@ -88,6 +113,7 @@ export default function RecipeDetail({
                   Array(ingredientQuantity).fill(recipeState);
                 return prev ? [...prev, ...newIngredients] : newIngredients;
               });
+
               Toast.show({
                 type: "success",
                 text1: "Ingredients added to shopping list!",
@@ -120,31 +146,7 @@ export default function RecipeDetail({
         </Button>
         <FavouriteButton recipe_id={recipe.recipe_id} />
       </View>
-      {recipeState.ingredients && recipeState.ingredients.length > 0 ? (
-        <FlatList
-          scrollEnabled={false}
-          data={recipeState.ingredients}
-          keyExtractor={(item) => item.ingredient_id}
-          renderItem={({ item, index }) => (
-            <ListItem.Part
-              activeBackgroundColor={Colors.grey60}
-              activeOpacity={0.3}
-              onPress={() => console.log(`pressed on order #${id + 1}`)}
-            >
-              <Text>{`${item.quantity_numerical}${
-                item.quantity_unit ? " " + item.quantity_unit : ""
-              } ${
-                item.quantity_numerical > 1 &&
-                countableIngredients.includes(item.ingredient_name)
-                  ? item.ingredient_name + "s"
-                  : item.ingredient_name
-              }`}</Text>
-            </ListItem.Part>
-          )}
-        />
-      ) : (
-        <Loading />
-      )}
+
       {recipeState.instructions && recipeState.instructions.length > 0 ? (
         recipeState.instructions?.map((instruction) => (
           <Step key={instruction.step_number} instruction={instruction} />

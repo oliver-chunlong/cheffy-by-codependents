@@ -1,4 +1,4 @@
-import { FlatList, StyleSheet } from "react-native";
+import { ScrollView, FlatList, StyleSheet } from "react-native";
 import ListIngredient from "../components/ShoppingListComponents/ListIngredient";
 import { useContext } from "react";
 import { ShoppingListContext } from "../context/ShoppingListContext";
@@ -9,19 +9,33 @@ import { Text, View, Button } from "react-native-ui-lib";
 export default function ShoppingList() {
   const { shoppingList, setShoppingList } = useContext(ShoppingListContext);
   const navigation = useNavigation();
-  const sumedUpIngredients = Object.values(
-    shoppingList?.reduce((ingredients, recipe) => {
-      for (const ingridient of recipe.ingredients) {
-        if (!ingredients[ingridient.ingredient_id]) {
-          ingredients[ingridient.ingredient_id] = ingridient;
+  const safeShoppingList = Array.isArray(shoppingList) ? shoppingList : [];
+  const summedUpIngredients = Object.values(
+    safeShoppingList.reduce((ingredients, recipe) => {
+      if (!recipe?.ingredients || !Array.isArray(recipe.ingredients))
+        return ingredients;
+
+      for (const ingredient of recipe.ingredients) {
+        if (!ingredient || !ingredient.ingredient_id) continue;
+
+        if (!ingredients[ingredient.ingredient_id]) {
+          ingredients[ingredient.ingredient_id] = { ...ingredient };
         } else {
-          ingredients[ingridient.ingredient_id].quantity_numerical +=
-            ingridient.quantity_numerical;
+          ingredients[ingredient.ingredient_id].quantity_numerical +=
+            ingredient.quantity_numerical;
         }
       }
+
       return ingredients;
-    }, {}) ?? {}
+    }, {})
   );
+  const recipeCount = shoppingList.reduce((acc, item) => {
+    acc[item.recipe_id] = acc[item.recipe_id] || { ...item, count: 0 };
+    acc[item.recipe_id].count += 1;
+    return acc;
+  }, {});
+  const uniqueRecipesWithCount = Object.values(recipeCount);
+
   return (
     <View style={styles.container}>
       <Text>Shopping List</Text>
@@ -33,17 +47,23 @@ export default function ShoppingList() {
           Select a recipe to add ingredients
         </Text>
       ) : (
-        <View>
+        <ScrollView>
           <Text>Ingredients for:</Text>
           <FlatList
-            data={shoppingList}
+            data={uniqueRecipesWithCount}
             keyExtractor={(item) => item.recipe_id}
             renderItem={({ item }) => (
-              <Text key={item.recipe_id}>{item.recipe_name}</Text>
+              <Text key={item.recipe_id}>
+                {`${
+                  item.count > 1
+                    ? item.count + " orders of"
+                    : item.count + " order of"
+                } ${item.recipe_name} `}
+              </Text>
             )}
           />
           <FlatList
-            data={sumedUpIngredients}
+            data={summedUpIngredients}
             keyExtractor={(item) => item.ingredient_id}
             renderItem={({ item }) => <ListIngredient ingredient={item} />}
           />
@@ -54,7 +74,7 @@ export default function ShoppingList() {
           >
             <Text>Clear List</Text>
           </Button>
-        </View>
+        </ScrollView>
       )}
     </View>
   );
@@ -63,7 +83,7 @@ export default function ShoppingList() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
+    // justifyContent: "center",
     backgroundColor: "#ecf0f1",
     padding: 8,
   },
