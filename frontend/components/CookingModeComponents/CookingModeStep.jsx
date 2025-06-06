@@ -1,8 +1,8 @@
 import Timer from "../Timer";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { StyleSheet } from "react-native";
 import * as Speech from "expo-speech";
-import { Card, View, Text, Button } from "react-native-ui-lib";
+import { Card, View, Text, Button, Switch } from "react-native-ui-lib";
 
 export default function CookingModeStep({
   step_number,
@@ -12,11 +12,15 @@ export default function CookingModeStep({
   setIsTimerRunning,
   repeat,
 }) {
+  const [hasReading, setHasReading] = useState(false);
+
   useEffect(() => {
     setIsTimerRunning(false);
     Speech.stop();
-    Speech.speak(step_description);
-  }, [step_number, repeat]);
+    if (hasReading) {
+      Speech.speak(step_description);
+    }
+  }, [step_number, repeat, hasReading]);
 
   return (
     <Card>
@@ -30,6 +34,10 @@ export default function CookingModeStep({
           </Button>
         </Card>
       )}
+      <View justifyContent="space-between">
+        <Text>Read outloud</Text>
+        <Switch margin-20 value={hasReading} onValueChange={setHasReading} />
+      </View>
     </Card>
   );
 }
