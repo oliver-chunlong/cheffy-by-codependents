@@ -35,7 +35,6 @@ app.delete('/api/users/:user_id/recipes/:recipe_id', deleteUserRecipe);
 app.delete('/api/users/:user_id/favourites/:recipe_id', deleteFromFavourites);
 
 app.use((err, req, res, next) => {
-  console.error('ERROR:', err);
   if (err.code === "22P02") {
     return res.status(400).send({ msg: "Bad request" });
   } else {
@@ -52,7 +51,6 @@ app.use((err, req, res, next) => {
 });
 
 app.use((err, req, res, next) => {
-  console.error('UNHANDLED ERROR:', err);
   return res.status(500).send({ msg: "Internal Server Error" });
 });  
 
