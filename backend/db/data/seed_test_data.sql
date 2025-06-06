@@ -32,7 +32,7 @@ INSERT INTO recipes (recipe_name, recipe_description, recipe_img_url, created_by
   ('milk', 'https://example.jpg', 42, 3.4, 5, 1, 0, 5),
   ('butter', 'https://example.jpg', 717, 0.9, 0.1, 81, 0, 0.1),
   ('cheddar', 'https://example.jpg', 403, 25, 1.3, 33, 0, 0.5),
-  ('tortillas', 'https://example.jpg', 237, 6.8, 42, 4.7, 3.6, 1.2),
+  ('tortilla', 'https://example.jpg', 237, 6.8, 42, 4.7, 3.6, 1.2),
   ('black beans', 'https://example.jpg', 339, 21, 62, 0.9, 16.6, 0.3),
   ('avocado', 'https://example.jpg', 160, 2, 9, 15, 7, 0.7),
   ('lime', 'https://example.jpg', 30, 0.7, 11, 0.2, 2.8, 1.7),

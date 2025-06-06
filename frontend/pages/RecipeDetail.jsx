@@ -1,4 +1,4 @@
-import { StyleSheet, FlatList } from "react-native";
+import { StyleSheet, FlatList, Alert } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { useContext } from "react";
 import { ShoppingListContext } from "../context/ShoppingListContext";
@@ -43,6 +43,7 @@ export default function RecipeDetail({
 
   const [recipeState, setRecipeState] = useState(recipe);
   const { setShoppingList } = useContext(ShoppingListContext);
+  const countableIngredients = ["onion", "lime", "tortilla", "chilli pepper"];
 
   useEffect(() => {
     requestRecipeById(recipe.recipe_id).then((recipe) => {
@@ -94,7 +95,14 @@ export default function RecipeDetail({
             onPress={() => console.log(`pressed on order #${id + 1}`)}
           >
             <Text>
-              {`${item.quantity_numerical}${item.quantity_unit ? ' ' + item.quantity_unit : ''} ${item.ingredient_name}`}
+              {`${item.quantity_numerical}${
+                item.quantity_unit ? " " + item.quantity_unit : ""
+              } ${
+                item.quantity_numerical > 1 &&
+                countableIngredients.includes(item.ingredient_name)
+                  ? item.ingredient_name + "s"
+                  : item.ingredient_name
+              }`}
             </Text>
           </ListItem.Part>
         )}
