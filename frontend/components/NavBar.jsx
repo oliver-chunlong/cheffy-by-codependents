@@ -6,61 +6,72 @@ import {
   View,
   Text,
   Image,
-  TextInput,
   TouchableOpacity,
-  StyleSheet,
 } from 'react-native';
+import React, { useState, useEffect } from "react";
+import { requestRecipes } from "../utils/axios";
 
 import Home from "../pages/Homepage.jsx";
 import CookingMode from "../pages/CookingMode.jsx";
 import ShoppingList from "../pages/ShoppingList.jsx";
 import RecipeDetail from "../pages/RecipeDetail.jsx";
 import Profile from "../pages/Profile.jsx";
+import SearchBar from "./HomePage-components/SearchBar.jsx"
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
+
 function HomeStack() {
+  const [allRecipes, setAllRecipes] = useState([]);
+  const [filteredRecipes, setFilteredRecipes] = useState([]);
+
+  useEffect(() => {
+    requestRecipes()
+      .then(recipes => {
+        console.log("Fetched recipes:", recipes); 
+        setAllRecipes(recipes);
+        setFilteredRecipes(recipes);
+      });
+  }, []);
+
   return (
     <Stack.Navigator screenOptions={{ headerShown: true }}>
+
       <Stack.Screen
         name="Homepage"
-        component={Home}
-        options={({ navigation }) => ({
+        options={{
           headerStyle: styles.header,
           headerTitleAlign: 'center',
           headerTitle: () => (
-            <View style={{ width: '100%' }}>
-              <View style={styles.titleWrapper}>
-                <Text style={styles.titleText}>H O M E</Text>
-                <TouchableOpacity
-                  onPress={() => navigation.navigate('Profile')}
-                  style={styles.profileButton}
-                >
-                  <Image
-                    source={require('../assets/ProfileIcon.png')}
-                    style={styles.profileIcon}
-                    resizeMode="contain"
-                  />
-                </TouchableOpacity>
-              </View>
-              <View style={styles.searchWrapper}>
-                <Image
-                  source={require("../assets/searchIcon.png")}
-                  style={styles.searchIconImage}
-                />
-                <TextInput
-                  placeholderTextColor="#999"
-                  style={styles.searchInput}
-                />
-              </View>
+            <View style={styles.titleWrapper}>
+              <Text style={styles.titleText}>H O M E</Text>
+              <TouchableOpacity
+                onPress={() => navigation.navigate('Profile')}
+                style={styles.profileButton}
+              >
+                {/* <Image
+                  source={require('../assets/ProfileIcon.png')}
+                  style={styles.profileIcon}
+                  resizeMode="contain"
+                /> */}
+              </TouchableOpacity>
             </View>
           ),
-          
           headerRight: () => null,
           headerLeft: () => null,
-        })}
-      />
+        }}
+      >
+        {props => (
+          <>
+            <SearchBar recipes={allRecipes} setFilteredRecipes={setFilteredRecipes} />
+            <Home {...props} recipes={filteredRecipes} />
+          </>
+        )}
+      </Stack.Screen>
+
+
+
       <Stack.Screen name="RecipeDetail" component={RecipeDetail} />
       <Stack.Screen
         name="Profile"
@@ -94,7 +105,6 @@ const icons = {
   },
 };
 
-
 export default function NavBar() {
   return (
     <Tab.Navigator
@@ -118,13 +128,12 @@ export default function NavBar() {
           ),
           tabBarShowLabel: false,
           tabBarStyle: styles.tabBar,
-
         };
       }}
     >
-     <Tab.Screen name="Home" component={HomeStack} options={{ headerShown: false }} />
-     <Tab.Screen name="Cooking Mode" component={CookingMode} />
-     <Tab.Screen name="Shopping List" component={ShoppingList} />
+      <Tab.Screen name="Home" component={HomeStack} options={{ headerShown: false }} />
+      <Tab.Screen name="Cooking Mode" component={CookingMode} />
+      <Tab.Screen name="Shopping List" component={ShoppingList} />
     </Tab.Navigator>
   );
 }
