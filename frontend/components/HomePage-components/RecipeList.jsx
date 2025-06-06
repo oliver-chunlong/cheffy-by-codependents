@@ -1,37 +1,58 @@
 import { useEffect, useState } from "react";
-import RecipeCard from "./RecipeCard";
-import { GridList, Spacings } from "react-native-ui-lib";
-import SearchBar from "./SearchBar";
+import {
+  FlatList,
+  TouchableOpacity,
+  Image,
+  Text,
+  View,
+  Dimensions,
+} from "react-native";
+import { useNavigation } from "@react-navigation/native";
 import { requestRecipes } from "../../utils/axios";
+import  {styles}  from "../../styles/styles";
 
-export default function RecipeList({ searchQuery, filterBy, category }) {
-  //changes to filtering logic required
+const screenWidth = Dimensions.get("window").width;
+const numColumns = 2;
+const itemMargin = 8;
+const itemWidth = (screenWidth - itemMargin * (numColumns + 1)) / numColumns;
 
+export default function RecipeList() {
   const [allRecipes, setAllRecipes] = useState([]);
+  const navigation = useNavigation();
 
   useEffect(() => {
     requestRecipes().then((recipes) => {
-      setAllRecipes(recipes);
-      // useEffect(() => {
-      //   /*Function to get recipes from the database*/
-      //   /*UtilFunctionHere*/ .then((recipes) => {
-      //     setAllRecipes(recipes);
-      //     setFilteredRecipes(recipes);
-      //   });
-      // }, []);
+      if (recipes) setAllRecipes(recipes);
     });
   }, []);
 
+  const renderItem = ({ item }) => (
+    <TouchableOpacity
+      onPress={() => navigation.navigate("RecipeDetail", { recipe: item })}
+      style={styles.card}
+    >
+      <Image source={{ uri: item.recipe_img_url }} style={styles.image} />
+      <View style={styles.textWrapper}>
+        <Text style={styles.title} numberOfLines={1}>
+          {item.recipe_name}
+        </Text>
+        <Text style={styles.description} numberOfLines={2}>
+          {item.recipe_description}
+        </Text>
+      </View>
+    </TouchableOpacity>
+  );
+
   return (
-    <GridList
-      ListHeaderComponent={() => <SearchBar />}
+    <FlatList
       data={allRecipes}
-      renderItem={({ item }) => <RecipeCard recipe={item} />}
-      // numColumns={2}
-      maxItemWidth={140}
-      itemSpacing={Spacings.s3}
-      listPadding={Spacings.s5}
-      // keepItemSize
+      renderItem={renderItem}
+      keyExtractor={(item, index) =>
+        item.id ? item.id.toString() : index.toString()
+      }
+      numColumns={numColumns}
+      showsVerticalScrollIndicator={false}
+      contentContainerStyle={styles.container}
     />
   );
 }
