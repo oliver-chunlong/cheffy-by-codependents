@@ -17,6 +17,7 @@ import { useEffect, useState } from "react";
 import { requestRecipeById } from "../utils/axios";
 import { Toast } from "react-native-toast-message";
 import Loading from "../components/Loading";
+import FavouriteButton from "../components/FavouriteButton";
 
 function Step({ instruction }) {
   return (
@@ -106,6 +107,7 @@ export default function RecipeDetail({
         >
           <Text>Add to Shopping List</Text>
         </Button>
+
         <Button
           disabled={isLoading}
           onPress={() =>
@@ -116,6 +118,7 @@ export default function RecipeDetail({
         >
           <Text>Cooking Mode</Text>
         </Button>
+        <FavouriteButton recipe_id={recipe.recipe_id} />
       </View>
       {recipeState.ingredients && recipeState.ingredients.length > 0 ? (
         <FlatList
