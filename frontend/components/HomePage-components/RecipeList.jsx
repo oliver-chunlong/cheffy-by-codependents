@@ -10,6 +10,8 @@ import {
 import { useNavigation } from "@react-navigation/native";
 import { requestRecipes } from "../../utils/axios";
 import  {styles}  from "../../styles/styles";
+import Loading from "../Loading";
+
 
 const screenWidth = Dimensions.get("window").width;
 const numColumns = 2;
@@ -42,6 +44,11 @@ export default function RecipeList() {
       </View>
     </TouchableOpacity>
   );
+
+  if (allRecipes.length === 0) {
+    return <Loading />;
+  }
+
 
   return (
     <FlatList
