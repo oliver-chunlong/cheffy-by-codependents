@@ -14,6 +14,7 @@ import {
 } from "react-native-ui-lib";
 import { useEffect, useState } from "react";
 import { requestRecipeById } from "../utils/axios";
+import Loading from "../components/Loading";
 
 function Step({ instruction }) {
   return (
@@ -43,10 +44,13 @@ export default function RecipeDetail({
 
   const [recipeState, setRecipeState] = useState(recipe);
   const { setShoppingList } = useContext(ShoppingListContext);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
+    setIsLoading(true);
     requestRecipeById(recipe.recipe_id).then((recipe) => {
       setRecipeState(recipe);
+      setIsLoading(false);
     });
   }, [recipe]);
 
@@ -62,6 +66,7 @@ export default function RecipeDetail({
       <Text>{recipeState.recipe_description}</Text>
       <View row>
         <Button
+          disabled={isLoading}
           onPress={() => {
             setShoppingList((prev) => {
               if (prev) {
@@ -74,6 +79,7 @@ export default function RecipeDetail({
           <Text>Add to Shopping List</Text>
         </Button>
         <Button
+          disabled={isLoading}
           onPress={() =>
             navigation
               .getParent()
@@ -83,25 +89,33 @@ export default function RecipeDetail({
           <Text>Cooking Mode</Text>
         </Button>
       </View>
-      <FlatList
-        scrollEnabled={false}
-        data={recipeState.ingredients}
-        keyExtractor={(item) => item.ingredient_id}
-        renderItem={({ item, index }) => (
-          <ListItem.Part
-            activeBackgroundColor={Colors.grey60}
-            activeOpacity={0.3}
-            onPress={() => console.log(`pressed on order #${id + 1}`)}
-          >
-            <Text>{item.ingredient_name}</Text>
-            <Text>{item.quantity_numerical}</Text>
-            <Text>{item.quantity_unit}</Text>
-          </ListItem.Part>
-        )}
-      />
-      {recipeState.instructions?.map((instruction) => (
-        <Step key={instruction.step_number} instruction={instruction} />
-      ))}
+      {recipeState.ingredients && recipeState.ingredients.length > 0 ? (
+        <FlatList
+          scrollEnabled={false}
+          data={recipeState.ingredients}
+          keyExtractor={(item) => item.ingredient_id}
+          renderItem={({ item, index }) => (
+            <ListItem.Part
+              activeBackgroundColor={Colors.grey60}
+              activeOpacity={0.3}
+              onPress={() => console.log(`pressed on order #${id + 1}`)}
+            >
+              <Text>{item.ingredient_name}</Text>
+              <Text>{item.quantity_numerical}</Text>
+              <Text>{item.quantity_unit}</Text>
+            </ListItem.Part>
+          )}
+        />
+      ) : (
+        <Loading />
+      )}
+      {recipeState.instructions && recipeState.instructions.length > 0 ? (
+        recipeState.instructions?.map((instruction) => (
+          <Step key={instruction.step_number} instruction={instruction} />
+        ))
+      ) : (
+        <Loading />
+      )}
     </View>
   );
 }

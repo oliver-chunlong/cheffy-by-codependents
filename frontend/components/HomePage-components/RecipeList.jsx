@@ -3,6 +3,7 @@ import RecipeCard from "./RecipeCard";
 import { GridList, Spacings } from "react-native-ui-lib";
 import SearchBar from "./SearchBar";
 import { requestRecipes } from "../../utils/axios";
+import Loading from "../Loading";
 
 export default function RecipeList({ searchQuery, filterBy, category }) {
   //changes to filtering logic required
@@ -21,6 +22,10 @@ export default function RecipeList({ searchQuery, filterBy, category }) {
       // }, []);
     });
   }, []);
+
+  if (allRecipes.length === 0) {
+    return <Loading />;
+  }
 
   return (
     <GridList

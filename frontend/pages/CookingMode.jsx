@@ -28,7 +28,7 @@ export default function CookingMode(props) {
 
   const handleNext = () => {
     setStep((prev) => prev + 1);
-    if (step === currentRecipe.instructions - 1) {
+    if (step === currentRecipe.instructions.length - 1) {
       setComplete(true);
       setStep(0);
     }
