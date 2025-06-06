@@ -10,6 +10,8 @@ const shared = {
   backgroundColor: '#f6c47b',
 };
 
+const isMobile = Dimensions.get('window').width < 400;
+
 export const styles = StyleSheet.create({
 container: {
     padding: itemMargin,
@@ -19,7 +21,7 @@ container: {
     width: '100%',
     },
 card: {
-    margin: itemMargin / 2,
+    margin: itemMargin,
     width: itemWidth,
     maxWidth: 180,
     backgroundColor: '#fff',
@@ -33,13 +35,14 @@ card: {
     },
   image: {
     width: '100%',
-    height: itemWidth * 0.6,
+    height: undefined,
+    aspectRatio: 1,
     resizeMode: 'cover',
   },
   textWrapper: {
     padding: 6,
   },
-  title: {
+  recipeTitle: {
     fontFamily: shared.fontFamily,
     fontSize: 22,
     color: "#2b2b2b",
@@ -49,56 +52,74 @@ card: {
     fontSize: 12,
     color: "#8c8c8c",
   },
+  iconRow: {
+    flexDirection: 'row',
+    marginTop: 4,
+  },
+  icon: {
+    fontSize: 18,
+    marginRight: 8,
+  },
+  
 
   // Navbar styles
   header: {
     backgroundColor: shared.backgroundColor,
-    height: 120,
-    borderTopLeftRadius: 16,
-    borderTopRightRadius: 16,
-    borderBottomLeftRadius: 20,
-    borderBottomRightRadius: 20,
+    height: 140,
+    borderTopLeftRadius: 14,
+    borderTopRightRadius: 14,
   },
   titleWrapper: {
+    position: 'relative',
     alignItems: 'center',
+    justifyContent: 'center',
     width: '100%',
-    paddingTop: 20,
-    paddingBottom: 20,
+    paddingTop: 10,
+    paddingBottom: 10,
     backgroundColor: shared.backgroundColor,
     minHeight: 100,
+    paddingHorizontal: 16,
+  },
+  profileButton: {
+    position: 'absolute',
+    right: 16,
+    top: '50%',
+    transform: [{ translateY: -14 }],
+    justifyContent: 'center',
+    height: 28,
+    width: 28,
+    alignItems: 'center',
   },
   titleText: {
-    fontSize: 20,
-    fontWeight: 'bold',
+    fontSize: 40,
+    // fontWeight: 'bold',ç
     color: 'white',
-    marginBottom: 10,
     fontFamily: shared.fontFamily,
   },
   searchWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: 4,
+    // marginTop: 4,
+    marginBottom: 8,
     backgroundColor: shared.backgroundColor,
     width: '100%',
     paddingHorizontal: 8,
   },
-  searchIcon: {
-    fontSize: 20,
-    marginRight: 8,
-    color: 'white',
-    fontFamily: shared.fontFamily,
+  searchIconImage: {
+    width: 32,
+    height: 32,
+    resizeMode: 'contain',
+    marginRight: 10,
   },
   searchInput: {
     backgroundColor: 'white',
     borderRadius: 8,
-    paddingHorizontal: 12,
+    paddingHorizontal: 10,
     fontSize: 16,
-    height: 36,
+    height: 26,
+    width: 350,
     flex: 1,
     fontFamily: shared.fontFamily,
-  },
-  profileButton: {
-    marginRight: 12,
   },
   profileIcon: {
     width: 28,
@@ -108,4 +129,34 @@ card: {
     marginRight: 12,
     fontFamily: shared.fontFamily,
   },
+
+  //Tabnav styles
+  tabBar: {
+    position: 'absolute',
+    bottom: 16,
+    left: 16,
+    right: 16,
+    backgroundColor: '#fff',
+    borderRadius: 20,
+    height: 80,
+    elevation: 16, // Android shadow needs a separate setting
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.25,
+    shadowRadius: 10,
+    overflow: 'hidden', // fixes iOS clipping apparently?
+  },
+  iconContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingTop: isMobile ? 30 : 10,
+  },
+  
+  iconImage: {
+    width: 40,
+    height: 40,
+    resizeMode: 'contain',
+  },
+  
+
 });
