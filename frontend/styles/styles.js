@@ -158,5 +158,102 @@ card: {
     resizeMode: 'contain',
   },
   
+  //Cooking Mode Styles
+  
+  cookingContainerNoRecipe: {
+    flex: 1, // Fill the screen
+    padding: itemMargin,
+    justifyContent: 'center',  // vertical center
+    alignItems: 'center',      // horizontal center
+    width: '100%',
+    },
+
+  cookingModeText: {
+    fontFamily: shared.fontFamily,
+    fontSize: 22,
+    color: "#2b2b2b",
+  },
+
+  cookingModeButton: {
+    backgroundColor: '#f6c47b',
+  borderRadius: 20,
+  paddingVertical: 10,
+  paddingHorizontal: 32,
+  marginVertical: 6,
+  width: '25%',
+  alignItems: 'center',
+  marginTop: 20,  
+  },
+
+  cookingModeButtonText: {
+    fontFamily: shared.fontFamily,
+    fontSize: 22,
+    color: "#fff",
+    textAlign: 'center',
+    padding: 5,
+  },
+
+  cookingModeContainer: {
+  justifyContent: 'center',  // vertical center
+  flexDirection: 'column',
+  alignItems: 'center',      // horizontal center
+  width: '100%',
+  backgroundColor: '#fff',
+  padding: 16,
+  borderRadius: 16,
+  elevation: 5,
+  shadowColor: '#000',
+  shadowOffset: { width: 0, height: 2 },
+  shadowOpacity: 0.2,
+  shadowRadius: 6,
+},
+
+  cookingModeText: {
+    fontFamily: shared.fontFamily,
+    fontSize: 22,
+    color: "#2b2b2b",
+    justifyContent: 'center',
+    textAlign: 'center',
+  },
+
+    cookingModeStepContainer: {
+  width: '100%',
+  margin: 20,
+  alignContent: 'center',
+  backgroundColor: '#fff',
+  borderRadius: 2,
+},
+
+cookingReadSection: {
+  margin: 20,
+  alignItems: 'center',
+},
+
+cookingModeStepWrapper: {
+  flex: 1,
+  alignItems:'center'
+},
+
+cookingTimerCard: {
+  width: '100%',
+  alignItems: 'center',
+  marginTop: 20
+},
+
+timerPlayIcon: {
+  color: '#f6c47b',
+},
+
+cookingIconButton: {
+  backgroundColor: '#fff'
+},
+
+cookingTimerText: {
+    fontFamily: shared.fontFamily,
+    fontSize: 96,
+    color: "#f6c47b",
+    justifyContent: 'center',
+    textAlign: 'center',
+}
 
 });
