@@ -66,7 +66,7 @@ export default function RecipeDetail({
           uri: recipeState.recipe_img_url,
         }}
       />
-      <h1>{recipeState.recipe_name}</h1>
+      <Text>{recipeState.recipe_name}</Text>
       <Text>{recipeState.recipe_description}</Text>
       <Text>
         <i>By {recipeState.created_by_username}</i>
