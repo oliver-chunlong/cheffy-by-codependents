@@ -14,12 +14,16 @@ import { BlurView } from 'expo-blur';
 const screenWidth = Dimensions.get("window").width;
 const numColumns = 2;
 const itemMargin = 8;
-// const itemWidth = (screenWidth - itemMargin * (numColumns + 1)) / numColumns;
+const itemWidth = (screenWidth - itemMargin * (numColumns + 1)) / numColumns;
 
 export default function RecipeList({ recipes }) {
   const navigation = useNavigation();
 
-  const renderItem = ({ item }) => <RecipeCard recipe={item} />;
+  const renderItem = ({ item }) => <RecipeCard 
+    recipe={item} 
+    cardWidth={itemWidth}
+    cardMargin={itemMargin}
+    />;
 
   if (!recipes || recipes.length === 0) {
     return <Loading />;

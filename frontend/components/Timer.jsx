@@ -65,5 +65,6 @@ export default function Timer({ seconds, isRunning, onFinish }) {
   text = removingLeadingEmpty(text);
   text = removingLeading0(text);
 
+  if (!Array.isArray(text)) return <Text style={styles.cookingTimerText}>--:--</Text>;
   return <Text style={styles.cookingTimerText}>{text.join(":")}</Text>;
 }

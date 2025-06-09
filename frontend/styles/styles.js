@@ -14,7 +14,7 @@ const isMobile = Dimensions.get('window').width < 400;
 
 export const styles = StyleSheet.create({
 container: {
-    padding: itemMargin,
+    padding: 8,
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'center',
@@ -23,7 +23,7 @@ container: {
 card: {
     margin: itemMargin,
     width: itemWidth,
-    maxWidth: 180,
+    // maxWidth: 180,
     backgroundColor: '#fff',
     borderRadius: 12,
     overflow: 'hidden',
@@ -137,6 +137,7 @@ searchWrapper: {
     backgroundColor: '#fff',
     borderRadius: 20,
     height: 80,
+    paddingVertical: 8,
     elevation: 16, // Android shadow needs a separate setting
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 6 },
@@ -145,16 +146,28 @@ searchWrapper: {
     overflow: 'hidden', // fixes iOS clipping apparently?
   },
   iconContainer: {
+    flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingTop: isMobile ? 30 : 10,
+    paddingTop: 0,
+    paddingBottom: 4
   },
   
   iconImage: {
     width: 40,
     height: 40,
     resizeMode: 'contain',
+    marginBottom: 4,
+    marginTop: 40
   },
+
+  iconLabel: {
+  fontSize: 10,
+  lineHeight: 14,
+  textAlign: 'center',
+  paddingHorizontal: 0,
+  // You can adjust fontSize or lineHeight here if needed
+},
   
   //Cooking Mode Styles
   
@@ -178,7 +191,7 @@ searchWrapper: {
   paddingVertical: 10,
   paddingHorizontal: 32,
   marginVertical: 6,
-  width: '25%',
+  minWidth: 160,
   alignItems: 'center',
   marginTop: 20,  
   },
