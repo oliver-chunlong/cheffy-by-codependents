@@ -1,8 +1,9 @@
-import React, { useState, useContext, useEffect } from "react";
-import { StyleSheet, ScrollView } from "react-native";
+import React, { useState, useEffect } from "react";
+import { ScrollView } from "react-native";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
-import { Card, Button, View, Text } from "react-native-ui-lib";
+import { Button, View, Text } from "react-native-ui-lib";
 import { styles } from "../styles/styles";
+import Toast from "react-native-toast-message";
 
 import CookingModeStep from "../components/CookingModeComponents/CookingModeStep";
 import Progressbar from "../components/Progressbar";

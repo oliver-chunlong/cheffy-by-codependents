@@ -21,7 +21,13 @@ function toTimeArray(date) {
   return date.toUTCString().split(" ").at(-2).split(":");
 }
 
-export default function Timer({ seconds, isRunning, onFinish }) {
+export default function Timer({
+  seconds,
+  isRunning,
+  onFinish,
+  handleTimerEnd,
+  step_number,
+}) {
   const start = new Date(0);
 
   const [timer, setTimer] = useState(null);
@@ -31,12 +37,13 @@ export default function Timer({ seconds, isRunning, onFinish }) {
     const date = new Date(0);
     date.setSeconds(seconds);
     setSecondsLeft(date);
-  }, [seconds]);
+  }, [seconds, step_number]);
 
   useEffect(() => {
     if (secondsLeft.valueOf() === start.valueOf() && isRunning && timer) {
       clearInterval(timer);
       setTimer(null);
+      handleTimerEnd();
       onFinish && onFinish();
     }
   }, [secondsLeft]);
