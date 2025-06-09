@@ -64,7 +64,7 @@ export default function RecipeList({ recipes, query }) {
 
   return (
     <View style={{ flex: 1 }}>
-      <View style={{ paddingHorizontal: 10, paddingVertical: 8 }}>
+      <View style={{ paddingHorizontal: 10, paddingTop: 0, paddingBottom: 13 }}>
         <FilterOrderBar
           activeFilters={activeFilters}
           setActiveFilters={setActiveFilters}

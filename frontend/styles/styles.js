@@ -165,7 +165,7 @@ filterBar: {
   alignItems: 'center',
   paddingVertical: 8,
   paddingHorizontal: 10,
-  backgroundColor: 'white',
+  backgroundColor: 'fff',
 },
 
 filterText: {
