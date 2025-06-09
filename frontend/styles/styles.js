@@ -6,38 +6,39 @@ const numColumns = screenWidth > 500 ? 2 : 1;
 const itemWidth = (screenWidth - itemMargin * (numColumns + 1)) / numColumns;
 
 const shared = {
-  fontFamily: 'Calibri',
-  backgroundColor: '#f6c47b',
+  fontFamily: "Calibri",
+  backgroundColor: "#f6c47b",
 };
 
-const isMobile = Dimensions.get('window').width < 400;
+const isMobile = Dimensions.get("window").width < 400;
 
 export const styles = StyleSheet.create({
-container: {
-    padding: 8,
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'center',
-    width: '100%',
-    },
-card: {
+
+  container: {
+    padding: itemMargin,
+    flexDirection: "row",
+    flexWrap: "wrap",
+    // justifyContent: "center",
+    width: "100%",
+  },
+  card: {
     margin: itemMargin,
     width: itemWidth,
-    // maxWidth: 180,
-    backgroundColor: '#fff',
+    maxWidth: 180,
+    backgroundColor: "#fff",
     borderRadius: 12,
-    overflow: 'hidden',
-    shadowColor: '#000',
+    overflow: "hidden",
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.3,
     shadowRadius: 4,
     elevation: 5,
-    },
+  },
   image: {
-    width: '100%',
+    width: "100%",
     height: undefined,
     aspectRatio: 1,
-    resizeMode: 'cover',
+    resizeMode: "cover",
   },
   textWrapper: {
     padding: 6,
@@ -53,14 +54,13 @@ card: {
     color: "#8c8c8c",
   },
   iconRow: {
-    flexDirection: 'row',
+    flexDirection: "row",
     marginTop: 4,
   },
   icon: {
     fontSize: 18,
     marginRight: 8,
   },
-  
 
   // Navbar styles
   header: {
@@ -70,47 +70,49 @@ card: {
     borderTopRightRadius: 18,
   },
   titleWrapper: {
-    position: 'relative',
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: '100%',
+    position: "relative",
+    alignItems: "center",
+    justifyContent: "center",
+    width: "100%",
     paddingTop: 10,
     paddingBottom: 10,
     backgroundColor: shared.backgroundColor,
     minHeight: 100,
     paddingHorizontal: 16,
-},
-profileButton: {
-    position: 'absolute',
-    right: 16,
-    top: '50%',
-    justifyContent: 'center',
-    height: 28,
-    width: 28,
-    alignItems: 'center',
-},
-titleText: {
+  },
+  profileButton: {
+    // position: "absolute",
+    // right: 16,
+    // top: "50%",
+    justifyContent: "center",
+    // height: 28,
+    // width: 28,
+    alignItems: "center",
+  },
+  titleText: {
     fontSize: 40,
-    color: 'white',
+    color: "white",
     fontFamily: shared.fontFamily,
-},
-searchWrapper: {
-    flexDirection: 'row',
-    alignItems: 'center',
+  },
+  searchWrapper: {
+    flexDirection: "row",
+    alignItems: "center",
     marginBottom: 18,
     backgroundColor: shared.backgroundColor,
-    width: '100%',
+    width: "100%",
     paddingHorizontal: 18,
     paddingBottom: 10,
+    borderTopWidth: 0,
+    borderColor: "transparent",
   },
   searchIconImage: {
     width: 32,
     height: 32,
-    resizeMode: 'contain',
+    resizeMode: "contain",
     marginRight: 10,
   },
   searchInput: {
-    backgroundColor: 'white',
+    backgroundColor: "white",
     borderRadius: 8,
     paddingHorizontal: 10,
     fontSize: 16,
@@ -130,54 +132,74 @@ searchWrapper: {
 
   //Tabnav styles
   tabBar: {
-    position: 'absolute',
-    bottom: 16,
-    left: 16,
-    right: 16,
-    backgroundColor: '#fff',
-    borderRadius: 20,
+    // position: "absolute",
+    // bottom: 16,
+    // left: 16,
+    // right: 16,
+    backgroundColor: "#fff",
+    // borderRadius: 20,
     height: 80,
     paddingVertical: 8,
     elevation: 16, // Android shadow needs a separate setting
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 6 },
     shadowOpacity: 0.25,
     shadowRadius: 10,
-    overflow: 'hidden', // fixes iOS clipping apparently?
+    overflow: "hidden", // fixes iOS clipping apparently?
   },
   iconContainer: {
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingTop: 0,
-    paddingBottom: 4
+    alignItems: "center",
+    justifyContent: "center",
+    paddingTop: isMobile ? 30 : 10,
   },
-  
+
   iconImage: {
     width: 40,
     height: 40,
-    resizeMode: 'contain',
-    marginBottom: 4,
-    marginTop: 40
+    resizeMode: "contain",
   },
 
-  iconLabel: {
-  fontSize: 10,
-  lineHeight: 14,
-  textAlign: 'center',
-  paddingHorizontal: 0,
-  // You can adjust fontSize or lineHeight here if needed
-},
-  
+  //filtering bar
+
+  filterBar: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingVertical: 8,
+    paddingHorizontal: 10,
+    backgroundColor: "white",
+  },
+
+  filterText: {
+    marginRight: 20,
+    fontSize: 16,
+    color: "#888",
+    borderBottomWidth: 2,
+    borderBottomColor: "transparent",
+  },
+
+  activeFilterText: {
+    borderBottomColor: "#f6c47b",
+  },
+
+  orderPickerWrapper: {
+    minWidth: 140,
+    justifyContent: "center",
+  },
+
+  orderPicker: {
+    height: 40,
+    width: "100%",
+  },
+
   //Cooking Mode Styles
-  
+
   cookingContainerNoRecipe: {
     flex: 1, // Fill the screen
     padding: itemMargin,
-    justifyContent: 'center',  // vertical center
-    alignItems: 'center',      // horizontal center
-    width: '100%',
-    },
+    justifyContent: "center", // vertical center
+    alignItems: "center", // horizontal center
+    width: "100%",
+  },
 
   cookingModeText: {
     fontFamily: shared.fontFamily,
@@ -186,85 +208,84 @@ searchWrapper: {
   },
 
   cookingModeButton: {
-    backgroundColor: '#f6c47b',
-  borderRadius: 20,
-  paddingVertical: 10,
-  paddingHorizontal: 32,
-  marginVertical: 6,
-  minWidth: 160,
-  alignItems: 'center',
-  marginTop: 20,  
+    backgroundColor: "#f6c47b",
+    borderRadius: 20,
+    paddingVertical: 10,
+    paddingHorizontal: 32,
+    marginVertical: 6,
+    width: "25%",
+    alignItems: "center",
+    marginTop: 20,
   },
 
   cookingModeButtonText: {
     fontFamily: shared.fontFamily,
     fontSize: 22,
     color: "#fff",
-    textAlign: 'center',
+    textAlign: "center",
     padding: 5,
   },
 
   cookingModeContainer: {
-  justifyContent: 'center',  // vertical center
-  flexDirection: 'column',
-  alignItems: 'center',      // horizontal center
-  width: '100%',
-  backgroundColor: '#fff',
-  padding: 16,
-  borderRadius: 16,
-  elevation: 5,
-  shadowColor: '#000',
-  shadowOffset: { width: 0, height: 2 },
-  shadowOpacity: 0.2,
-  shadowRadius: 6,
-},
+    justifyContent: "center", // vertical center
+    flexDirection: "column",
+    alignItems: "center", // horizontal center
+    width: "100%",
+    backgroundColor: "#fff",
+    padding: 16,
+    borderRadius: 16,
+    elevation: 5,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 6,
+  },
 
   cookingModeText: {
     fontFamily: shared.fontFamily,
     fontSize: 22,
     color: "#2b2b2b",
-    justifyContent: 'center',
-    textAlign: 'center',
+    justifyContent: "center",
+    textAlign: "center",
   },
 
-    cookingModeStepContainer: {
-  width: '100%',
-  margin: 20,
-  alignContent: 'center',
-  backgroundColor: '#fff',
-  borderRadius: 2,
-},
+  cookingModeStepContainer: {
+    width: "100%",
+    margin: 20,
+    alignContent: "center",
+    backgroundColor: "#fff",
+    borderRadius: 2,
+  },
 
-cookingReadSection: {
-  margin: 20,
-  alignItems: 'center',
-},
+  cookingReadSection: {
+    margin: 20,
+    alignItems: "center",
+  },
 
-cookingModeStepWrapper: {
-  flex: 1,
-  alignItems:'center'
-},
+  cookingModeStepWrapper: {
+    flex: 1,
+    alignItems: "center",
+  },
 
-cookingTimerCard: {
-  width: '100%',
-  alignItems: 'center',
-  marginTop: 20
-},
+  cookingTimerCard: {
+    width: "100%",
+    alignItems: "center",
+    marginTop: 20,
+  },
 
-timerPlayIcon: {
-  color: '#f6c47b',
-},
+  timerPlayIcon: {
+    color: "#f6c47b",
+  },
 
-cookingIconButton: {
-  backgroundColor: '#fff'
-},
+  cookingIconButton: {
+    backgroundColor: "#fff",
+  },
 
-cookingTimerText: {
+  cookingTimerText: {
     fontFamily: shared.fontFamily,
     fontSize: 96,
     color: "#f6c47b",
-    justifyContent: 'center',
-    textAlign: 'center',
-}
-
+    justifyContent: "center",
+    textAlign: "center",
+  },
 });

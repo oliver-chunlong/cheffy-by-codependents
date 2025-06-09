@@ -49,7 +49,6 @@ export default function CookingMode(props) {
         if (complete) {
           setStep(0);
           setComplete(false);
-          setCurrentRecipe({});
           setStart(false);
         }
       };
@@ -59,7 +58,9 @@ export default function CookingMode(props) {
   if (!currentRecipe) {
     return (
       <View style={styles.cookingContainerNoRecipe}>
-        <Text style={styles.cookingNoRecipeText}>Select a recipe to get started!</Text>
+        <Text style={styles.cookingNoRecipeText}>
+          Select a recipe to get started!
+        </Text>
         <Button
           onPress={() => {
             navigation.navigate("Home");
@@ -76,14 +77,14 @@ export default function CookingMode(props) {
   if (!start)
     return (
       <View style={styles.cookingContainerNoRecipe}>
-      <Button
-        onPress={() => {
-          setStart(true);
-        }}
-        style={styles.cookingModeButton}
-      >
-        <Text style={styles.cookingModeButtonText}>Start Cooking</Text>
-      </Button>
+        <Button
+          onPress={() => {
+            setStart(true);
+          }}
+          style={styles.cookingModeButton}
+        >
+          <Text style={styles.cookingModeButtonText}>Start Cooking</Text>
+        </Button>
       </View>
     );
 
@@ -104,22 +105,19 @@ export default function CookingMode(props) {
           repeat={repeat}
         />
       )}
-      <Button 
-        onPress={handleNext} 
-        style={styles.cookingModeButton}>
-        <Text
-          style={styles.cookingModeButtonText}>Next Step</Text>
+      <Button onPress={handleNext} style={styles.cookingModeButton}>
+        <Text style={styles.cookingModeButtonText}>Next Step</Text>
       </Button>
-      <Button 
-        // title="Previous Step" 
+
+      <Button
+        title="Previous Step"
         onPress={handleBack}
-        style={styles.cookingModeButton}>
-        <Text
-          style={styles.cookingModeButtonText}>Previous Step</Text>
+        style={styles.cookingModeButton}
+      >
+        <Text style={styles.cookingModeButtonText}>Previous Step</Text>
       </Button>
 
       <View style={{ height: 150 }} />
-
       <SpeechRecognition
         setStep={setStep}
         complete={complete}
