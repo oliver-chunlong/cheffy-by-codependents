@@ -49,7 +49,6 @@ export default function CookingMode(props) {
         if (complete) {
           setStep(0);
           setComplete(false);
-          setCurrentRecipe({});
           setStart(false);
         }
       };
