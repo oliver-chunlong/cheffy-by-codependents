@@ -1,15 +1,13 @@
 import { useEffect, useState, useCallback } from "react";
-import {
-  View,
-  FlatList,
-  Dimensions,
-} from "react-native";
+import { FlatList, Dimensions } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { requestRecipes } from "../../utils/axios";
-import  {styles}  from "../../styles/styles";
+import { styles } from "../../styles/styles";
 import Loading from "../Loading";
-import RecipeCard from './RecipeCard';
-import { BlurView } from 'expo-blur';
+import RecipeCard from "./RecipeCard";
+
+import { View } from "react-native-ui-lib";
+import { BlurView } from "expo-blur";
 
 import FilterOrderBar from "./FilterOrderBar";
 
@@ -17,7 +15,7 @@ const screenWidth = Dimensions.get("window").width;
 const numColumns = 2;
 const itemMargin = 8;
 
-export default function RecipeList({ recipes, query}) {
+export default function RecipeList({ recipes, query }) {
   const navigation = useNavigation();
 
   const [activeFilters, setActiveFilters] = useState({});
@@ -40,7 +38,7 @@ export default function RecipeList({ recipes, query}) {
 
   useEffect(() => {
     let sorted = [...filteredRecipes];
-    switch(order) {
+    switch (order) {
       case "name_asc":
         sorted.sort((a, b) => a.recipe_name.localeCompare(b.recipe_name));
         break;
@@ -55,25 +53,28 @@ export default function RecipeList({ recipes, query}) {
         break;
     }
     setFilteredRecipes(sorted);
-  }, [order]);  
-  
-  const renderItem = useCallback(({ item }) => <RecipeCard recipe={item} />, []);
+  }, [order]);
+
+  const renderItem = useCallback(
+    ({ item }) => <RecipeCard recipe={item} />,
+    []
+  );
 
   if (!filteredRecipes || filteredRecipes.length === 0) {
     return <Loading />;
   }
 
   return (
-    <View style={{ flex: 1 }}>
-      <View style={{ paddingHorizontal: 10, paddingVertical: 8 }}>
-        <FilterOrderBar
-          activeFilters={activeFilters}
-          setActiveFilters={setActiveFilters}
-          order={order}
-          setOrder={setOrder}
-        />
-      </View>
+    <View style={{ flex: 1 }} useSafeArea>
+      <FilterOrderBar
+        activeFilters={activeFilters}
+        setActiveFilters={setActiveFilters}
+        order={order}
+        setOrder={setOrder}
+      />
       <FlatList
+        style={{ alignContent: "center" }}
+        contentInsetAdjustmentBehavior="automatic"
         data={filteredRecipes}
         renderItem={renderItem}
         keyExtractor={(item, index) =>
@@ -83,18 +84,17 @@ export default function RecipeList({ recipes, query}) {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.container}
       />
-      <BlurView
+      {/* <BlurView
         intensity={40}
         tint="light"
         style={{
-          position: 'absolute',
+          position: "absolute",
           bottom: 0,
           left: 0,
           right: 0,
           height: 90,
         }}
-      />
+      /> */}
     </View>
   );
-  
 }
