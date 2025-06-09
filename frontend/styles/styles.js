@@ -95,14 +95,16 @@ titleText: {
     fontFamily: shared.fontFamily,
 },
 searchWrapper: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 18,
-    backgroundColor: shared.backgroundColor,
-    width: '100%',
-    paddingHorizontal: 18,
-    paddingBottom: 10,
-  },
+  flexDirection: 'row',
+  alignItems: 'center',
+  marginBottom: 18,
+  backgroundColor: shared.backgroundColor,
+  width: '100%',
+  paddingHorizontal: 18,
+  paddingBottom: 10,
+  borderTopWidth: 0,
+  borderColor: 'transparent',
+},
   searchIconImage: {
     width: 32,
     height: 32,
@@ -156,5 +158,36 @@ searchWrapper: {
     resizeMode: 'contain',
   },
   
+//filtering bar
+
+filterBar: {
+  flexDirection: 'row',
+  alignItems: 'center',
+  paddingVertical: 8,
+  paddingHorizontal: 10,
+  backgroundColor: 'white',
+},
+
+filterText: {
+  marginRight: 20,
+  fontSize: 16,
+  color: '#888',
+  borderBottomWidth: 2,
+  borderBottomColor: 'transparent',
+},
+
+activeFilterText: {
+  borderBottomColor: '#f6c47b', 
+},
+
+orderPickerWrapper: {
+  minWidth: 140,
+  justifyContent: 'center',
+},
+
+orderPicker: {
+  height: 40,
+  width: '100%',
+},
 
 });

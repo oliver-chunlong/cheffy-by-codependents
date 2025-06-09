@@ -1,14 +1,10 @@
+import React, { useState, useEffect } from "react";
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import  {styles}  from "../styles/styles";
+import { View, Text, Image, TouchableOpacity } from 'react-native';
 import { Button } from 'react-native-ui-lib';
-import {
-  View,
-  Text,
-  Image,
-  TouchableOpacity,
-} from 'react-native';
-import React, { useState, useEffect } from "react";
+
+import { styles } from "../styles/styles";
 import { requestRecipes } from "../utils/axios";
 
 import Home from "../pages/Homepage.jsx";
@@ -16,28 +12,27 @@ import CookingMode from "../pages/CookingMode.jsx";
 import ShoppingList from "../pages/ShoppingList.jsx";
 import RecipeDetail from "../pages/RecipeDetail.jsx";
 import Profile from "../pages/Profile.jsx";
-import SearchBar from "./HomePage-components/SearchBar.jsx"
+import SearchBar from "./HomePage-components/SearchBar.jsx";
+import RecipeList from './HomePage-components/RecipeList'; 
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
-
-function HomeStack() {
+function HomeStack({ navigation }) {
   const [allRecipes, setAllRecipes] = useState([]);
   const [filteredRecipes, setFilteredRecipes] = useState([]);
+  const [query, setQuery] = useState("");
+  const [activeFilters, setActiveFilters] = useState({});
 
   useEffect(() => {
-    requestRecipes()
-      .then(recipes => {
-        console.log("Fetched recipes:", recipes); 
-        setAllRecipes(recipes);
-        setFilteredRecipes(recipes);
-      });
+    requestRecipes().then((recipes) => {
+      setAllRecipes(recipes);
+      setFilteredRecipes(recipes); 
+    });
   }, []);
 
   return (
     <Stack.Navigator screenOptions={{ headerShown: true }}>
-
       <Stack.Screen
         name="Homepage"
         options={{
@@ -46,33 +41,43 @@ function HomeStack() {
           headerTitle: () => (
             <View style={styles.titleWrapper}>
               <Text style={styles.titleText}>H O M E</Text>
-              <TouchableOpacity
-                onPress={() => navigation.navigate('Profile')}
-                style={styles.profileButton}
-              >
-                {/* <Image
-                  source={require('../assets/ProfileIcon.png')}
-                  style={styles.profileIcon}
-                  resizeMode="contain"
-                /> */}
-              </TouchableOpacity>
             </View>
           ),
-          headerRight: () => null,
+          headerRight: () => (
+            <TouchableOpacity
+            onPress={() => navigation.navigate('Home', { screen: 'Profile' })}
+              style={styles.profileButton}
+            >
+              <Image
+                source={require('../assets/ProfileIcon.png')}
+                style={styles.profileIcon}
+                resizeMode="contain"
+              />
+            </TouchableOpacity>
+          ),
           headerLeft: () => null,
         }}
       >
         {props => (
           <>
-            <SearchBar recipes={allRecipes} setFilteredRecipes={setFilteredRecipes} />
-            <Home {...props} recipes={filteredRecipes} />
+            <SearchBar
+              allRecipes={allRecipes}
+              setFilteredRecipes={setFilteredRecipes}
+              query={query}
+              setQuery={setQuery}
+              activeFilters={activeFilters}
+              setActiveFilters={setActiveFilters}
+            />
+            <RecipeList
+              {...props}
+              recipes={filteredRecipes}
+            />
           </>
         )}
       </Stack.Screen>
 
-
-
       <Stack.Screen name="RecipeDetail" component={RecipeDetail} />
+
       <Stack.Screen
         name="Profile"
         component={Profile}
@@ -109,7 +114,10 @@ export default function NavBar() {
   return (
     <Tab.Navigator
       screenOptions={({ route }) => {
-        const icon = focused => focused ? icons[route.name].active : icons[route.name].inactive || icons[route.name].active;
+        const icon = focused =>
+          focused
+            ? icons[route.name].active
+            : icons[route.name].inactive || icons[route.name].active;
 
         let label;
         if (route.name === 'Home') label = 'MENU';
@@ -121,7 +129,12 @@ export default function NavBar() {
           tabBarIcon: ({ focused }) => (
             <View style={styles.iconContainer}>
               <Image source={icon(focused)} style={styles.iconImage} />
-              <Text style={[styles.iconLabel, focused ? styles.iconLabelActive : styles.iconLabelInactive]}>
+              <Text
+                style={[
+                  styles.iconLabel,
+                  focused ? styles.iconLabelActive : styles.iconLabelInactive,
+                ]}
+              >
                 {label}
               </Text>
             </View>
@@ -131,7 +144,11 @@ export default function NavBar() {
         };
       }}
     >
-      <Tab.Screen name="Home" component={HomeStack} options={{ headerShown: false }} />
+      <Tab.Screen
+        name="Home"
+        component={HomeStack}
+        options={{ headerShown: false }}
+      />
       <Tab.Screen name="Cooking Mode" component={CookingMode} />
       <Tab.Screen name="Shopping List" component={ShoppingList} />
     </Tab.Navigator>
