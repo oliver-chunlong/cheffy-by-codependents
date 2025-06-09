@@ -13,6 +13,7 @@ const shared = {
 const isMobile = Dimensions.get("window").width < 400;
 
 export const styles = StyleSheet.create({
+
   container: {
     padding: itemMargin,
     flexDirection: "row",
@@ -138,6 +139,7 @@ export const styles = StyleSheet.create({
     backgroundColor: "#fff",
     // borderRadius: 20,
     height: 80,
+    paddingVertical: 8,
     elevation: 16, // Android shadow needs a separate setting
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 6 },
