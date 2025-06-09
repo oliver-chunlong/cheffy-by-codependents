@@ -1,8 +1,9 @@
 import Timer from "../Timer";
 import { useEffect, useState } from "react";
-import { StyleSheet } from "react-native";
+import { styles } from "../../styles/styles";
 import * as Speech from "expo-speech";
 import { Card, View, Text, Button, Switch } from "react-native-ui-lib";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
 export default function CookingModeStep({
   step_number,
@@ -23,30 +24,41 @@ export default function CookingModeStep({
   }, [step_number, repeat, hasReading]);
 
   return (
-    <Card>
-      <Text>step {step_number}</Text>
-      <Text>{step_description}</Text>
+    <Card
+      style={styles.cookingModeStepContainer}>
+        <View style={styles.cookingStepWrapper}>
+      <Text 
+        style={styles.cookingModeText}>Step {step_number}</Text>
+      <Text
+        style={styles.cookingModeText}>{step_description}</Text>
+        </View>
       {time_required && (
-        <Card>
+        <Card
+          style={styles.cookingTimerCard}>
           <Timer seconds={time_required * 60} isRunning={isTimerRunning} />
-          <Button onPress={() => setIsTimerRunning((prev) => !prev)}>
-            <Text>{isTimerRunning ? "Pause Timer" : "Start Timer"}</Text>
+          <Button 
+            style={styles.cookingIconButton}
+            onPress={() => setIsTimerRunning((prev) => !prev)}>
+          <Icon 
+            name={isTimerRunning ? "pause-circle-outline" : "play-circle-outline"}
+            size={100} 
+            style={styles.timerPlayIcon} />            
           </Button>
         </Card>
       )}
-      <View justifyContent="space-between">
-        <Text>Read outloud</Text>
+      <View style={styles.cookingReadSection}>
+        <Text style={styles.cookingModeText}>Read outloud</Text>
         <Switch margin-20 value={hasReading} onValueChange={setHasReading} />
       </View>
     </Card>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    backgroundColor: "#ecf0f1",
-    padding: 8,
-  },
-});
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//     justifyContent: "center",
+//     backgroundColor: "#ecf0f1",
+//     padding: 8,
+//   },
+// });

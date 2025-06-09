@@ -68,9 +68,7 @@ export default function RecipeDetail({
       />
       <Text>{recipeState.recipe_name}</Text>
       <Text>{recipeState.recipe_description}</Text>
-      <Text>
-        <i>By {recipeState.created_by_username}</i>
-      </Text>
+      <Text>By {recipeState.created_by_username}</Text>
       {recipeState.ingredients && recipeState.ingredients.length > 0 ? (
         <FlatList
           scrollEnabled={false}
