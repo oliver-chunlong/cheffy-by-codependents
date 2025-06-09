@@ -1,9 +1,9 @@
 import Timer from "../Timer";
 import { useEffect, useState } from "react";
 import { styles } from "../../styles/styles";
-import * as Speech from "expo-speech";
 import { Card, View, Text, Button, Switch } from "react-native-ui-lib";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import { speak, stopSpeaking } from "../../utils/Speak";
 
 export default function CookingModeStep({
   step_number,
@@ -17,32 +17,32 @@ export default function CookingModeStep({
 
   useEffect(() => {
     setIsTimerRunning(false);
-    Speech.stop();
+    stopSpeaking();
     if (hasReading) {
-      Speech.speak(step_description);
+      speak(step_description);
     }
   }, [step_number, repeat, hasReading]);
 
   return (
-    <Card
-      style={styles.cookingModeStepContainer}>
-        <View style={styles.cookingStepWrapper}>
-      <Text 
-        style={styles.cookingModeText}>Step {step_number}</Text>
-      <Text
-        style={styles.cookingModeText}>{step_description}</Text>
-        </View>
+    <Card style={styles.cookingModeStepContainer}>
+      <View style={styles.cookingStepWrapper}>
+        <Text style={styles.cookingModeText}>Step {step_number}</Text>
+        <Text style={styles.cookingModeText}>{step_description}</Text>
+      </View>
       {time_required && (
-        <Card
-          style={styles.cookingTimerCard}>
+        <Card style={styles.cookingTimerCard}>
           <Timer seconds={time_required * 60} isRunning={isTimerRunning} />
-          <Button 
+          <Button
             style={styles.cookingIconButton}
-            onPress={() => setIsTimerRunning((prev) => !prev)}>
-          <Icon 
-            name={isTimerRunning ? "pause-circle-outline" : "play-circle-outline"}
-            size={100} 
-            style={styles.timerPlayIcon} />            
+            onPress={() => setIsTimerRunning((prev) => !prev)}
+          >
+            <Icon
+              name={
+                isTimerRunning ? "pause-circle-outline" : "play-circle-outline"
+              }
+              size={100}
+              style={styles.timerPlayIcon}
+            />
           </Button>
         </Card>
       )}
