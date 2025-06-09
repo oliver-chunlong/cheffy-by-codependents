@@ -108,7 +108,6 @@ export default function CookingMode(props) {
       <Button onPress={handleNext} style={styles.cookingModeButton}>
         <Text style={styles.cookingModeButtonText}>Next Step</Text>
       </Button>
-
       <Button
         title="Previous Step"
         onPress={handleBack}
@@ -116,7 +115,6 @@ export default function CookingMode(props) {
       >
         <Text style={styles.cookingModeButtonText}>Previous Step</Text>
       </Button>
-
       <View style={{ height: 150 }} />
       <SpeechRecognition
         setStep={setStep}

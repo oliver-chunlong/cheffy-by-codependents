@@ -46,28 +46,34 @@ export default function ShoppingList() {
           Select a recipe to add ingredients
         </Text>
       ) : (
-        <FlatList ListHeaderComponent={
-        <View>
+        <ScrollView>
           <Text>Ingredients for:</Text>
-          {uniqueRecipesWithCount.map((item) => (
-            <Text key={item.recipe_id}>
-              {item.count > 1
-                ? `${item.count} batches of ${item.recipe_name}`
-                : `${item.count} batch of ${item.recipe_name}`}
-            </Text>
-          ))}
-        </View>
-      }
-      data={summedUpIngredients}
-      keyExtractor={(item) => item.ingredient_id}
-      renderItem={({ item }) => <ListIngredient ingredient={item} />}
-      ListFooterComponent={
-        <Button onPress={() => setShoppingList([])}>
-          <Text>Clear List</Text>
-        </Button>
-      }
-      contentContainerStyle={styles.container}
-    />
+          <FlatList
+            data={uniqueRecipesWithCount}
+            keyExtractor={(item) => item.recipe_id}
+            renderItem={({ item }) => (
+              <Text key={item.recipe_id}>
+                {`${
+                  item.count > 1
+                    ? item.count + " batches of"
+                    : item.count + " batch of"
+                } ${item.recipe_name} `}
+              </Text>
+            )}
+          />
+          <FlatList
+            data={summedUpIngredients}
+            keyExtractor={(item) => item.ingredient_id}
+            renderItem={({ item }) => <ListIngredient ingredient={item} />}
+          />
+          <Button
+            onPress={() => {
+              setShoppingList((prev) => []);
+            }}
+          >
+            <Text>Clear List</Text>
+          </Button>
+        </ScrollView>
       )}
     </View>
   );

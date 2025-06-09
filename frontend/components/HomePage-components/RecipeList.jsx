@@ -17,6 +17,7 @@ const itemMargin = 8;
 
 export default function RecipeList({ recipes, query }) {
   const navigation = useNavigation();
+
   const [activeFilters, setActiveFilters] = useState({});
   const [order, setOrder] = useState("name_asc");
   const [filteredRecipes, setFilteredRecipes] = useState(recipes || []);

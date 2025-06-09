@@ -3,12 +3,12 @@ import { useNavigation } from "@react-navigation/native";
 import  {styles}  from "../../styles/styles";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
-export default function RecipeCard({ recipe, cardWidth, cardMargin }) {
+export default function RecipeCard({ recipe }) {
   const navigation = useNavigation();
 
   return (
     <TouchableOpacity
-      style={[styles.card, { width: cardWidth, margin: cardMargin }]}
+      style={styles.card}
       onPress={() => navigation.navigate("RecipeDetail", { recipe })}
     >
       <Image
