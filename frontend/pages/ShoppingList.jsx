@@ -1,4 +1,4 @@
-import { ScrollView, FlatList, StyleSheet } from "react-native";
+import { FlatList, StyleSheet } from "react-native";
 import ListIngredient from "../components/ShoppingListComponents/ListIngredient";
 import { useContext } from "react";
 import { ShoppingListContext } from "../context/ShoppingListContext";
@@ -9,11 +9,11 @@ import { Text, View, Button } from "react-native-ui-lib";
 export default function ShoppingList() {
   const { shoppingList, setShoppingList } = useContext(ShoppingListContext);
   const navigation = useNavigation();
+
   const safeShoppingList = Array.isArray(shoppingList) ? shoppingList : [];
   const summedUpIngredients = Object.values(
     safeShoppingList.reduce((ingredients, recipe) => {
-      if (!recipe?.ingredients || !Array.isArray(recipe.ingredients))
-        return ingredients;
+      if (!recipe?.ingredients || !Array.isArray(recipe.ingredients)) return ingredients;
 
       for (const ingredient of recipe.ingredients) {
         if (!ingredient || !ingredient.ingredient_id) continue;
@@ -29,6 +29,7 @@ export default function ShoppingList() {
       return ingredients;
     }, {})
   );
+
   const recipeCount = shoppingList.reduce((acc, item) => {
     acc[item.recipe_id] = acc[item.recipe_id] || { ...item, count: 0 };
     acc[item.recipe_id].count += 1;
@@ -36,45 +37,47 @@ export default function ShoppingList() {
   }, {});
   const uniqueRecipesWithCount = Object.values(recipeCount);
 
-  return (
-    <View style={styles.container}>
-      {shoppingList?.length === 0 ? (
-        <Text
-          style={{ color: "blue" }}
-          onPress={() => navigation.navigate("Home")}
-        >
+  // If empty, show a message
+  if (shoppingList?.length === 0) {
+    return (
+      <View style={styles.container}>
+        <Text style={{ color: "blue" }} onPress={() => navigation.navigate("Home")}>
           Select a recipe to add ingredients
         </Text>
-      ) : (
-        <ScrollView>
-          <Text>Ingredients for:</Text>
-          <FlatList
-            data={uniqueRecipesWithCount}
-            keyExtractor={(item) => item.recipe_id}
-            renderItem={({ item }) => (
-              <Text key={item.recipe_id}>
-                {`${
-                  item.count > 1
-                    ? item.count + " batches of"
-                    : item.count + " batch of"
-                } ${item.recipe_name} `}
+      </View>
+    );
+  }
+
+  return (
+    <View style={styles.container}>
+      <FlatList
+        data={summedUpIngredients}
+        keyExtractor={(item) => item.ingredient_id}
+        renderItem={({ item }) => <ListIngredient ingredient={item} />}
+        ListHeaderComponent={() => (
+          <>
+            <Text style={{ marginBottom: 8 }}>Ingredients for:</Text>
+            {uniqueRecipesWithCount.map((item) => (
+              <Text key={item.recipe_id} style={{ marginBottom: 4 }}>
+                {item.count > 1
+                  ? `${item.count} batches of ${item.recipe_name}`
+                  : `${item.count} batch of ${item.recipe_name}`}
               </Text>
-            )}
-          />
-          <FlatList
-            data={summedUpIngredients}
-            keyExtractor={(item) => item.ingredient_id}
-            renderItem={({ item }) => <ListIngredient ingredient={item} />}
-          />
+            ))}
+          </>
+        )}
+        ListFooterComponent={() => (
           <Button
             onPress={() => {
-              setShoppingList((prev) => []);
+              setShoppingList([]);
             }}
+            style={{ marginTop: 16 }}
           >
             <Text>Clear List</Text>
           </Button>
-        </ScrollView>
-      )}
+        )}
+        contentContainerStyle={{ paddingBottom: 20 }}
+      />
     </View>
   );
 }
@@ -82,7 +85,6 @@ export default function ShoppingList() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // justifyContent: "center",
     backgroundColor: "#ecf0f1",
     padding: 8,
   },
