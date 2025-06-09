@@ -34,7 +34,7 @@ function FilterOrderBar({ activeFilters, setActiveFilters, order, setOrder }) {
                     {f.label}
                 </Text>
                 ))}
-  <TouchableOpacity style={styles.orderPickerWrapper}>
+  {/* <TouchableOpacity style={styles.orderPickerWrapper}>
     <Picker
       selectedValue={order}
       onValueChange={val => setOrder(val)}
@@ -46,7 +46,7 @@ function FilterOrderBar({ activeFilters, setActiveFilters, order, setOrder }) {
       <Picker.Item label="Quickest → Longest" value="time_asc" />
       <Picker.Item label="Longest → Quickest" value="time_desc" />
     </Picker>
-  </TouchableOpacity>
+  </TouchableOpacity> */}
 </ScrollView>
 
     </View>

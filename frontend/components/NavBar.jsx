@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { View, Text, Image, TouchableOpacity } from 'react-native';
-import { Button } from 'react-native-ui-lib';
+import { View, Image, SafeAreaView, ScrollView } from 'react-native';
+import { Text, Button } from 'react-native-ui-lib';
 
 import { styles } from "../styles/styles";
 import { requestRecipes } from "../utils/axios";
@@ -34,32 +34,36 @@ function HomeStack({ navigation }) {
   return (
     <Stack.Navigator screenOptions={{ headerShown: true }}>
       <Stack.Screen
-        name="Homepage"
+        name="Menu"
         options={{
           headerStyle: styles.header,
+          headerShadowVisible: false,
           headerTitleAlign: 'center',
-          headerTitle: () => (
-            <View style={styles.titleWrapper}>
-              <Text style={styles.titleText}>H O M E</Text>
-            </View>
-          ),
+          // headerTitle: () => (
+          //   <View style={styles.titleWrapper}>
+          //     <Text text60BO>H O M E</Text>
+          //   </View>
+          // ),
           headerRight: () => (
-            <TouchableOpacity
-            onPress={() => navigation.navigate('Home', { screen: 'Profile' })}
-              style={styles.profileButton}
+            <Button
+              round
+              size={Button.sizes.small}
+              backgroundColor="#eee"
+              onPress={() => navigation.navigate('Home', { screen: 'Profile' })}
+              style={{ marginRight: 10 }}
             >
               <Image
                 source={require('../assets/ProfileIcon.png')}
-                style={styles.profileIcon}
+                style={{ width: 24, height: 24 }}
                 resizeMode="contain"
               />
-            </TouchableOpacity>
+            </Button>
           ),
           headerLeft: () => null,
         }}
       >
         {props => (
-          <>
+          <SafeAreaView style={{ flex: 1 }}>
             <SearchBar
               allRecipes={allRecipes}
               setFilteredRecipes={setFilteredRecipes}
@@ -72,7 +76,7 @@ function HomeStack({ navigation }) {
               {...props}
               recipes={filteredRecipes}
             />
-          </>
+          </SafeAreaView>
         )}
       </Stack.Screen>
 
@@ -81,15 +85,17 @@ function HomeStack({ navigation }) {
       <Stack.Screen
         name="Profile"
         component={Profile}
-        options={({ navigation }) => ({
+        options={{
           headerRight: () => (
             <Button
               label="Home"
               onPress={() => navigation.navigate('Homepage')}
-              style={styles.homeButton}
+              backgroundColor="#f5f5f5"
+              style={{ marginRight: 10 }}
+              labelStyle={{ color: '#333' }}
             />
           ),
-        })}
+        }}
       />
     </Stack.Navigator>
   );
@@ -117,30 +123,37 @@ export default function NavBar() {
         const icon = focused =>
           focused
             ? icons[route.name].active
-            : icons[route.name].inactive || icons[route.name].active;
+            : icons[route.name].inactive;
 
-        let label;
-        if (route.name === 'Home') label = 'MENU';
-        else if (route.name === 'Cooking Mode') label = 'COOK';
-        else if (route.name === 'Shopping List') label = 'LIST';
+        const label =
+          route.name === 'Home' ? 'Menu' :
+          route.name === 'Cooking Mode' ? 'Cook' :
+          'List';
 
         return {
           headerShown: true,
           tabBarIcon: ({ focused }) => (
             <View style={styles.iconContainer}>
-              <Image source={icon(focused)} style={styles.iconImage} />
+              <Image source={icon(focused)} style={{ width: 24, height: 24 }} />
               <Text
-                style={[
-                  styles.iconLabel,
-                  focused ? styles.iconLabelActive : styles.iconLabelInactive,
-                ]}
+                style={{
+                  fontSize: 10,
+                  marginTop: 4,
+                  color: focused ? '#000' : '#888',
+                  fontWeight: focused ? 'bold' : 'normal',
+                }}
               >
                 {label}
               </Text>
             </View>
           ),
           tabBarShowLabel: false,
-          tabBarStyle: styles.tabBar,
+          tabBarStyle: {
+            backgroundColor: '#fff',
+            height: 60,
+            borderTopWidth: 0.5,
+            borderColor: '#ddd',
+          },
         };
       }}
     >

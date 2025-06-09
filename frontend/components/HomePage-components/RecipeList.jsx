@@ -1,15 +1,11 @@
 import { useEffect, useState, useCallback } from "react";
-import {
-  View,
-  FlatList,
-  Dimensions,
-} from "react-native";
+import { View, FlatList, Dimensions } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { requestRecipes } from "../../utils/axios";
-import  {styles}  from "../../styles/styles";
+import { styles } from "../../styles/styles";
 import Loading from "../Loading";
-import RecipeCard from './RecipeCard';
-import { BlurView } from 'expo-blur';
+import RecipeCard from "./RecipeCard";
+import { BlurView } from "expo-blur";
 
 import FilterOrderBar from "./FilterOrderBar";
 
@@ -17,7 +13,7 @@ const screenWidth = Dimensions.get("window").width;
 const numColumns = 2;
 const itemMargin = 8;
 
-export default function RecipeList({ recipes, query}) {
+export default function RecipeList({ recipes, query }) {
   const navigation = useNavigation();
 
   const [activeFilters, setActiveFilters] = useState({});
@@ -40,7 +36,7 @@ export default function RecipeList({ recipes, query}) {
 
   useEffect(() => {
     let sorted = [...filteredRecipes];
-    switch(order) {
+    switch (order) {
       case "name_asc":
         sorted.sort((a, b) => a.recipe_name.localeCompare(b.recipe_name));
         break;
@@ -55,9 +51,12 @@ export default function RecipeList({ recipes, query}) {
         break;
     }
     setFilteredRecipes(sorted);
-  }, [order]);  
-  
-  const renderItem = useCallback(({ item }) => <RecipeCard recipe={item} />, []);
+  }, [order]);
+
+  const renderItem = useCallback(
+    ({ item }) => <RecipeCard recipe={item} />,
+    []
+  );
 
   if (!filteredRecipes || filteredRecipes.length === 0) {
     return <Loading />;
@@ -81,20 +80,22 @@ export default function RecipeList({ recipes, query}) {
         }
         numColumns={numColumns}
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.container}
+        contentContainerStyle={{
+          paddingHorizontal: 18,
+        }}
+        columnWrapperStyle={{ justifyContent: 'space-between' }}
       />
-      <BlurView
+      {/* <BlurView
         intensity={40}
         tint="light"
         style={{
-          position: 'absolute',
+          position: "absolute",
           bottom: 0,
           left: 0,
           right: 0,
           height: 90,
         }}
-      />
+      /> */}
     </View>
   );
-  
 }
