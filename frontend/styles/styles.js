@@ -1,6 +1,8 @@
 import { StyleSheet, Dimensions } from "react-native";
+import { Colors } from "react-native-ui-lib";
 
 const screenWidth = Dimensions.get("window").width;
+const height = Dimensions.get("window").width;
 const itemMargin = 6;
 const numColumns = screenWidth > 500 ? 2 : 1;
 const itemWidth = (screenWidth - itemMargin * (numColumns + 1)) / numColumns;
@@ -167,8 +169,16 @@ export const styles = StyleSheet.create({
     backgroundColor: "fff",
   },
 
+  filterBar: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingVertical: 8,
+    paddingHorizontal: 10,
+    backgroundColor: "fff",
+  },
+
   filterText: {
-    marginRight: 20,
+    marginRight: 10,
     fontSize: 16,
     color: "#888",
     borderBottomWidth: 2,
@@ -180,11 +190,70 @@ export const styles = StyleSheet.create({
   },
 
   orderPickerWrapper: {
-    minWidth: 140,
+    minWidth: 100,
     justifyContent: "center",
+    marginRight: 10,
+    zIndex: 1,
   },
 
   orderPicker: {
+    height: 35,
+    width: '80%',
+    minWidth: 100,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 10,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    backgroundColor: '#fff',
+  },
+
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.5)', 
+    justifyContent: 'flex-end', 
+    alignItems: 'center',
+  },
+  sortButtonText: {
+    fontSize: 14,
+    color: '#555',
+  },
+  dropdownArrow: {
+    fontSize: 10,
+    color: '#555',
+  },
+
+  dropdownContent: {
+    backgroundColor: '#fff',
+    borderRadius: 8, 
+    paddingVertical: 5,
+    width: '100%', 
+    maxHeight: height * 0.6, 
+    paddingBottom: 20, 
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  dropdownItem: {
+    paddingVertical: 12,
+    paddingHorizontal: 15,
+    borderBottomWidth: 1,
+    borderBottomColor: '#f0f0f0',
+  },
+  dropdownItemText: {
+    fontSize: 16,
+    color: '#333',
+  },
+  activeDropdownItem: {
+    backgroundColor: '#FDEBD0',
+  },
+  activeDropdownItemText: {
+    color: '#E67E22',
+    fontWeight: 'bold',
     height: 40,
     width: "100%",
   },
@@ -286,6 +355,7 @@ export const styles = StyleSheet.create({
     justifyContent: "center",
     textAlign: "center",
   },
+  
   // Shopping List Styles
 
   shoppingListItem: {
@@ -338,5 +408,108 @@ export const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "bold",
     textAlign: "center",
+  },
+
+  scrollViewContainer: {
+    flex: 1,
+    backgroundColor: Colors.white,
+  },
+
+  innerContentContainer: {
+    padding: 15,
+    paddingBottom: 30,
+  },
+
+  topButtonsRow: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: 15,
+    paddingTop: 10,
+  },
+
+  button: {
+    backgroundColor: "#fc9f5d",
+    marginLeft: 10,
+    marginRight: 10,
+  },
+
+  recipeImage: {
+    width: "100%",
+    height: 200,
+    resizeMode: "cover",
+    borderRadius: 8,
+    marginBottom: 0,
+  },
+
+  recipeName: {
+    fontSize: 28,
+    fontWeight: "bold",
+    marginBottom: 5,
+    textAlign: "center",
+  },
+
+  recipeDescription: {
+    fontSize: 16,
+    color: Colors.grey20,
+    marginBottom: 3,
+    textAlign: "center",
+  },
+
+  createdBy: {
+    fontSize: 14,
+    color: Colors.grey30,
+    marginBottom: 20,
+    textAlign: "center",
+  },
+
+  ingredientsListSpacing: {
+    marginBottom: 10,
+  },
+
+  shoppingListSection: {
+    marginBottom: 20,
+    justifyContent: "center",
+  },
+
+  shoppingAddButton: {
+    backgroundColor: "#fc9f5d",
+    marginLeft: 0,
+},
+  buttonText: {
+    fontWeight: "bold",
+  },
+
+  sectionTitle: {
+    fontSize: 20,
+    fontWeight: "bold",
+    marginTop: 20,
+    marginBottom: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: "#eee",
+    paddingBottom: 5,
+  },
+
+  ingredientsList: {
+    marginBottom: 20,
+  },
+
+  ingredientText: {
+    fontSize: 16,
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+  },
+
+  instructionCard: {
+    backgroundColor: "",
+    padding: 5,
+    borderRadius: 8,
+    marginBottom: 10,
+  },
+
+  instructionTime: {
+    fontSize: 14,
+    color: Colors.grey30,
+    marginTop: 5,
   },
 });

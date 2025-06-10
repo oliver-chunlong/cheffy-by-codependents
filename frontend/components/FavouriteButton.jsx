@@ -1,4 +1,4 @@
-import { Button, View } from "react-native-ui-lib";
+import { Button, View, Text } from "react-native-ui-lib";
 import {
   postRecipeToFavourites,
   requestFavouriteRecipes,
@@ -9,9 +9,10 @@ import { UserContext } from "../context/UserContext.jsx";
 import Heart from "../assets/Heart.png";
 import HeartClicked from "../assets/HeartClicked.png";
 import Toast from "react-native-toast-message";
+import { styles } from "../styles/styles.js";
 
 export default function FavouriteButton({ recipe_id }) {
-  const { user } = useContext(UserContext);
+  const { user, login } = useContext(UserContext);
   const [isClicked, setIsClicked] = useState(false);
 
   useEffect(() => {
@@ -25,11 +26,12 @@ export default function FavouriteButton({ recipe_id }) {
     });
   }, [user, recipe_id]);
 
-  const handleToggle = () => {
-    if (!user) {
+  const handleToggle = (localUser = user) => {
+    if (!localUser) {
       Toast.show({
         type: "error",
         text1: "Please log in to favourite",
+        position: "bottom",
       });
       return;
     }
@@ -37,8 +39,8 @@ export default function FavouriteButton({ recipe_id }) {
     setIsClicked(newClickedState);
 
     const action = newClickedState
-      ? postRecipeToFavourites(user.id, recipe_id)
-      : removeRecipeFromFavourites(user.id, recipe_id);
+      ? postRecipeToFavourites(localUser.id, recipe_id)
+      : removeRecipeFromFavourites(localUser.id, recipe_id);
 
     action
       .then(() => {
@@ -62,14 +64,32 @@ export default function FavouriteButton({ recipe_id }) {
   };
 
   return (
-    <View>
+    <View style={styles.favouriteContainer}>
       <Button
+        style={styles.favouriteButton}
         title="Add to favourites"
-        onPress={handleToggle}
+        onPress={async () => {
+          if (!user) {
+
+            const u = await login("default", "123");
+            if (u) {
+                handleToggle(u);
+            } else {
+                Toast.show({
+                    type: "error",
+                    text1: "Please log in to favourite",
+                    position: "bottom",
+                });
+            }
+          } else {
+            handleToggle();
+          }
+        }}
         iconSource={isClicked ? HeartClicked : Heart}
         iconStyle={{ width: 30, height: 30, tintColor: undefined }}
         backgroundColor="transparent"
-      />
+      >
+      </Button>
     </View>
   );
 }

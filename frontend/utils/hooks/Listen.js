@@ -8,14 +8,23 @@ function stop() {
   ExpoSpeechRecognitionModule.stop();
 }
 
-async function start() {
-  const { granted } = await ExpoSpeechRecognitionModule.getPermissionsAsync();
-  if (!granted) {
-    const result = await ExpoSpeechRecognitionModule.requestPermissionsAsync();
-    if (!result.granted) {
-      throw new Error("Speech recognition permission not granted");
+async function checkPermission() {
+  try {
+    const permissions = await ExpoSpeechRecognitionModule.getPermissionsAsync();
+    if (!permissions.granted) {
+      const result =
+        await ExpoSpeechRecognitionModule.requestPermissionsAsync();
+      if (!result.granted) {
+        throw new Error("Speech recognition permission not granted");
+      }
     }
+  } catch (error) {
+    console.log(error);
   }
+}
+
+async function start() {
+  await checkPermission();
 
   ExpoSpeechRecognitionModule.start({
     lang: "en-US",
@@ -29,6 +38,8 @@ async function start() {
 
 export default function useListen() {
   const [transcript, setTranscript] = useState("");
+
+  checkPermission();
 
   useSpeechRecognitionEvent("result", (event) => {
     setTranscript(event.results[0]?.transcript);
