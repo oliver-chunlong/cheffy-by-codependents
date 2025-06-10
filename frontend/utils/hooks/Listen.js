@@ -11,7 +11,6 @@ function stop() {
 async function checkPermission() {
   try {
     const permissions = await ExpoSpeechRecognitionModule.getPermissionsAsync();
-    console.log(permissions);
     if (!permissions.granted) {
       const result =
         await ExpoSpeechRecognitionModule.requestPermissionsAsync();

@@ -1,4 +1,4 @@
-import { Button, View } from "react-native-ui-lib";
+import { Button, View, Text } from "react-native-ui-lib";
 import {
   postRecipeToFavourites,
   requestFavouriteRecipes,
@@ -11,7 +11,7 @@ import HeartClicked from "../assets/HeartClicked.png";
 import Toast from "react-native-toast-message";
 
 export default function FavouriteButton({ recipe_id }) {
-  const { user } = useContext(UserContext);
+  const { user, login } = useContext(UserContext);
   const [isClicked, setIsClicked] = useState(false);
 
   useEffect(() => {
@@ -25,8 +25,8 @@ export default function FavouriteButton({ recipe_id }) {
     });
   }, [user, recipe_id]);
 
-  const handleToggle = () => {
-    if (!user) {
+  const handleToggle = (localUser = user) => {
+    if (!localUser) {
       Toast.show({
         type: "error",
         text1: "Please log in to favourite",
@@ -37,8 +37,8 @@ export default function FavouriteButton({ recipe_id }) {
     setIsClicked(newClickedState);
 
     const action = newClickedState
-      ? postRecipeToFavourites(user.id, recipe_id)
-      : removeRecipeFromFavourites(user.id, recipe_id);
+      ? postRecipeToFavourites(localUser.id, recipe_id)
+      : removeRecipeFromFavourites(localUser.id, recipe_id);
 
     action
       .then(() => {
@@ -65,11 +65,21 @@ export default function FavouriteButton({ recipe_id }) {
     <View>
       <Button
         title="Add to favourites"
-        onPress={handleToggle}
+        onPress={async () => {
+          if (!user) {
+            const u = await login("default", "123");
+            console.log("Changed " + u);
+            handleToggle(u);
+          } else {
+            handleToggle();
+          }
+        }}
         iconSource={isClicked ? HeartClicked : Heart}
         iconStyle={{ width: 30, height: 30, tintColor: undefined }}
         backgroundColor="transparent"
-      />
+      >
+        {!user && <Text>Log in and add to favourite</Text>}
+      </Button>
     </View>
   );
 }
