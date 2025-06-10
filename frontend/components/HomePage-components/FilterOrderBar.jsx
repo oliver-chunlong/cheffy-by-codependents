@@ -1,6 +1,6 @@
-import { View, Text, TouchableOpacity } from "react-native-ui-lib";
+import { View, Text, Picker } from "react-native-ui-lib";
 import { ScrollView } from "react-native";
-import { Picker } from "@react-native-picker/picker";
+// import { Picker } from "@react-native-picker/picker";
 import { styles } from "../../styles/styles";
 
 const filters = [
@@ -10,6 +10,13 @@ const filters = [
   { label: "Gluten-Free", key: "is_gluten_free" },
   { label: "Nut-Free", key: "is_nut_free" },
 ];
+
+const sortItems =  [
+        { value: "name_asc", label: 'A-Z' },
+        { value: "name_desc", label: 'Z-A' },
+        { value: "time_asc", label: 'Quickest → Longest' },
+        { value: "time_desc", label: 'Longest → Quickest' },
+      ];
 
 function FilterOrderBar({ activeFilters, setActiveFilters, order, setOrder }) {
   const toggleFilter = key => {
@@ -34,19 +41,17 @@ function FilterOrderBar({ activeFilters, setActiveFilters, order, setOrder }) {
                     {f.label}
                 </Text>
                 ))}
-  {/* <TouchableOpacity style={styles.orderPickerWrapper}>
+  <View style={styles.orderPickerWrapper}>
     <Picker
       selectedValue={order}
       onValueChange={val => setOrder(val)}
       style={styles.orderPicker}
-      mode="dropdown"
+     placeholder={'↓↑'}
+    //  label={'Sort'}
+     items={sortItems}
     >
-      <Picker.Item label="A-Z" value="name_asc" />
-      <Picker.Item label="Z-A" value="name_desc" />
-      <Picker.Item label="Quickest → Longest" value="time_asc" />
-      <Picker.Item label="Longest → Quickest" value="time_desc" />
     </Picker>
-  </TouchableOpacity> */}
+  </View>
 </ScrollView>
 
     </View>
