@@ -17,6 +17,7 @@ import ShoppingList from "../pages/ShoppingList.jsx";
 import RecipeDetail from "../pages/RecipeDetail.jsx";
 import Profile from "../pages/Profile.jsx";
 import SearchBar from "./HomePage-components/SearchBar.jsx"
+import CreateNewRecipe from "../pages/CreateNewRecipe.jsx"
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -37,31 +38,33 @@ function HomeStack() {
 
   return (
     <Stack.Navigator screenOptions={{ headerShown: true }}>
-
+      
       <Stack.Screen
-        name="Homepage"
-        options={{
-          headerStyle: styles.header,
-          headerTitleAlign: 'center',
-          headerTitle: () => (
-            <View style={styles.titleWrapper}>
-              <Text style={styles.titleText}>H O M E</Text>
-              <TouchableOpacity
-                onPress={() => navigation.navigate('Profile')}
-                style={styles.profileButton}
-              >
-                {/* <Image
-                  source={require('../assets/ProfileIcon.png')}
-                  style={styles.profileIcon}
-                  resizeMode="contain"
-                /> */}
-              </TouchableOpacity>
-            </View>
-          ),
-          headerRight: () => null,
-          headerLeft: () => null,
-        }}
+      name="Homepage"
+      options={({ navigation }) => ({
+      headerStyle: styles.header,
+      headerTitleAlign: "center",
+      headerTitle: () => (
+      <View style={styles.titleWrapper}>
+        <Text style={styles.titleText}>H O M E</Text>
+      </View>
+      ),
+      headerLeft: () => null,
+      headerRight: () => (
+      <TouchableOpacity
+      onPress={() => navigation.navigate('Profile')}
+      style={styles.profileButton}
       >
+        <Image
+        source={require('../assets/ProfileIcon.png')}
+        style={styles.profileIcon}
+        resizeMode="contain"
+        />
+        </TouchableOpacity>
+        ),
+    })}
+    >
+
         {props => (
           <>
             <SearchBar recipes={allRecipes} setFilteredRecipes={setFilteredRecipes} />
@@ -70,21 +73,41 @@ function HomeStack() {
         )}
       </Stack.Screen>
 
-
-
       <Stack.Screen name="RecipeDetail" component={RecipeDetail} />
       <Stack.Screen
         name="Profile"
         component={Profile}
         options={({ navigation }) => ({
-          headerRight: () => (
-            <Button
-              label="Home"
-              onPress={() => navigation.navigate('Homepage')}
-              style={styles.homeButton}
-            />
-          ),
+        headerStyle: styles.header,
+        headerTitleAlign: "center",
+        headerTitle: () => (
+        <View style={styles.titleWrapper}>
+          <Text style={styles.titleText}>P R O F I L E</Text>
+        </View>
+        ),
+        headerRight: () => (
+        <Button
+        label="Home"
+        onPress={() => navigation.navigate('Homepage')}
+        style={styles.homeButton}
+        />
+        ),
         })}
+      />
+      <Stack.Screen
+        name="CreateNewRecipe"
+        component={CreateNewRecipe}
+        options={{
+        headerTitle: "Create a recipe",
+        headerTitleAlign: "center",
+        headerStyle: styles.header,
+        headerTitle: () => (
+      <View style={styles.titleWrapper}>
+        <Text style={styles.titleText}>C R E A T E  A  R E C I P E</Text>
+      </View>
+      ),
+      }}
+
       />
     </Stack.Navigator>
   );

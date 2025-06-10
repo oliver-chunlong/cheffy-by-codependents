@@ -8,6 +8,10 @@ const itemWidth = (screenWidth - itemMargin * (numColumns + 1)) / numColumns;
 const shared = {
   fontFamily: 'Calibri',
   backgroundColor: '#f6c47b',
+  cardBg:        '#fff',
+  accent:        '#FF8C00',
+  lightGrey:     '#D3D3D3',
+  borderGrey:    '#DDD',
 };
 
 const isMobile = Dimensions.get('window').width < 400;
@@ -155,6 +159,103 @@ searchWrapper: {
     height: 40,
     resizeMode: 'contain',
   },
+
+
+
+  screen: {
+    flex: 1,
+    backgroundColor: '#FCF8F0',
+  },
+
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: '500',
+    margin: 12,
+    fontFamily: shared.fontFamily,
+  },
+  input: {
+    flex: 1,
+    borderBottomWidth: 1,
+    borderColor: shared.borderGrey,
+    paddingVertical: 8,
+    paddingHorizontal: 4,
+    fontFamily: shared.fontFamily,
+  },
+  textArea: {
+    flex: 1,
+    borderWidth: 1,
+    borderColor: shared.borderGrey,
+    borderRadius: 8,
+    padding: 12,
+    textAlignVertical: 'top',
+    margin: 12,
+    minHeight: 100,
+    fontFamily: shared.fontFamily,
+  },
+  toggleRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+  },
+  saveButton: {
+    borderRadius: 8,
+    marginBottom: 12,
+    backgroundColor: shared.accent,
+  },
+  cancelButton: {
+    borderRadius: 8,
+    backgroundColor: shared.lightGrey,
+  },
+  errorText: {
+    color: 'red',
+    textAlign: 'center',
+    marginBottom: 12,
+    fontFamily: shared.fontFamily,
+  },
+  listContainer: {
+    paddingHorizontal: itemMargin,
+    paddingTop: itemMargin,
+  },
+
+  listCard: {
+    width: '100%',
+    marginBottom: itemMargin * 2,
+    backgroundColor: shared.cardBg,
+    borderRadius: 12,
+    overflow: 'hidden',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+
+centered: {
+  flex: 1,
+  justifyContent: 'center',
+  alignItems: 'center',
+  backgroundColor: 'white'
+},
+
+sectionTitle: {
+  fontSize: 22,
+},
+
+actionButton: {
+  marginHorizontal: 16,
+  marginVertical: 8,
+  borderRadius: 8,
+},
+
+scrollContent: {
+  paddingVertical: 16,
+  paddingBottom: 100,
+},
+
+loading: {
   
+}
 
 });
