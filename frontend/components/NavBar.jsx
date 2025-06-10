@@ -163,7 +163,19 @@ export default function NavBar() {
         options={{ headerShown: false }}
       />
       <Tab.Screen name="Cooking Mode" component={CookingMode} />
-      <Tab.Screen name="Shopping List" component={ShoppingList} />
+      <Tab.Screen
+        name="Shopping List"
+        component={ShoppingList}
+        options={{
+          headerStyle: styles.header,
+          headerTitleStyle: {
+            color: "white",
+          },
+          headerShadowVisible: false,
+          headerTitleAlign: "center",
+          headerTitle: "S H O P P I N G   L I S T",
+        }}
+      />
     </Tab.Navigator>
   );
 }

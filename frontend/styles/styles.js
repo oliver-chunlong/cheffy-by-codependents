@@ -157,16 +157,15 @@ export const styles = StyleSheet.create({
     resizeMode: "contain",
   },
 
-  
-//filtering bar
+  //filtering bar
 
-filterBar: {
-  flexDirection: 'row',
-  alignItems: 'center',
-  paddingVertical: 8,
-  paddingHorizontal: 10,
-  backgroundColor: 'fff',
-},
+  filterBar: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingVertical: 8,
+    paddingHorizontal: 10,
+    backgroundColor: "fff",
+  },
 
   filterText: {
     marginRight: 20,
@@ -285,6 +284,59 @@ filterBar: {
     fontSize: 96,
     color: "#f6c47b",
     justifyContent: "center",
+    textAlign: "center",
+  },
+  // Shopping List Styles
+
+  shoppingListItem: {
+    backgroundColor: "white",
+    padding: 10,
+    borderRadius: 20,
+    width: "90%",
+    maxWidth: 480,
+    alignSelf: "center",
+    flexDirection: "row",
+    justifyContent: "flex-start",
+    alignItems: "center",
+    marginBottom: 20,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+  },
+  shoppingListText: {
+    marginBottom: 15,
+    fontFamily: shared.fontFamily,
+    fontSize: 16,
+  },
+  ingredientText: {
+    flexShrink: 1,
+    paddingLeft: 12,
+    fontFamily: shared.fontFamily,
+    fontSize: 16,
+  },
+  listIngredientPart: {
+    flexDirection: "row",
+    alignItems: "center",
+    width: "100%",
+  },
+  shoppingListButton: {
+    width: "90%",
+    backgroundColor: "#f6c47b",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 4,
+    alignSelf: "center",
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 20,
+  },
+  shoppingListButtonText: {
+    color: "white",
+    fontFamily: shared.fontFamily,
+    fontSize: 16,
+    fontWeight: "bold",
     textAlign: "center",
   },
 });
