@@ -181,13 +181,13 @@ filterBar: {
   },
 
   orderPickerWrapper: {
-    minWidth: 140,
+    minWidth: 40,
     justifyContent: "center",
   },
 
   orderPicker: {
-    height: 40,
-    width: "100%",
+    height: 20,
+    width: "80%",
   },
 
   //Cooking Mode Styles
