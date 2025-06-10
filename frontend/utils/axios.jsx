@@ -2,22 +2,23 @@ import axios from "axios";
 
 const endpoint = "https://cheffy-by-codependents.onrender.com/api";
 
-export const requestRecipes = (searchQuery, filterBy, category, order) => {
+export const requestRecipes = ({ searchQuery, filters = {}, order } = {}) => {
   const params = new URLSearchParams();
 
   if (searchQuery) params.append("search", searchQuery);
-  if (filterBy) params.append("filter", filterBy);
-  if (category) params.append("category", category);
-  if (order) params.append("order", order);
+  Object.entries(filters).forEach(([key, val]) => {
+    if (val) params.append(key, val);
+  });
 
-  return axios
-    .get(`${endpoint}/recipes?${params.toString()}`)
-    .then((response) => {
-      return response.data.recipes;
-    })
-    .catch((error) => {
-      console.log(error);
-    });
+  if (order) {
+    const [orderBy, sortOrder] = order.split("_"); 
+    if (orderBy) params.append("order_by", orderBy);
+    if (sortOrder) params.append("sort_order", sortOrder);
+  }
+
+  return axios.get(`${endpoint}/recipes?${params.toString()}`)
+    .then((response) => response.data.recipes)
+    .catch(console.log);
 };
 
 export const requestRecipeById = (recipeId) => {

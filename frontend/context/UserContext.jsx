@@ -2,7 +2,7 @@ import { createContext, useState } from "react";
 
 export const UserContext = createContext({
   user: null,
-  login:() => {},
+  login: () => {},
   error: () => {},
 });
 
@@ -15,17 +15,17 @@ export const UserProvider = ({ children }) => {
   };
 
   const login = (username, password) => {
-    fetchUser(username)
+    return fetchUser(username)
       .then((user) => {
         if (password === "123") {
           setUser(user);
           setError("");
+          return user;
         } else {
           setError("Wrong Password");
         }
       })
       .catch(() => setError("Username not recognised"));
-
   };
 
   const logout = () => {

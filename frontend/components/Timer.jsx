@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Text } from "react-native";
+import { styles } from "../styles/styles";
 
 function removingLeading0(text) {
   if (text[0].startsWith("0")) {
@@ -20,7 +21,13 @@ function toTimeArray(date) {
   return date.toUTCString().split(" ").at(-2).split(":");
 }
 
-export default function Timer({ seconds, isRunning, onFinish }) {
+export default function Timer({
+  seconds,
+  isRunning,
+  onFinish,
+  handleTimerEnd,
+  step_number,
+}) {
   const start = new Date(0);
 
   const [timer, setTimer] = useState(null);
@@ -30,12 +37,13 @@ export default function Timer({ seconds, isRunning, onFinish }) {
     const date = new Date(0);
     date.setSeconds(seconds);
     setSecondsLeft(date);
-  }, [seconds]);
+  }, [seconds, step_number]);
 
   useEffect(() => {
     if (secondsLeft.valueOf() === start.valueOf() && isRunning && timer) {
       clearInterval(timer);
       setTimer(null);
+      handleTimerEnd();
       onFinish && onFinish();
     }
   }, [secondsLeft]);
@@ -64,5 +72,5 @@ export default function Timer({ seconds, isRunning, onFinish }) {
   text = removingLeadingEmpty(text);
   text = removingLeading0(text);
 
-  return <Text>{text.join(":")}</Text>;
+  return <Text style={styles.cookingTimerText}>{text.join(":")}</Text>;
 }
