@@ -1,12 +1,10 @@
 import { useEffect, useState, useCallback } from "react";
-import { FlatList, Dimensions } from "react-native";
+import { View, FlatList, Dimensions } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { requestRecipes } from "../../utils/axios";
 import { styles } from "../../styles/styles";
 import Loading from "../Loading";
 import RecipeCard from "./RecipeCard";
-
-import { View } from "react-native-ui-lib";
 import { BlurView } from "expo-blur";
 
 import FilterOrderBar from "./FilterOrderBar";
@@ -65,13 +63,15 @@ export default function RecipeList({ recipes, query }) {
   }
 
   return (
-    <View style={{ flex: 1 }} useSafeArea>
-      <FilterOrderBar
-        activeFilters={activeFilters}
-        setActiveFilters={setActiveFilters}
-        order={order}
-        setOrder={setOrder}
-      />
+    <View style={{ flex: 1 }}>
+      <View style={{ paddingHorizontal: 10, paddingTop: 0, paddingBottom: 13 }}>
+        <FilterOrderBar
+          activeFilters={activeFilters}
+          setActiveFilters={setActiveFilters}
+          order={order}
+          setOrder={setOrder}
+        />
+      </View>
       <FlatList
         style={{ alignContent: "center" }}
         contentInsetAdjustmentBehavior="automatic"
@@ -82,7 +82,10 @@ export default function RecipeList({ recipes, query }) {
         }
         numColumns={numColumns}
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.container}
+        contentContainerStyle={{
+          paddingHorizontal: 18,
+        }}
+        columnWrapperStyle={{ justifyContent: 'space-between' }}
       />
       {/* <BlurView
         intensity={40}

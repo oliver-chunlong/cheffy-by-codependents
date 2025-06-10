@@ -157,15 +157,16 @@ export const styles = StyleSheet.create({
     resizeMode: "contain",
   },
 
-  //filtering bar
+  
+//filtering bar
 
-  filterBar: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingVertical: 8,
-    paddingHorizontal: 10,
-    backgroundColor: "white",
-  },
+filterBar: {
+  flexDirection: 'row',
+  alignItems: 'center',
+  paddingVertical: 8,
+  paddingHorizontal: 10,
+  backgroundColor: 'fff',
+},
 
   filterText: {
     marginRight: 20,
