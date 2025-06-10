@@ -1,4 +1,4 @@
-import { StyleSheet, FlatList } from "react-native";
+import { ScrollView, FlatList, SafeAreaView } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { useContext } from "react";
 import { ShoppingListContext } from "../context/ShoppingListContext";
@@ -18,21 +18,22 @@ import Toast from "react-native-toast-message";
 import Loading from "../components/Loading";
 import Stepper from "../components/Stepper";
 import FavouriteButton from "../components/FavouriteButton";
+import { styles } from "../styles/styles";
 
 function Step({ instruction }) {
   return (
-    <Timeline
+    <Timeline 
       topLine={
         instruction.step_number > 1
-          ? { state: Timeline.states.CURRENT }
+          ? { state: Timeline.states.CURRENT, color: '#f6c47b' }
           : undefined
       }
-      bottomLine={{ state: Timeline.states.CURRENT }}
-      point={{ label: instruction.step_number }}
+      bottomLine={{ state: Timeline.states.CURRENT, color: '#f6c47b' }}
+      point={{ label: instruction.step_number, color: '#f6c47b' }}
     >
       <Card>
-        <Text>{instruction.step_description}</Text>
-        <Text>{instruction.time_required} mins</Text>
+        <Text style={styles.description}>{instruction.step_description}</Text>
+        <Text style={styles.description}>{instruction.time_required} mins</Text>
       </Card>
     </Timeline>
   );
@@ -59,18 +60,22 @@ export default function RecipeDetail({
     });
   }, [recipe]);
 
-  return (
-    <View style={styles.container}>
+  return ( 
+    <ScrollView contentContainerStyle={styles.recipeDetailsContainer}>
       <Image
         source={{
           uri: recipeState.recipe_img_url,
         }}
+        style={styles.recipeImage}
       />
-      <Text>{recipeState.recipe_name}</Text>
-      <Text>{recipeState.recipe_description}</Text>
-      <Text>By {recipeState.created_by_username}</Text>
+      <View style={styles.recipeKeyInfoContainer}>
+      <Text style={styles.recipeTitle}>{recipeState.recipe_name}</Text>
+      <Text style={styles.description}>{recipeState.recipe_description}</Text>
+      <Text style={styles.recipeAuthor}>By {recipeState.created_by_username}</Text>
+      </View>
       {recipeState.ingredients && recipeState.ingredients.length > 0 ? (
         <FlatList
+          style={styles.recipeIngredientsList}
           scrollEnabled={false}
           data={recipeState.ingredients}
           keyExtractor={(item) => item.ingredient_id}
@@ -79,8 +84,9 @@ export default function RecipeDetail({
               activeBackgroundColor={Colors.grey60}
               activeOpacity={0.3}
               onPress={() => console.log(`pressed on order #${id + 1}`)}
+              horizontal
             >
-              <Text>{`${item.quantity_numerical}${
+              <Text style={styles.description}>{`${item.quantity_numerical}${
                 item.quantity_unit ? " " + item.quantity_unit : ""
               } ${
                 item.quantity_numerical > 1 &&
@@ -95,7 +101,7 @@ export default function RecipeDetail({
         <Loading />
       )}
 
-      <View row>
+      <View row style={styles.shoppingListContainer}>
         <Stepper
           value={ingredientQuantity}
           onValueChange={setIngredientQuantity}
@@ -103,6 +109,7 @@ export default function RecipeDetail({
           max={1000}
         />
         <Button
+        style={styles.shoppingAddButton}
           disabled={isLoading}
           onPress={() => {
             try {
@@ -127,9 +134,12 @@ export default function RecipeDetail({
             }
           }}
         >
-          <Text>Add to Shopping List</Text>
+          <Text style={styles.shoppingAddButtonText}>Add to Shopping List</Text>
         </Button>
+        </View>
+        <View row>
         <Button
+          style={styles.cookingModeStartButton}
           disabled={isLoading}
           onPress={() =>
             navigation
@@ -137,11 +147,11 @@ export default function RecipeDetail({
               ?.navigate("Cooking Mode", { recipe: recipeState })
           }
         >
-          <Text>Cooking Mode</Text>
+          <Text style={styles.cookingModeStartButtonText}>Cooking Mode</Text>
         </Button>
         <FavouriteButton recipe_id={recipe.recipe_id} />
       </View>
-
+      <View style={styles.timelineContainer}>
       {recipeState.instructions && recipeState.instructions.length > 0 ? (
         recipeState.instructions?.map((instruction) => (
           <Step key={instruction.step_number} instruction={instruction} />
@@ -149,15 +159,17 @@ export default function RecipeDetail({
       ) : (
         <Loading />
       )}
-    </View>
+      </View>
+      <View style={{ height: 10 }} />
+    </ScrollView>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    backgroundColor: "#ecf0f1",
-    padding: 8,
-  },
-});
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//     justifyContent: "center",
+//     backgroundColor: "#ecf0f1",
+//     padding: 8,
+//   },
+// });

@@ -9,6 +9,7 @@ import { UserContext } from "../context/UserContext.jsx";
 import Heart from "../assets/Heart.png";
 import HeartClicked from "../assets/HeartClicked.png";
 import Toast from "react-native-toast-message";
+import { styles } from "../styles/styles.js";
 
 export default function FavouriteButton({ recipe_id }) {
   const { user, login } = useContext(UserContext);
@@ -62,8 +63,9 @@ export default function FavouriteButton({ recipe_id }) {
   };
 
   return (
-    <View>
+    <View style={styles.favouriteContainer}>
       <Button
+        style={styles.favouriteButton}
         title="Add to favourites"
         onPress={async () => {
           if (!user) {
