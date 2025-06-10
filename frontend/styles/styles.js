@@ -1,4 +1,5 @@
 import { StyleSheet, Dimensions } from "react-native";
+import { Colors } from "react-native-ui-lib";
 
 const screenWidth = Dimensions.get("window").width;
 const height = Dimensions.get("window").width;
@@ -61,43 +62,6 @@ export const styles = StyleSheet.create({
     fontSize: 18,
     marginRight: 8,
   },
-
-  recipeAuthor: {
-    fontFamily: shared.fontFamily,
-    fontSize: 8,
-    color: "#000",
-  },
-
-  recipeImage: {
-    height: 300,
-    width: 300,
-    borderRadius: 20,
-    },
-
-recipeDetailsContainer: {
-  marginTop: 20,
-    alignItems: "center",
-}, 
-
-recipeIngredientsList: {
-  paddingTop: 30,
-  paddingBottom: 0,
-  paddingLeft: 30,
-},
-
-recipeKeyInfoContainer: {
-// flex: 1,
-margin: 10,
-},
-
-shoppingListContainer: {
-paddingTop: 0, 
-paddingLeft: 30,
-},
-
-favouriteContainer: {
-padding: 30,
-},
 
   // Navbar styles
   header: {
@@ -195,14 +159,22 @@ padding: 30,
     resizeMode: "contain",
   },
 
-  
-//filtering bar
+  //filtering bar
+
 
 filterBar: {
   flexDirection: 'row',
   alignItems: 'center',
   backgroundColor: 'fff',
 },
+
+  filterBar: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingVertical: 8,
+    paddingHorizontal: 10,
+    backgroundColor: "fff",
+  },
 
   filterText: {
     marginRight: 10,
@@ -281,6 +253,8 @@ filterBar: {
   activeDropdownItemText: {
     color: '#E67E22',
     fontWeight: 'bold',
+    height: 40,
+    width: "100%",
   },
 
   //Cooking Mode Styles
@@ -309,35 +283,8 @@ filterBar: {
     alignItems: "center",
     marginTop: 20,
   },
-   cookingModeStartButton: {
-    backgroundColor: "#f6c47b",
-    borderRadius: 20,
-    paddingHorizontal: 32,
-    marginVertical: 6,
-    width: "55%",
-    height: 70,
-    alignItems: "center",
-    marginTop: 5,
-  },
-    cookingModeStartButtonText: {
-    fontFamily: shared.fontFamily,
-    fontSize: 22,
-    color: "#fff",
-    textAlign: "center",
-  },
-    
-  shoppingAddButton: {
-    backgroundColor: "#f6c47b",
-    borderRadius: 20,
-    paddingHorizontal: 32,
-    marginVertical: 6,
-    width: "40%",
-    height: 90,
-    alignItems: "center",
-    marginTop: 5,
-  },
 
-  shoppingAddButtonText: {
+  cookingModeButtonText: {
     fontFamily: shared.fontFamily,
     fontSize: 22,
     color: "#fff",
@@ -396,10 +343,6 @@ filterBar: {
     color: "#f6c47b",
   },
 
-  speakerPlayIcon: {
-    color: "#f6c47b",
-  },
-
   cookingIconButton: {
     backgroundColor: "#fff",
   },
@@ -410,5 +353,108 @@ filterBar: {
     color: "#f6c47b",
     justifyContent: "center",
     textAlign: "center",
+  },
+
+  scrollViewContainer: {
+    flex: 1,
+    backgroundColor: Colors.white,
+  },
+
+  innerContentContainer: {
+    padding: 15,
+    paddingBottom: 30,
+  },
+
+  topButtonsRow: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: 15,
+    paddingTop: 10,
+  },
+
+  button: {
+    backgroundColor: "#fc9f5d",
+    marginLeft: 10,
+    marginRight: 10,
+  },
+
+  recipeImage: {
+    width: "100%",
+    height: 200,
+    resizeMode: "cover",
+    borderRadius: 8,
+    marginBottom: 0,
+  },
+
+  recipeName: {
+    fontSize: 28,
+    fontWeight: "bold",
+    marginBottom: 5,
+    textAlign: "center",
+  },
+
+  recipeDescription: {
+    fontSize: 16,
+    color: Colors.grey20,
+    marginBottom: 3,
+    textAlign: "center",
+  },
+
+  createdBy: {
+    fontSize: 14,
+    color: Colors.grey30,
+    marginBottom: 20,
+    textAlign: "center",
+  },
+
+  ingredientsListSpacing: {
+    marginBottom: 10,
+  },
+
+  shoppingListSection: {
+    marginBottom: 20,
+    justifyContent: "center",
+  },
+
+  shoppingAddButton: {
+    backgroundColor: "#fc9f5d",
+    marginLeft: 0,
+},
+  buttonText: {
+    fontWeight: "bold",
+  },
+
+  sectionTitle: {
+    fontSize: 20,
+    fontWeight: "bold",
+    marginTop: 20,
+    marginBottom: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: "#eee",
+    paddingBottom: 5,
+  },
+
+  ingredientsList: {
+    marginBottom: 20,
+  },
+
+  ingredientText: {
+    fontSize: 16,
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+  },
+
+  instructionCard: {
+    backgroundColor: "",
+    padding: 5,
+    borderRadius: 8,
+    marginBottom: 10,
+  },
+
+  instructionTime: {
+    fontSize: 14,
+    color: Colors.grey30,
+    marginTop: 5,
   },
 });

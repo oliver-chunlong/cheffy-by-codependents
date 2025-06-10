@@ -34,7 +34,7 @@ function HomeStack({ navigation }) {
   return (
     <Stack.Navigator screenOptions={{ headerShown: true }}>
       <Stack.Screen
-        name="H O M E"
+        name="Home"
         options={{
           headerStyle: styles.header,
           headerTitleStyle: {

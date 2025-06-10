@@ -31,11 +31,10 @@ const styles = StyleSheet.create({
     marginRight: 20
   },
   button: {
-    backgroundColor: "#fc9f5d",
+    backgroundColor: "#ffcba0",
     paddingHorizontal: 16,
     paddingVertical: 8,
     borderRadius: 8,
-    marginHorizontal: 8,
   },
   buttonText: {
     fontSize: 18,
@@ -43,8 +42,7 @@ const styles = StyleSheet.create({
   },
   value: {
     fontSize: 18,
-    fontWeight: "500",
-    minWidth: 40,
+    minWidth: 45,
     textAlign: "center",
   },
 });
