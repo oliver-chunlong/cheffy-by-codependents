@@ -2,6 +2,7 @@ import { StyleSheet, Dimensions } from "react-native";
 import { Colors } from "react-native-ui-lib";
 
 const screenWidth = Dimensions.get("window").width;
+const height = Dimensions.get("window").width;
 const itemMargin = 6;
 const numColumns = screenWidth > 500 ? 2 : 1;
 const itemWidth = (screenWidth - itemMargin * (numColumns + 1)) / numColumns;
@@ -160,6 +161,13 @@ export const styles = StyleSheet.create({
 
   //filtering bar
 
+
+filterBar: {
+  flexDirection: 'row',
+  alignItems: 'center',
+  backgroundColor: 'fff',
+},
+
   filterBar: {
     flexDirection: "row",
     alignItems: "center",
@@ -169,7 +177,7 @@ export const styles = StyleSheet.create({
   },
 
   filterText: {
-    marginRight: 20,
+    marginRight: 10,
     fontSize: 16,
     color: "#888",
     borderBottomWidth: 2,
@@ -181,11 +189,70 @@ export const styles = StyleSheet.create({
   },
 
   orderPickerWrapper: {
-    minWidth: 140,
+    minWidth: 100,
     justifyContent: "center",
+    marginRight: 10,
+    zIndex: 1,
   },
 
   orderPicker: {
+    height: 35,
+    width: '80%',
+    minWidth: 100,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 10,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    backgroundColor: '#fff',
+  },
+
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.5)', 
+    justifyContent: 'flex-end', 
+    alignItems: 'center',
+  },
+  sortButtonText: {
+    fontSize: 14,
+    color: '#555',
+  },
+  dropdownArrow: {
+    fontSize: 10,
+    color: '#555',
+  },
+
+  dropdownContent: {
+    backgroundColor: '#fff',
+    borderRadius: 8, 
+    paddingVertical: 5,
+    width: '100%', 
+    maxHeight: height * 0.6, 
+    paddingBottom: 20, 
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  dropdownItem: {
+    paddingVertical: 12,
+    paddingHorizontal: 15,
+    borderBottomWidth: 1,
+    borderBottomColor: '#f0f0f0',
+  },
+  dropdownItemText: {
+    fontSize: 16,
+    color: '#333',
+  },
+  activeDropdownItem: {
+    backgroundColor: '#FDEBD0',
+  },
+  activeDropdownItemText: {
+    color: '#E67E22',
+    fontWeight: 'bold',
     height: 40,
     width: "100%",
   },
