@@ -68,7 +68,6 @@ export default function FavouriteButton({ recipe_id }) {
         onPress={async () => {
           if (!user) {
             const u = await login("default", "123");
-            console.log("Changed " + u);
             handleToggle(u);
           } else {
             handleToggle();

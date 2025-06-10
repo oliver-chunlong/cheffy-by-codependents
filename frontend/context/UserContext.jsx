@@ -19,7 +19,6 @@ export const UserProvider = ({ children }) => {
       .then((user) => {
         if (password === "123") {
           setUser(user);
-          console.log("Set to " + user);
           setError("");
           return user;
         } else {
