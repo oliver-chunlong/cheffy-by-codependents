@@ -69,10 +69,9 @@ export default function CookingModeStep({
           </Button>
         </Card>
       )}
-      <View style={styles.cookingReadSection}>
-        <Text style={styles.cookingModeText}>Read outloud</Text>
-        <Switch margin-20 value={hasReading} onValueChange={setHasReading} />
-      </View>
+        <Button style={styles.cookingIconButton} margin-20 onPress={setHasReading}>
+          <Icon  name="volume-high" size={70} style={styles.speakerPlayIcon} />
+        </Button>
     </Card>
   );
 }
