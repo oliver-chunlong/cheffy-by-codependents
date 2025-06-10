@@ -144,19 +144,16 @@ export default function RecipeDetail({
             onPress={() => {
               try {
                 setShoppingList((prev) => {
-                  const newIngredients = Array(ingredientQuantity)
-                    .fill()
-                    .flatMap(() => recipeState.ingredients || []);
+                  const newIngredients =
+                    Array(ingredientQuantity).fill(recipeState);
                   return prev ? [...prev, ...newIngredients] : newIngredients;
                 });
-
                 Toast.show({
                   type: "success",
                   text1: "Ingredients added to shopping list",
                   position: "bottom",
                 });
               } catch (error) {
-                console.error("Error adding to shopping list:", error);
                 Toast.show({
                   type: "error",
                   text1: "Oh no! Something went wrong!",
