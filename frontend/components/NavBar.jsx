@@ -12,8 +12,11 @@ import CookingMode from "../pages/CookingMode.jsx";
 import ShoppingList from "../pages/ShoppingList.jsx";
 import RecipeDetail from "../pages/RecipeDetail.jsx";
 import Profile from "../pages/Profile.jsx";
-import SearchBar from "./HomePage-components/SearchBar.jsx";
+
+import SearchBar from "./HomePage-components/SearchBar.jsx"
+import CreateNewRecipe from "../pages/CreateNewRecipe.jsx"
 import RecipeList from "./HomePage-components/RecipeList";
+
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -33,6 +36,7 @@ function HomeStack({ navigation }) {
 
   return (
     <Stack.Navigator screenOptions={{ headerShown: true }}>
+
       <Stack.Screen
         name="Home"
         options={{
@@ -77,6 +81,7 @@ function HomeStack({ navigation }) {
             />
             <RecipeList {...props} recipes={filteredRecipes} />
           </SafeAreaView>
+
         )}
       </Stack.Screen>
 
@@ -85,17 +90,39 @@ function HomeStack({ navigation }) {
       <Stack.Screen
         name="Profile"
         component={Profile}
+
+        options={({ navigation }) => ({
+        headerStyle: styles.header,
+        headerTitleAlign: "center",
+        headerTitle: () => (
+        <View style={styles.titleWrapper}>
+          <Text style={styles.titleText}>P R O F I L E</Text>
+        </View>
+        ),
+        headerRight: () => (
+        <Button
+        label="Home"
+        onPress={() => navigation.navigate('Homepage')}
+        style={styles.homeButton}
+        />
+        ),
+        })}
+
+      />
+      <Stack.Screen
+        name="CreateNewRecipe"
+        component={CreateNewRecipe}
         options={{
-          headerRight: () => (
-            <Button
-              label="Home"
-              onPress={() => navigation.navigate("Homepage")}
-              backgroundColor="#f5f5f5"
-              style={{ marginRight: 10 }}
-              labelStyle={{ color: "#333" }}
-            />
-          ),
-        }}
+        headerTitle: "Create a recipe",
+        headerTitleAlign: "center",
+        headerStyle: styles.header,
+        headerTitle: () => (
+      <View style={styles.titleWrapper}>
+        <Text style={styles.titleText}>C R E A T E  A  R E C I P E</Text>
+      </View>
+      ),
+      }}
+
       />
     </Stack.Navigator>
   );

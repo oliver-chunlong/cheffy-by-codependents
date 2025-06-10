@@ -99,12 +99,31 @@ export const updateUserRecipe = (userId, recipeId, recipeObject) => {
 };
 
 export const deleteUserRecipe = (userId, recipeId) => {
-  return axios
+return axios
     .delete(`${endpoint}/users/${userId}/recipes/${recipeId}`)
-    .then((response) => {
-      return response.data;
+    .then(response => {
+     if (response.status !== 204) {
+       throw new Error(`Unexpected status code ${response.status}`);
+      }
     })
-    .catch((error) => {
-      console.log(error);
+   .catch(err => {
+      console.error('deleteUserRecipe failed:', err);
+      throw err;
     });
 };
+
+export const api = axios.create({
+  baseURL: 'https://cheffy-by-codependents.onrender.com/api',
+  withCredentials: true,
+});
+
+// export const getDietaryFlags = ingredients =>
+//   api.post('/dietary/flags', { ingredients })
+//      .then(response => response.data);
+
+export const getAllIngredients = () =>
+  api.get('/ingredients')
+     .then(({ data }) =>
+       data.ingredients.map(item => item.ingredient_name)
+     );
+

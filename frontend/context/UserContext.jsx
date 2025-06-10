@@ -11,7 +11,7 @@ export const UserProvider = ({ children }) => {
   const [error, setError] = useState("");
 
   const fetchUser = async (username) => {
-    return Promise.resolve({ id: 1, username, name: "Test User" });
+    return Promise.resolve({ id: 1, username, name: "test user" });
   };
 
   const login = (username, password) => {
@@ -28,8 +28,12 @@ export const UserProvider = ({ children }) => {
       .catch(() => setError("Username not recognised"));
   };
 
+  const logout = () => {
+    setUser(null);
+  }
+
   return (
-    <UserContext.Provider value={{ user, login, error }}>
+    <UserContext.Provider value={{ user, login, error, logout }}>
       {children}
     </UserContext.Provider>
   );

@@ -11,19 +11,25 @@ import HeartClicked from "../assets/HeartClicked.png";
 import Toast from "react-native-toast-message";
 import { styles } from "../styles/styles.js";
 
-export default function FavouriteButton({ recipe_id }) {
+
+export default function FavouriteButton({ recipe_id, onToggle }) {
   const { user, login } = useContext(UserContext);
+
   const [isClicked, setIsClicked] = useState(false);
 
   useEffect(() => {
     if (!user) return;
 
-    requestFavouriteRecipes(user.id).then((res) => {
-      const favourites = res.map((recipe) => recipe.recipe_id);
+    requestFavouriteRecipes(user.id)
+    .then((res) => {
+       const arr = Array.isArray(res) ? res : res.recipes || [];
+      const favourites = arr.map((recipe) => recipe.recipe_id);
       if (favourites.includes(recipe_id)) {
         setIsClicked(true);
       }
-    });
+    })
+    .catch(() => {
+  })
   }, [user, recipe_id]);
 
   const handleToggle = (localUser = user) => {
@@ -51,6 +57,7 @@ export default function FavouriteButton({ recipe_id }) {
             : "Removed from favourites",
           position: "bottom",
         });
+         if (onToggle) onToggle(newClickedState);
       })
       .catch(() => {
         setIsClicked(!newClickedState);
