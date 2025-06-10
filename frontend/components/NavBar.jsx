@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { View, Image, SafeAreaView, ScrollView } from 'react-native';
-import { Text, Button } from 'react-native-ui-lib';
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { View, Image, SafeAreaView, ScrollView } from "react-native";
+import { Text, Button } from "react-native-ui-lib";
 
 import { styles } from "../styles/styles";
 import { requestRecipes } from "../utils/axios";
@@ -13,7 +13,7 @@ import ShoppingList from "../pages/ShoppingList.jsx";
 import RecipeDetail from "../pages/RecipeDetail.jsx";
 import Profile from "../pages/Profile.jsx";
 import SearchBar from "./HomePage-components/SearchBar.jsx";
-import RecipeList from './HomePage-components/RecipeList'; 
+import RecipeList from "./HomePage-components/RecipeList";
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -27,18 +27,21 @@ function HomeStack({ navigation }) {
   useEffect(() => {
     requestRecipes().then((recipes) => {
       setAllRecipes(recipes);
-      setFilteredRecipes(recipes); 
+      setFilteredRecipes(recipes);
     });
   }, []);
 
   return (
     <Stack.Navigator screenOptions={{ headerShown: true }}>
       <Stack.Screen
-        name="Menu"
+        name="H O M E"
         options={{
           headerStyle: styles.header,
+          headerTitleStyle: {
+            color: "white",
+          },
           headerShadowVisible: false,
-          headerTitleAlign: 'center',
+          headerTitleAlign: "center",
           // headerTitle: () => (
           //   <View style={styles.titleWrapper}>
           //     <Text text60BO>H O M E</Text>
@@ -49,11 +52,11 @@ function HomeStack({ navigation }) {
               round
               size={Button.sizes.small}
               backgroundColor="#eee"
-              onPress={() => navigation.navigate('Home', { screen: 'Profile' })}
+              onPress={() => navigation.navigate("Home", { screen: "Profile" })}
               style={{ marginRight: 10 }}
             >
               <Image
-                source={require('../assets/ProfileIcon.png')}
+                source={require("../assets/ProfileIcon.png")}
                 style={{ width: 24, height: 24 }}
                 resizeMode="contain"
               />
@@ -62,7 +65,7 @@ function HomeStack({ navigation }) {
           headerLeft: () => null,
         }}
       >
-        {props => (
+        {(props) => (
           <SafeAreaView style={{ flex: 1 }}>
             <SearchBar
               allRecipes={allRecipes}
@@ -72,10 +75,7 @@ function HomeStack({ navigation }) {
               activeFilters={activeFilters}
               setActiveFilters={setActiveFilters}
             />
-            <RecipeList
-              {...props}
-              recipes={filteredRecipes}
-            />
+            <RecipeList {...props} recipes={filteredRecipes} />
           </SafeAreaView>
         )}
       </Stack.Screen>
@@ -89,10 +89,10 @@ function HomeStack({ navigation }) {
           headerRight: () => (
             <Button
               label="Home"
-              onPress={() => navigation.navigate('Homepage')}
+              onPress={() => navigation.navigate("Homepage")}
               backgroundColor="#f5f5f5"
               style={{ marginRight: 10 }}
-              labelStyle={{ color: '#333' }}
+              labelStyle={{ color: "#333" }}
             />
           ),
         }}
@@ -103,16 +103,16 @@ function HomeStack({ navigation }) {
 
 const icons = {
   Home: {
-    active: require('../assets/MenuOnSelect.png'),
-    inactive: require('../assets/Menu.png'),
+    active: require("../assets/MenuOnSelect.png"),
+    inactive: require("../assets/Menu.png"),
   },
-  'Cooking Mode': {
-    active: require('../assets/CookingOnSelect.png'),
-    inactive: require('../assets/Cooking.png'),
+  "Cooking Mode": {
+    active: require("../assets/CookingOnSelect.png"),
+    inactive: require("../assets/Cooking.png"),
   },
-  'Shopping List': {
-    active: require('../assets/ListOnSelect.png'),
-    inactive: require('../assets/List.png'),
+  "Shopping List": {
+    active: require("../assets/ListOnSelect.png"),
+    inactive: require("../assets/List.png"),
   },
 };
 
@@ -120,15 +120,15 @@ export default function NavBar() {
   return (
     <Tab.Navigator
       screenOptions={({ route }) => {
-        const icon = focused =>
-          focused
-            ? icons[route.name].active
-            : icons[route.name].inactive;
+        const icon = (focused) =>
+          focused ? icons[route.name].active : icons[route.name].inactive;
 
         const label =
-          route.name === 'Home' ? 'Menu' :
-          route.name === 'Cooking Mode' ? 'Cook' :
-          'List';
+          route.name === "Home"
+            ? "Menu"
+            : route.name === "Cooking Mode"
+            ? "Cook"
+            : "List";
 
         return {
           headerShown: true,
@@ -139,8 +139,8 @@ export default function NavBar() {
                 style={{
                   fontSize: 10,
                   marginTop: 4,
-                  color: focused ? '#000' : '#888',
-                  fontWeight: focused ? 'bold' : 'normal',
+                  color: focused ? "#000" : "#888",
+                  fontWeight: focused ? "bold" : "normal",
                 }}
               >
                 {label}
@@ -149,10 +149,10 @@ export default function NavBar() {
           ),
           tabBarShowLabel: false,
           tabBarStyle: {
-            backgroundColor: '#fff',
+            backgroundColor: "#fff",
             height: 60,
             borderTopWidth: 0.5,
-            borderColor: '#ddd',
+            borderColor: "#ddd",
           },
         };
       }}
