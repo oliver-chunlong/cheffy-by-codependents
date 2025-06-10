@@ -30,8 +30,8 @@ export default function FavouriteButton({ recipe_id }) {
     if (!localUser) {
       Toast.show({
         type: "error",
-        text1: "Please log in to favourite",
         position: "bottom",
+        props: { text1: "Please log in to favourite", icon: Heart },
       });
       return;
     }
@@ -45,20 +45,26 @@ export default function FavouriteButton({ recipe_id }) {
     action
       .then(() => {
         Toast.show({
-          type: "success",
-          text1: newClickedState
-            ? "Added to favourites"
-            : "Removed from favourites",
+          type: "customToast",
           position: "bottom",
+          props: {
+            text1: newClickedState
+              ? "Added to favourites"
+              : "Removed from favourites",
+
+            icon: newClickedState ? HeartClicked : Heart,
+          },
         });
       })
       .catch(() => {
         setIsClicked(!newClickedState);
         Toast.show({
-          type: "error",
-          text1: "Oh no! Something went wrong!",
-          text2: "Please try again later.",
+          type: "customToast",
           position: "bottom",
+          props: {
+            text1: "Oh no! Something went wrong!",
+            text2: "Please try again later.",
+          },
         });
       });
   };
@@ -70,16 +76,18 @@ export default function FavouriteButton({ recipe_id }) {
         title="Add to favourites"
         onPress={async () => {
           if (!user) {
-
             const u = await login("default", "123");
             if (u) {
-                handleToggle(u);
+              handleToggle(u);
             } else {
-                Toast.show({
-                    type: "error",
-                    text1: "Please log in to favourite",
-                    position: "bottom",
-                });
+              Toast.show({
+                type: "error",
+                position: "bottom",
+                props: {
+                  text1: "Please log in to favourite",
+                  icon: Heart,
+                },
+              });
             }
           } else {
             handleToggle();
@@ -88,8 +96,7 @@ export default function FavouriteButton({ recipe_id }) {
         iconSource={isClicked ? HeartClicked : Heart}
         iconStyle={{ width: 30, height: 30, tintColor: undefined }}
         backgroundColor="transparent"
-      >
-      </Button>
+      ></Button>
     </View>
   );
 }

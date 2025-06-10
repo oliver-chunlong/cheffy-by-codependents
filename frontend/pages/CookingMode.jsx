@@ -87,7 +87,6 @@ export default function CookingMode(props) {
 
   return (
     <ScrollView contentContainerStyle={styles.cookingModeContainer}>
-      <Text style={styles.cookingModeText}>Cooking Mode</Text>
       <Progressbar
         step={step}
         totalSteps={currentRecipe?.instructions?.length - 1}

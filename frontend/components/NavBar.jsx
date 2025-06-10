@@ -42,22 +42,18 @@ function HomeStack({ navigation }) {
           },
           headerShadowVisible: false,
           headerTitleAlign: "center",
-          // headerTitle: () => (
-          //   <View style={styles.titleWrapper}>
-          //     <Text text60BO>H O M E</Text>
-          //   </View>
-          // ),
+          headerTitle: "H O M E",
           headerRight: () => (
             <Button
               round
               size={Button.sizes.small}
-              backgroundColor="#eee"
+              backgroundColor="transparent"
               onPress={() => navigation.navigate("Home", { screen: "Profile" })}
               style={{ marginRight: 10 }}
             >
               <Image
                 source={require("../assets/ProfileIcon.png")}
-                style={{ width: 24, height: 24 }}
+                style={{ width: 40, height: 40 }}
                 resizeMode="contain"
               />
             </Button>
@@ -80,7 +76,20 @@ function HomeStack({ navigation }) {
         )}
       </Stack.Screen>
 
-      <Stack.Screen name="RecipeDetail" component={RecipeDetail} />
+      <Stack.Screen
+        name="RecipeDetail"
+        component={RecipeDetail}
+        options={{
+          headerStyle: styles.header,
+          headerTitleStyle: {
+            color: "white",
+          },
+          headerShadowVisible: false,
+          headerTitleAlign: "center",
+          headerTitle: "R E C I P E",
+          headerTintColor: "white",
+        }}
+      />
 
       <Stack.Screen
         name="Profile"
@@ -162,7 +171,19 @@ export default function NavBar() {
         component={HomeStack}
         options={{ headerShown: false }}
       />
-      <Tab.Screen name="Cooking Mode" component={CookingMode} />
+      <Tab.Screen
+        name="Cooking Mode"
+        component={CookingMode}
+        options={{
+          headerStyle: styles.header,
+          headerTitleStyle: {
+            color: "white",
+          },
+          headerShadowVisible: false,
+          headerTitleAlign: "center",
+          headerTitle: "C O O K I N G   M O D E",
+        }}
+      />
       <Tab.Screen
         name="Shopping List"
         component={ShoppingList}
