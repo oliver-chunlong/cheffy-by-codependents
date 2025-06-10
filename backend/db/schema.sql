@@ -69,7 +69,7 @@ CREATE TABLE equipment (
 
 CREATE TABLE ingredient_quantities (
   iq_id SERIAL PRIMARY KEY,
-  recipe_id INTEGER REFERENCES recipes(recipe_id) ON DELETE CASCADE,
+  recipe_id INTEGER NOT NULL REFERENCES recipes(recipe_id) ON DELETE CASCADE,
   ingredient_id INTEGER REFERENCES ingredients(id),
   quantity_numerical NUMERIC,
   quantity_unit TEXT,
@@ -79,7 +79,7 @@ CREATE TABLE ingredient_quantities (
 
 CREATE TABLE instructions (
   instruction_id SERIAL PRIMARY KEY,
-  recipe_id INTEGER REFERENCES recipes(recipe_id) ON DELETE CASCADE,
+  recipe_id INTEGER NOT NULL REFERENCES recipes(recipe_id) ON DELETE CASCADE,
   step_number INTEGER NOT NULL,
   step_description TEXT NOT NULL,
   iq_id INTEGER REFERENCES ingredient_quantities(iq_id),

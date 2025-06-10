@@ -428,8 +428,7 @@ scrollContent: {
 
 loading: {
   
-}
-
+},
 
   cookingModeStepWrapper: {
     flex: 1,
