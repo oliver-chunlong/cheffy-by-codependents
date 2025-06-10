@@ -31,6 +31,7 @@ export default function FavouriteButton({ recipe_id }) {
       Toast.show({
         type: "error",
         text1: "Please log in to favourite",
+        position: "bottom",
       });
       return;
     }
@@ -69,8 +70,17 @@ export default function FavouriteButton({ recipe_id }) {
         title="Add to favourites"
         onPress={async () => {
           if (!user) {
+
             const u = await login("default", "123");
-            handleToggle(u);
+            if (u) {
+                handleToggle(u);
+            } else {
+                Toast.show({
+                    type: "error",
+                    text1: "Please log in to favourite",
+                    position: "bottom",
+                });
+            }
           } else {
             handleToggle();
           }
@@ -79,7 +89,6 @@ export default function FavouriteButton({ recipe_id }) {
         iconStyle={{ width: 30, height: 30, tintColor: undefined }}
         backgroundColor="transparent"
       >
-        {!user && <Text>Log in and add to favourite</Text>}
       </Button>
     </View>
   );
