@@ -231,6 +231,8 @@
     }
   },
 
+  
+
   "PATCH /api/users/:user_id/recipes/:recipe_id": {
     "description": "updates details of a user's recipe by recipe ID",
     "exampleResponse": {
