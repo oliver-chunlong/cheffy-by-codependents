@@ -19,7 +19,7 @@ export default function ListIngredient({ ingredient }) {
           borderColor: "#f6c47b",
         }}
       />
-      <Text style={styles.ingredientText}>
+      <Text style={styles.listIngredientText}>
         {`${ingredient.quantity_numerical}${
           ingredient.quantity_unit ? " " + ingredient.quantity_unit : ""
         } ${

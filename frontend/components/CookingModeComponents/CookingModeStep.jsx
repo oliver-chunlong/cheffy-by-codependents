@@ -1,11 +1,13 @@
 import Timer from "../Timer";
 import { useEffect, useState } from "react";
 import { styles } from "../../styles/styles";
-import { Card, View, Text, Button, Switch } from "react-native-ui-lib";
+import { Card, View, Text, Button, Switch, Image } from "react-native-ui-lib";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { speak, stopSpeaking } from "../../utils/Speak";
 import Toast from "react-native-toast-message";
 import { Audio } from "expo-av";
+import Mute from "../../assets/NotListening.webp";
+import notMute from "../../assets/Listening.webp";
 
 export default function CookingModeStep({
   step_number,
@@ -69,9 +71,14 @@ export default function CookingModeStep({
           </Button>
         </Card>
       )}
-        <Button style={styles.cookingIconButton} margin-20 onPress={setHasReading}>
-          <Icon  name="volume-high" size={70} style={styles.speakerPlayIcon} />
-        </Button>
+      <Button
+        style={styles.cookingIconButton}
+        margin-20
+        onPress={setHasReading}
+      >
+        <Icon name="volume-high" size={70} style={styles.speakerPlayIcon} />
+        {/* <Image source={hasReading ? notMute : Mute} width={70} height={70} /> */}
+      </Button>
     </Card>
   );
 }
