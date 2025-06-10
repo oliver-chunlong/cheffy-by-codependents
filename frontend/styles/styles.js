@@ -61,6 +61,43 @@ export const styles = StyleSheet.create({
     marginRight: 8,
   },
 
+  recipeAuthor: {
+    fontFamily: shared.fontFamily,
+    fontSize: 8,
+    color: "#000",
+  },
+
+  recipeImage: {
+    height: 300,
+    width: 300,
+    borderRadius: 20,
+    },
+
+recipeDetailsContainer: {
+  marginTop: 20,
+    alignItems: "center",
+}, 
+
+recipeIngredientsList: {
+  paddingTop: 30,
+  paddingBottom: 0,
+  paddingLeft: 30,
+},
+
+recipeKeyInfoContainer: {
+// flex: 1,
+margin: 10,
+},
+
+shoppingListContainer: {
+paddingTop: 0, 
+paddingLeft: 30,
+},
+
+favouriteContainer: {
+padding: 30,
+},
+
   // Navbar styles
   header: {
     backgroundColor: shared.backgroundColor,
@@ -181,13 +218,13 @@ filterBar: {
   },
 
   orderPickerWrapper: {
-    minWidth: 140,
+    minWidth: 40,
     justifyContent: "center",
   },
 
   orderPicker: {
-    height: 40,
-    width: "100%",
+    height: 20,
+    width: "80%",
   },
 
   //Cooking Mode Styles
@@ -216,8 +253,35 @@ filterBar: {
     alignItems: "center",
     marginTop: 20,
   },
+   cookingModeStartButton: {
+    backgroundColor: "#f6c47b",
+    borderRadius: 20,
+    paddingHorizontal: 32,
+    marginVertical: 6,
+    width: "55%",
+    height: 70,
+    alignItems: "center",
+    marginTop: 5,
+  },
+    cookingModeStartButtonText: {
+    fontFamily: shared.fontFamily,
+    fontSize: 22,
+    color: "#fff",
+    textAlign: "center",
+  },
+    
+  shoppingAddButton: {
+    backgroundColor: "#f6c47b",
+    borderRadius: 20,
+    paddingHorizontal: 32,
+    marginVertical: 6,
+    width: "40%",
+    height: 90,
+    alignItems: "center",
+    marginTop: 5,
+  },
 
-  cookingModeButtonText: {
+  shoppingAddButtonText: {
     fontFamily: shared.fontFamily,
     fontSize: 22,
     color: "#fff",
@@ -273,6 +337,10 @@ filterBar: {
   },
 
   timerPlayIcon: {
+    color: "#f6c47b",
+  },
+
+  speakerPlayIcon: {
     color: "#f6c47b",
   },
 

@@ -17,6 +17,7 @@ export default function Stepper({ value, onValueChange, min = 1, max = 1000 }) {
       >
         <Text style={styles.buttonText}>+</Text>
       </TouchableOpacity>
+
     </View>
   );
 }
@@ -26,6 +27,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
+    marginLeft: 10,
+    marginRight: 20
   },
   button: {
     backgroundColor: "#fc9f5d",
