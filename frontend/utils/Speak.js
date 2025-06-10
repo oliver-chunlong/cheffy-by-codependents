@@ -6,13 +6,14 @@ export function stopSpeaking() {
   // }
 }
 
-export async function speak(text) {
+export async function speak(text, onDone) {
   const voices = await Speech.getAvailableVoicesAsync();
   console.log(new Set(voices.map((v) => v.quality)));
   if (voices.length > 0) {
     Speech.speak(text, {
       rate: 1,
       voice: voices.find((voice) => voice.quality === "Enhanced")?.identifier,
+      onDone: onDone,
     });
   }
 }

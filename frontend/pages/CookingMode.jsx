@@ -3,7 +3,6 @@ import { ScrollView } from "react-native";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { Button, View, Text } from "react-native-ui-lib";
 import { styles } from "../styles/styles";
-import Toast from "react-native-toast-message";
 
 import CookingModeStep from "../components/CookingModeComponents/CookingModeStep";
 import Progressbar from "../components/Progressbar";
@@ -20,28 +19,24 @@ export default function CookingMode(props) {
   const [isTimerRunning, setIsTimerRunning] = useState(false);
   const [currentRecipe, setCurrentRecipe] = useState(recipe);
   const currentStep = currentRecipe?.instructions?.[step];
-
   const [repeat, setRepeat] = useState(0);
 
   useEffect(() => {
     setStep(0);
     setCurrentRecipe(recipe);
   }, [recipe]);
-
   const handleNext = () => {
-    setStep((prev) => prev + 1);
+    setStep(step + 1);
     if (step === currentRecipe.instructions.length - 1) {
       setComplete(true);
       setStep(0);
     }
   };
-
   const handleBack = () => {
-    if (step > 0) setStep((prev) => prev - 1);
+    if (step > 0) setStep(step - 1);
   };
-
   const handleRepeat = () => {
-    setRepeat((prev) => prev + 1);
+    setRepeat(repeat + 1);
   };
 
   useFocusEffect(
@@ -73,6 +68,7 @@ export default function CookingMode(props) {
       </View>
     );
   }
+
   if (complete) return <Completed />;
 
   if (!start)
@@ -118,11 +114,8 @@ export default function CookingMode(props) {
       </Button>
       <View style={{ height: 150 }} />
       <SpeechRecognition
-        setStep={setStep}
         complete={complete}
-        step={step}
         setIsTimerRunning={setIsTimerRunning}
-        setRepeat={setRepeat}
         handleNext={handleNext}
         handleBack={handleBack}
         handleRepeat={handleRepeat}
@@ -131,12 +124,3 @@ export default function CookingMode(props) {
     </ScrollView>
   );
 }
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     justifyContent: "center",
-//     backgroundColor: "#ecf0f1",
-//     padding: 8,
-//   },
-// });

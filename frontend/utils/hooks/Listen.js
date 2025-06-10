@@ -2,7 +2,7 @@ import {
   ExpoSpeechRecognitionModule,
   useSpeechRecognitionEvent,
 } from "expo-speech-recognition";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 function stop() {
   ExpoSpeechRecognitionModule.stop();
@@ -43,18 +43,18 @@ export default function useListen() {
   return [transcript, start, stop];
 }
 
-export function useDetect(wordToDetect, onDetect) {
-  const [transcript] = useListen();
-  const [words, setWords] = useState([]);
-  useEffect(() => {
-    setWords(transcript.split(" ").map((word) => word.toLowerCase()));
-  }, [transcript]);
-  const detected = words.filter((word) => word === wordToDetect.toLowerCase());
-  if (detected.length) {
-    onDetect();
-    stop();
-    setWords([]);
-    start();
-  }
-  return [start, stop];
-}
+// export function useDetect(wordToDetect, onDetect) {
+//   const [transcript] = useListen();
+//   const [words, setWords] = useState([]);
+//   useEffect(() => {
+//     setWords(transcript.split(" ").map((word) => word.toLowerCase()));
+//   }, [transcript]);
+//   const detected = words.filter((word) => word === wordToDetect.toLowerCase());
+//   if (detected.length) {
+//     onDetect();
+//     stop();
+//     setWords([]);
+//     start();
+//   }
+//   return [start, stop];
+// }
