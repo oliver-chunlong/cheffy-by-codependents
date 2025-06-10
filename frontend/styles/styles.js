@@ -198,41 +198,41 @@ export const styles = StyleSheet.create({
 
   orderPicker: {
     height: 35,
-    width: '80%',
+    width: "80%",
     minWidth: 100,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
     paddingHorizontal: 10,
     borderRadius: 20,
     borderWidth: 1,
-    borderColor: '#ccc',
-    backgroundColor: '#fff',
+    borderColor: "#ccc",
+    backgroundColor: "#fff",
   },
 
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.5)', 
-    justifyContent: 'flex-end', 
-    alignItems: 'center',
+    backgroundColor: "rgba(0,0,0,0.5)",
+    justifyContent: "flex-end",
+    alignItems: "center",
   },
   sortButtonText: {
     fontSize: 14,
-    color: '#555',
+    color: "#555",
   },
   dropdownArrow: {
     fontSize: 10,
-    color: '#555',
+    color: "#555",
   },
 
   dropdownContent: {
-    backgroundColor: '#fff',
-    borderRadius: 8, 
+    backgroundColor: "#fff",
+    borderRadius: 8,
     paddingVertical: 5,
-    width: '100%', 
-    maxHeight: height * 0.6, 
-    paddingBottom: 20, 
-    shadowColor: '#000',
+    width: "100%",
+    maxHeight: height * 0.6,
+    paddingBottom: 20,
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
@@ -242,29 +242,29 @@ export const styles = StyleSheet.create({
     paddingVertical: 12,
     paddingHorizontal: 15,
     borderBottomWidth: 1,
-    borderBottomColor: '#f0f0f0',
+    borderBottomColor: "#f0f0f0",
   },
   dropdownItemText: {
     fontSize: 16,
-    color: '#333',
+    color: "#333",
   },
   activeDropdownItem: {
-    backgroundColor: '#FDEBD0',
+    backgroundColor: "#FDEBD0",
   },
   activeDropdownItemText: {
-    color: '#E67E22',
-    fontWeight: 'bold',
+    color: "#E67E22",
+    fontWeight: "bold",
     height: 40,
     width: "100%",
   },
 
-  //Cooking Mode Styles
+  // Cooking Mode Styles
 
   cookingContainerNoRecipe: {
-    flex: 1, // Fill the screen
+    flex: 1,
     padding: itemMargin,
-    justifyContent: "center", // vertical center
-    alignItems: "center", // horizontal center
+    justifyContent: "center",
+    alignItems: "center",
     width: "100%",
   },
 
@@ -275,12 +275,12 @@ export const styles = StyleSheet.create({
   },
 
   cookingModeButton: {
-    backgroundColor: "#f6c47b",
+    backgroundColor: "#fc9f5d",
     borderRadius: 20,
     paddingVertical: 10,
     paddingHorizontal: 32,
     marginVertical: 6,
-    width: "25%",
+    width: "50%",
     alignItems: "center",
     marginTop: 20,
   },
@@ -355,7 +355,7 @@ export const styles = StyleSheet.create({
     justifyContent: "center",
     textAlign: "center",
   },
-  
+
   // Shopping List Styles
 
   shoppingListItem: {
@@ -409,6 +409,8 @@ export const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "center",
   },
+
+  // Recipe Detail Styles
 
   scrollViewContainer: {
     flex: 1,
@@ -475,7 +477,7 @@ export const styles = StyleSheet.create({
   shoppingAddButton: {
     backgroundColor: "#fc9f5d",
     marginLeft: 0,
-},
+  },
   buttonText: {
     fontWeight: "bold",
   },
