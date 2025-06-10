@@ -73,6 +73,8 @@ export default function RecipeList({ recipes, query }) {
         />
       </View>
       <FlatList
+        style={{ alignContent: "center" }}
+        contentInsetAdjustmentBehavior="automatic"
         data={filteredRecipes}
         renderItem={renderItem}
         keyExtractor={(item, index) =>
