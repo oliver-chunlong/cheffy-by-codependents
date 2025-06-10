@@ -350,11 +350,10 @@ export const styles = StyleSheet.create({
     justifyContent: "center",
   },
 
-  addToShoppingListButton: {
+  shoppingAddButton: {
     backgroundColor: "#fc9f5d",
-    marginLeft: 15,
-  },
-
+    marginLeft: 0,
+},
   buttonText: {
     fontWeight: "bold",
   },
