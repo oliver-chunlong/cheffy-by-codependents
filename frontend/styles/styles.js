@@ -258,13 +258,13 @@ export const styles = StyleSheet.create({
     width: "100%",
   },
 
-  //Cooking Mode Styles
+  // Cooking Mode Styles
 
   cookingContainerNoRecipe: {
-    flex: 1, // Fill the screen
+    flex: 1,
     padding: itemMargin,
-    justifyContent: "center", // vertical center
-    alignItems: "center", // horizontal center
+    justifyContent: "center",
+    alignItems: "center",
     width: "100%",
   },
 
@@ -275,12 +275,12 @@ export const styles = StyleSheet.create({
   },
 
   cookingModeButton: {
-    backgroundColor: "#f6c47b",
+    backgroundColor: "#fc9f5d",
     borderRadius: 20,
     paddingVertical: 10,
     paddingHorizontal: 32,
     marginVertical: 6,
-    width: "25%",
+    width: "50%",
     alignItems: "center",
     marginTop: 20,
   },
@@ -409,6 +409,8 @@ export const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "center",
   },
+
+  // Recipe Detail Styles
 
   scrollViewContainer: {
     flex: 1,
