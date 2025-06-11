@@ -179,21 +179,22 @@ export default function RecipeDetail({
           </Button>
         </View>
 
-      {recipeState.instructions && recipeState.instructions.length > 0 ? (
-        recipeState.instructions?.map((instruction) => (
-          <Step
-            key={instruction.step_number}
-            lastStep={recipeState.instructions.at(-1).step_number}
-            instruction={instruction}
-          />
-        ))
-      ) : (
-        <Loading />
-      )}
-    </View>
+        {recipeState.instructions && recipeState.instructions.length > 0 ? (
+          recipeState.instructions?.map((instruction) => (
+            <Step
+              key={instruction.step_number}
+              lastStep={recipeState.instructions.at(-1).step_number}
+              instruction={instruction}
+            />
+          ))
+        ) : (
+          <Loading />
+        )}
+      </View>
     </ScrollView>
-  )
+  );
 }
+
 
 // const styles = StyleSheet.create({
 //   container: {
@@ -203,3 +204,4 @@ export default function RecipeDetail({
 //     padding: 8,
 //   },
 // });
+

@@ -46,6 +46,7 @@ function HomeStack({ navigation }) {
           headerShadowVisible: false,
           headerTitleAlign: "center",
           headerTitle: "H O M E",
+          headerTintColor: "white",
           headerRight: () => (
             <Button
               round
@@ -99,6 +100,10 @@ function HomeStack({ navigation }) {
         component={Profile}
         options={({ navigation }) => ({
           headerStyle: styles.header,
+          headerShadowVisible: false,
+          headerTitleAlign: "center",
+          headerTintColor: "white",
+          headerTitle: "P R O F I L E",
           headerTitleAlign: "center",
           headerTitle: () => (
             <View style={styles.titleWrapper}>
@@ -119,7 +124,12 @@ function HomeStack({ navigation }) {
         component={CreateNewRecipe}
         options={{
           headerTitle: "Create a recipe",
-          headerTitleAlign: "center",
+          headerTitleAlign: "center",n
+          headerTitleStyle: {
+            color: "white",
+          },
+          headerTintColor: "white",
+          headerTitle: "N E W  R E C I P E",
           headerStyle: styles.header,
           headerTitle: () => (
             <View style={styles.titleWrapper}>
@@ -193,13 +203,13 @@ export default function NavBar() {
         component={HomeStack}
         options={{ headerShown: false }}
         listeners={({ navigation }) => ({
-    tabPress: (e) => {
-      e.preventDefault();
-      navigation.navigate("Home", {
-        screen: "Home", 
-      });
-    },
-  })}
+          tabPress: (e) => {
+            e.preventDefault();
+            navigation.navigate("Home", {
+              screen: "Home",
+            });
+          },
+        })}
       />
       <Tab.Screen
         name="Cooking Mode"
