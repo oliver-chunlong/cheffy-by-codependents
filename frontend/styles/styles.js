@@ -170,7 +170,6 @@ export const styles = StyleSheet.create({
     alignItems: "center",
     paddingVertical: 8,
     paddingHorizontal: 10,
-    backgroundColor: "fff",
   },
 
   filterBar: {
@@ -178,7 +177,6 @@ export const styles = StyleSheet.create({
     alignItems: "center",
     paddingVertical: 8,
     paddingHorizontal: 10,
-    backgroundColor: "fff",
   },
 
   filterText: {
@@ -190,7 +188,7 @@ export const styles = StyleSheet.create({
   },
 
   activeFilterText: {
-    borderBottomColor: "#f6c47b",
+    borderBottomColor: "#ffcba0",
   },
 
   orderPickerWrapper: {
@@ -201,7 +199,7 @@ export const styles = StyleSheet.create({
   },
 
   orderPicker: {
-    height: 35,
+    height: 25,
     width: "80%",
     minWidth: 100,
     flexDirection: "row",
@@ -468,6 +466,50 @@ export const styles = StyleSheet.create({
 
   loading: {},
 
+actionButton: {
+  width: "90%",
+  backgroundColor: "#f6c47b",
+  shadowColor: "#000",
+  shadowOffset: { width: 0, height: 2 },
+  shadowOpacity: 0.05,
+  shadowRadius: 4,
+  alignSelf: "center",
+  paddingHorizontal: 20,
+  paddingVertical: 10,
+  borderRadius: 20,
+  marginHorizontal: 16,
+  marginVertical: 8,
+  borderRadius: 8,
+},
+
+actionButton2: {
+  width: "90%",
+  backgroundColor: "red",
+  shadowColor: "#000",
+  shadowOffset: { width: 0, height: 2 },
+  shadowOpacity: 0.05,
+  shadowRadius: 4,
+  alignSelf: "center",
+  paddingHorizontal: 20,
+  paddingVertical: 10,
+  borderRadius: 20,
+  marginHorizontal: 16,
+  marginVertical: 8,
+  borderRadius: 8,
+},
+
+scrollContent: {
+  paddingVertical: 0,
+  paddingBottom: 5,
+  paddingLeft: 15,
+  paddingRight: 15,
+},
+
+loading: {
+  
+},
+
+
   cookingModeStepWrapper: {
     flex: 1,
     alignItems: "center",
@@ -574,6 +616,31 @@ export const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "bold",
     textAlign: "center",
+  },
+
+    shoppingListCancelButton: {
+    backgroundColor: "#f4b1af",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 4,
+    alignSelf: "center",
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 20,
+  },
+
+    shoppingListClearButton: {
+    backgroundColor: "#f6c47b",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 4,
+    alignSelf: "center",
+    margin: 10,
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 20,
   },
 
   // Recipe Detail Styles

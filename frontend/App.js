@@ -28,7 +28,7 @@ export default function App() {
       return <CustomToast {...props} />;
     },
   };
-
+  
   return (
     <UserProvider>
       <ShoppingListProvider>
