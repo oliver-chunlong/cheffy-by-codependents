@@ -1,11 +1,12 @@
 import { useEffect, useState, useCallback } from "react";
-import { View, FlatList, Dimensions } from "react-native";
+import { FlatList, Dimensions } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { requestRecipes } from "../../utils/axios";
 import { styles } from "../../styles/styles";
 import Loading from "../Loading";
 import RecipeCard from "./RecipeCard";
 import { BlurView } from "expo-blur";
+import { Text, View, GridList, Spacings } from "react-native-ui-lib";
 
 import FilterOrderBar from "./FilterOrderBar";
 
@@ -72,32 +73,22 @@ export default function RecipeList({ recipes, query }) {
           setOrder={setOrder}
         />
       </View>
-      <FlatList
-        style={{ alignContent: "center" }}
-        contentInsetAdjustmentBehavior="automatic"
-        data={filteredRecipes}
-        renderItem={renderItem}
-        keyExtractor={(item, index) =>
-          item.recipe_id ? item.recipe_id.toString() : index.toString()
-        }
-        numColumns={numColumns}
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={{
-          paddingHorizontal: 9,
-        }}
-        columnWrapperStyle={{ justifyContent: "space-evenly" }}
-      />
-      {/* <BlurView
-        intensity={40}
-        tint="light"
-        style={{
-          position: "absolute",
-          bottom: 0,
-          left: 0,
-          right: 0,
-          height: 90,
-        }}
-      /> */}
+      <View justifyContent="center">
+        <FlatList
+          style={{ alignSelf: "center" }}
+          data={filteredRecipes}
+          renderItem={renderItem}
+          keyExtractor={(item, index) =>
+            item.recipe_id ? item.recipe_id.toString() : index.toString()
+          }
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{
+            flexDirection: "row",
+            flexWrap: "wrap",
+            justifyContent: "flex-start",
+          }}
+        />
+      </View>
     </View>
   );
 }
