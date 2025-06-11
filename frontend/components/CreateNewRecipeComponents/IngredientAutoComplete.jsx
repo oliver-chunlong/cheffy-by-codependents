@@ -1,15 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { View, TextInput, FlatList, TouchableOpacity, Text, StyleSheet } from 'react-native';
 
-export default function IngredientAutocomplete({ allIngredients, onAdd }) {
+export default function IngredientAutocomplete({ allIngredients = [], onAdd }) {
   const [query, setQuery] = useState("");
   const [suggestions, setSuggestions] = useState([]);
 
+  const normalized = allIngredients.map(item =>
+    typeof item === 'string' ? { ingredient_id: null, ingredient_name: item } : item );
+
   useEffect(() => {
     if (query.length > 0) {
-      const filtered = allIngredients
+      const filtered = normalized
         .filter(item =>
-          item.toLowerCase().startsWith(query.toLowerCase())
+          item.ingredient_name &&
+          item.ingredient_name.toLowerCase().startsWith(query.toLowerCase())
         )
         .slice(0, 5);
       setSuggestions(filtered);
@@ -18,44 +22,59 @@ export default function IngredientAutocomplete({ allIngredients, onAdd }) {
     }
   }, [query, allIngredients]);
 
-  const handleAdd = name => {
-    onAdd(name);
+  const handleAdd = ingredientObj => {
+    onAdd(ingredientObj);
     setQuery("");
+    setSuggestions([]);
   };
 
   const renderItem = ({ item }) => (
-    <TouchableOpacity style={styles.suggestionItem} onPress={() => handleAdd(item)}>
-      <Text>{item}</Text>
+    <TouchableOpacity
+      style={styles.suggestionItem}
+      onPress={() => handleAdd(item)}
+    >
+      <Text>{item.ingredient_name}</Text>
     </TouchableOpacity>
   );
 
   const showAddOption = () => {
-    const exists = allIngredients
-      .map(i => i.toLowerCase())
-      .includes(query.toLowerCase());
-    return query.length > 0 && !exists;
+    if (!query.trim()) return false;
+    return !normalized.some(
+      i => i.ingredient_name && i.ingredient_name.toLowerCase() === query.toLowerCase() );
   };
 
   return (
+
     <View style={styles.container}>
       <TextInput
-        placeholder="Search or add ingredients"
-        value={query}
-        onChangeText={setQuery}
-        style={styles.input}
+      placeholder="Search or add ingredients"
+      value={query}
+      onChangeText={setQuery}
+      style={styles.input}
       />
+
       {(suggestions.length > 0 || showAddOption()) && (
         <View style={styles.suggestionsList}>
           {suggestions.length > 0 && (
             <FlatList
-              data={suggestions}
-              keyExtractor={item => item}
+            data={suggestions}
+            keyExtractor={item =>
+            item.ingredient_id != null
+                ? item.ingredient_id.toString()
+                : item.ingredient_name
+              }
               renderItem={renderItem}
               keyboardShouldPersistTaps="handled"
             />
           )}
+
           {showAddOption() && (
-            <TouchableOpacity style={styles.addItem} onPress={() => handleAdd(query)}>
+            <TouchableOpacity
+            style={styles.addItem}
+            onPress={() =>
+              handleAdd({ ingredient_id: null, ingredient_name: query })
+            }
+            >
               <Text style={styles.addText}>Add "{query}"</Text>
             </TouchableOpacity>
           )}

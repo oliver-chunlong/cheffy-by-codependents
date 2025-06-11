@@ -341,7 +341,6 @@ export const styles = StyleSheet.create({
     backgroundColor: "#FCF8F0",
   },
 
-  /////////////////
 
   sectionTitle: {
     fontSize: 18,
@@ -508,6 +507,12 @@ scrollContent: {
 loading: {
   
 },
+
+
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+  },
 
 
   cookingModeStepWrapper: {

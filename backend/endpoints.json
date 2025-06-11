@@ -196,23 +196,110 @@
     }
   },
 
-  "POST /api/users/:user_id/recipes": {
-    "description": "creates a new recipe for the specified user",
-    "exampleResponse": {
-      "recipe": {
-        "recipe_id": 6,
-        "recipe_name": "Spicy Coconut Chickpea Curry",
-        "recipe_description": "Creamy coconut curry with chickpeas, tomato, and warming spices",
-        "recipe_img_url": "https://example.jpg",
-        "created_by": 1,
-        "is_vegetarian": false,
-        "is_vegan": false,
-        "is_gluten_free": false,
-        "is_dairy_free": false,
-        "is_nut_free": false
+"POST /api/users/:user_id/recipes": {
+  "description": "creates a new recipe for the specified user, including ingredients and instructions",
+  "requestBody": {
+    "description": "recipe data with nested ingredients and instructions",
+    "content": {
+      "application/json": {
+        "schema": {
+          "type": "object",
+          "properties": {
+            "recipe_name":        { "type": "string" },
+            "recipe_description": { "type": "string" },
+            "recipe_img_url":     { "type": "string", "format": "uri" },
+            "ingredients": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "ingredient_id":      { "type": "integer" },
+                  "quantity_numerical": { "type": "number" },
+                  "quantity_unit":      { "type": "string" }
+                },
+                "required": ["ingredient_id","quantity_numerical"]
+              }
+            },
+            "instructions": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "step_number":      { "type": "integer" },
+                  "step_description": { "type": "string" },
+                  "time_required":    { "type": "number" }
+                },
+                "required": ["step_number","step_description"]
+              }
+            }
+          },
+          "required": ["recipe_name","ingredients","instructions"]
+        }
       }
     }
   },
+  "exampleRequest": {
+    "recipe_name": "Spicy Coconut Chickpea Curry",
+    "recipe_description": "Creamy coconut curry with chickpeas, tomato, and warming spices",
+    "recipe_img_url": "https://example.jpg",
+    "ingredients": [
+      { "ingredient_id": 7,  "quantity_numerical": 400, "quantity_unit": "grams" },
+      { "ingredient_id": 12, "quantity_numerical": 1,   "quantity_unit": "tbsp" }
+    ],
+    "instructions": [
+      { "step_number": 1, "step_description": "Sauté onion and garlic until fragrant.",          "time_required": 5 },
+      { "step_number": 2, "step_description": "Add chickpeas and coconut milk, simmer.",       "time_required": 10 },
+      { "step_number": 3, "step_description": "Stir in spices and cook for two more minutes.", "time_required": 2 }
+    ]
+  },
+  "exampleResponse": {
+    "recipe": {
+      "recipe_id": 6,
+      "recipe_name": "Spicy Coconut Chickpea Curry",
+      "recipe_description": "Creamy coconut curry with chickpeas, tomato, and warming spices",
+      "recipe_img_url": "https://example.jpg",
+      "created_by": 1,
+      "is_vegetarian": false,
+      "is_vegan": false,
+      "is_gluten_free": false,
+      "is_dairy_free": false,
+      "is_nut_free": false,
+      "ingredients": [
+        {
+          "ingredient_id": 7,
+          "ingredient_name": "chickpeas",
+          "quantity_numerical": 400,
+          "quantity_unit": "grams",
+          "optional": false
+        },
+        {
+          "ingredient_id": 12,
+          "ingredient_name": "coconut oil",
+          "quantity_numerical": 1,
+          "quantity_unit": "tbsp",
+          "optional": false
+        }
+      ],
+      "instructions": [
+        {
+          "step_number": 1,
+          "step_description": "Sauté onion and garlic until fragrant.",
+          "time_required": 5
+        },
+        {
+          "step_number": 2,
+          "step_description": "Add chickpeas and coconut milk, simmer.",
+          "time_required": 10
+        },
+        {
+          "step_number": 3,
+          "step_description": "Stir in spices and cook for two more minutes.",
+          "time_required": 2
+        }
+      ]
+    }
+  }
+},
 
   "GET /api/users/:user_id/favourites": {
     "description": "serves all favourite recipes for the specified user",
