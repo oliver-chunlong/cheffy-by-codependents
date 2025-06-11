@@ -192,6 +192,14 @@ export default function NavBar() {
         name="Home"
         component={HomeStack}
         options={{ headerShown: false }}
+        listeners={({ navigation }) => ({
+    tabPress: (e) => {
+      e.preventDefault();
+      navigation.navigate("Home", {
+        screen: "Home", 
+      });
+    },
+  })}
       />
       <Tab.Screen
         name="Cooking Mode"

@@ -12,7 +12,7 @@ import {
   Timeline,
   ListItem,
 } from "react-native-ui-lib";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { requestRecipeById } from "../utils/axios";
 import Toast from "react-native-toast-message";
 import Loading from "../components/Loading";
@@ -21,30 +21,36 @@ import FavouriteButton from "../components/FavouriteButton";
 import { styles } from "../styles/styles";
 import AddToList from "../assets/AddToList.webp";
 
-function Step({ instruction }) {
-  const timelineColor = "#f6c47b";
+function Step({ instruction, lastStep }) {
+  const color = "#fc9f5d";
+  const anchorRef = useRef();
 
   return (
     <Timeline
       topLine={
         instruction.step_number > 1
-          ? { state: Timeline.states.CURRENT, color: timelineColor }
+          ? {
+              state: Timeline.states.CURRENT,
+              type: Timeline.lineTypes.DASHED,
+              color,
+            }
           : undefined
       }
-      bottomLine={{ state: Timeline.states.CURRENT, color: timelineColor }}
-      point={{
-        label: instruction.step_number,
-        labelStyle: { color: timelineColor },
-      }}
-      pointColor={timelineColor}
-      stateColor={timelineColor}
+      bottomLine={
+        instruction.step_number !== lastStep
+          ? {
+              state: Timeline.states.CURRENT,
+              type: Timeline.lineTypes.DASHED,
+              color,
+            }
+          : undefined
+      }
+      point={{ label: instruction.step_number, color, anchorRef }}
     >
-      <Card style={styles.instructionCard}>
-        <Text>{instruction.step_description}</Text>
+      <Card style={{ padding: 5 }}>
+        <Text ref={anchorRef}>{instruction.step_description}</Text>
         {instruction.time_required > 0 && (
-          <Text style={styles.instructionTime}>
-            {instruction.time_required} mins
-          </Text>
+          <Text>{instruction.time_required} mins</Text>
         )}
       </Card>
     </Timeline>
@@ -173,18 +179,27 @@ export default function RecipeDetail({
           </Button>
         </View>
 
-        <Text style={styles.sectionTitle}>Instructions</Text>
-        <View style={styles.timelineContainer}>
-          {recipeState.instructions && recipeState.instructions.length > 0 ? (
-            recipeState.instructions?.map((instruction) => (
-              <Step key={instruction.step_number} instruction={instruction} />
-            ))
-          ) : (
-            <Text>No instructions available.</Text>
-          )}
-        </View>
-        <View style={{ height: 10 }} />
-      </View>
+      {recipeState.instructions && recipeState.instructions.length > 0 ? (
+        recipeState.instructions?.map((instruction) => (
+          <Step
+            key={instruction.step_number}
+            lastStep={recipeState.instructions.at(-1).step_number}
+            instruction={instruction}
+          />
+        ))
+      ) : (
+        <Loading />
+      )}
+    </View>
     </ScrollView>
-  );
+  )
 }
+
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//     justifyContent: "center",
+//     backgroundColor: "#ecf0f1",
+//     padding: 8,
+//   },
+// });
