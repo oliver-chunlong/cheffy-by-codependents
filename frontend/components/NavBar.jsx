@@ -104,19 +104,6 @@ function HomeStack({ navigation }) {
           headerTitleAlign: "center",
           headerTintColor: "white",
           headerTitle: "P R O F I L E",
-          headerTitleAlign: "center",
-          headerTitle: () => (
-            <View style={styles.titleWrapper}>
-              <Text style={styles.titleText}>P R O F I L E</Text>
-            </View>
-          ),
-          headerRight: () => (
-            <Button
-              label="Home"
-              onPress={() => navigation.navigate("Home")}
-              style={styles.homeButton}
-            />
-          ),
         })}
       />
       <Stack.Screen
@@ -124,18 +111,13 @@ function HomeStack({ navigation }) {
         component={CreateNewRecipe}
         options={{
           headerTitle: "Create a recipe",
-          headerTitleAlign: "center",n
+          headerTitleAlign: "center",
           headerTitleStyle: {
             color: "white",
           },
           headerTintColor: "white",
           headerTitle: "N E W  R E C I P E",
           headerStyle: styles.header,
-          headerTitle: () => (
-            <View style={styles.titleWrapper}>
-              <Text style={styles.titleText}>C R E A T E A R E C I P E</Text>
-            </View>
-          ),
         }}
       />
     </Stack.Navigator>
