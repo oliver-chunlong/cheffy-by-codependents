@@ -124,7 +124,7 @@ function HomeStack({ navigation }) {
         component={CreateNewRecipe}
         options={{
           headerTitle: "Create a recipe",
-          headerTitleAlign: "center",n
+          headerTitleAlign: "center",
           headerTitleStyle: {
             color: "white",
           },
