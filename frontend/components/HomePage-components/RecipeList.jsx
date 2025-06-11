@@ -1,11 +1,14 @@
 import { useEffect, useState, useCallback } from "react";
-import { View, FlatList, Dimensions } from "react-native";
+import { FlatList, Dimensions } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { requestRecipes } from "../../utils/axios";
 import { styles } from "../../styles/styles";
 import Loading from "../Loading";
 import RecipeCard from "./RecipeCard";
-import FilterOrderBar from "../HomePage-components/FilterOrderBar";
+import { BlurView } from "expo-blur";
+import { Text, View, GridList, Spacings } from "react-native-ui-lib";
+
+import FilterOrderBar from "./FilterOrderBar";
 
 const screenWidth = Dimensions.get("window").width;
 const numColumns = 2;
@@ -62,29 +65,30 @@ export default function RecipeList({ recipes, query }) {
 
   return (
     <View style={{ flex: 1 }}>
-      <FilterOrderBar
-        activeFilters={activeFilters}
-        setActiveFilters={setActiveFilters}
-        order={order}
-        setOrder={setOrder}
-      />
-      <FlatList
-        style={{ alignContent: "center" }}
-        contentInsetAdjustmentBehavior="automatic"
-        data={filteredRecipes}
-        renderItem={renderItem}
-        keyExtractor={(item, index) =>
-          item.recipe_id ? item.recipe_id.toString() : index.toString()
-        }
-        numColumns={numColumns}
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={{
-          paddingHorizontal: 10,
-          paddingBottom: 10,
-          gap: 10,
-        }}
-        columnWrapperStyle={{ justifyContent: "space-evenly" }}
-      />
+      <View style={{ paddingHorizontal: 10, paddingTop: 0, paddingBottom: 13 }}>
+        <FilterOrderBar
+          activeFilters={activeFilters}
+          setActiveFilters={setActiveFilters}
+          order={order}
+          setOrder={setOrder}
+        />
+      </View>
+      <View justifyContent="center">
+        <FlatList
+          style={{ alignSelf: "center" }}
+          data={filteredRecipes}
+          renderItem={renderItem}
+          keyExtractor={(item, index) =>
+            item.recipe_id ? item.recipe_id.toString() : index.toString()
+          }
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{
+            flexDirection: "row",
+            flexWrap: "wrap",
+            justifyContent: "flex-start",
+          }}
+        />
+      </View>
     </View>
   );
 }
