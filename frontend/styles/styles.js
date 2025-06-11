@@ -17,7 +17,7 @@ const shared = {
 
 };
 
-const isMobile = Dimensions.get("window").width < 400;
+const isMobile = Dimensions.get("window").width < 600;
 
 export const styles = StyleSheet.create({
   container: {
@@ -155,7 +155,7 @@ export const styles = StyleSheet.create({
   iconContainer: {
     alignItems: "center",
     justifyContent: "center",
-    paddingTop: isMobile ? 30 : 10,
+    paddingTop: isMobile ? 20 : 10,
   },
 
   iconImage: {
@@ -272,7 +272,11 @@ export const styles = StyleSheet.create({
     alignItems: "center",
     width: "100%",
   },
-
+  cookingNoRecipeText: {
+    fontFamily: shared.fontFamily,
+    fontSize: 19,
+    color: "#2b2b2b",
+  },
   cookingModeText: {
     fontFamily: shared.fontFamily,
     fontSize: 22,
@@ -285,14 +289,14 @@ export const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 32,
     marginVertical: 6,
-    width: "50%",
+    width: "60%",
     alignItems: "center",
     marginTop: 20,
   },
 
   cookingModeButtonText: {
     fontFamily: shared.fontFamily,
-    fontSize: 22,
+    fontSize: 19,
     color: "#fff",
     textAlign: "center",
     padding: 5,
@@ -304,7 +308,7 @@ export const styles = StyleSheet.create({
     alignItems: "center", // horizontal center
     width: "100%",
     backgroundColor: "#fff",
-    padding: 16,
+    padding: 20,
     borderRadius: 16,
     elevation: 5,
     shadowColor: "#000",
@@ -319,6 +323,7 @@ export const styles = StyleSheet.create({
     color: "#2b2b2b",
     justifyContent: "center",
     textAlign: "center",
+    padding: 20,
   },
 
   cookingModeStepContainer: {
@@ -475,20 +480,29 @@ loading: {
     width: "100%",
     alignItems: "center",
     marginTop: 20,
+    paddingTop: 40,
+    elevation: 0,
+    shadowColor: "transparent",
   },
 
   timerPlayIcon: {
     color: "#f6c47b",
   },
 
+  speakerPlayIcon: {
+    color: "#f6c47b",
+  },
+
   cookingIconButton: {
     backgroundColor: "#fff",
+    margin: 0,
+    marginBottom: 10,
   },
 
   cookingTimerText: {
     fontFamily: shared.fontFamily,
     fontSize: 96,
-    color: "#f6c47b",
+    color: "#fc9f5d",
     justifyContent: "center",
     textAlign: "center",
   },

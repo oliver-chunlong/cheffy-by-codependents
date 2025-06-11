@@ -41,13 +41,18 @@ export default function ShoppingList() {
   // If empty, show a message
   if (shoppingList?.length === 0) {
     return (
-      <View style={styles.container}>
-        <Text
-          style={{ color: "blue" }}
-          onPress={() => navigation.navigate("Home")}
-        >
+      <View style={styles.cookingContainerNoRecipe}>
+        <Text style={styles.cookingNoRecipeText}>
           Select a recipe to add ingredients
         </Text>
+        <Button
+          onPress={() => {
+            navigation.navigate("Home");
+          }}
+          style={styles.cookingModeButton}
+        >
+          <Text style={styles.cookingModeButtonText}>return to homepage</Text>
+        </Button>
       </View>
     );
   }

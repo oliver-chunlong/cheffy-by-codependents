@@ -83,9 +83,9 @@ export default function RecipeList({ recipes, query }) {
         numColumns={numColumns}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{
-          paddingHorizontal: 18,
+          paddingHorizontal: 9,
         }}
-        columnWrapperStyle={{ justifyContent: 'space-between' }}
+        columnWrapperStyle={{ justifyContent: "space-evenly" }}
       />
       {/* <BlurView
         intensity={40}

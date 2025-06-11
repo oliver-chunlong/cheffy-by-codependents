@@ -19,6 +19,7 @@ import Loading from "../components/Loading";
 import Stepper from "../components/Stepper";
 import FavouriteButton from "../components/FavouriteButton";
 import { styles } from "../styles/styles";
+import AddToList from "../assets/AddToList.webp";
 
 function Step({ instruction }) {
   const timelineColor = "#f6c47b";
@@ -149,16 +150,21 @@ export default function RecipeDetail({
                   return prev ? [...prev, ...newIngredients] : newIngredients;
                 });
                 Toast.show({
-                  type: "success",
-                  text1: "Ingredients added to shopping list",
+                  type: "customToast",
                   position: "bottom",
+                  props: {
+                    text1: "Ingredients added to shopping list",
+                    icon: AddToList,
+                  },
                 });
               } catch (error) {
                 Toast.show({
-                  type: "error",
-                  text1: "Oh no! Something went wrong!",
-                  text2: "Please try again later.",
+                  type: "customToast",
                   position: "bottom",
+                  props: {
+                    text1: "Oh no! Something went wrong!",
+                    text2: "Please try again later.",
+                  },
                 });
               }
             }}
