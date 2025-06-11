@@ -16,7 +16,6 @@ import Profile from "../pages/Profile.jsx";
 import SearchBar from "./HomePage-components/SearchBar.jsx";
 import CreateNewRecipe from "../pages/CreateNewRecipe.jsx";
 import RecipeList from "./HomePage-components/RecipeList";
-import FilterOrderBar from "./HomePage-components/FilterOrderBar";
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -75,14 +74,6 @@ function HomeStack({ navigation }) {
               activeFilters={activeFilters}
               setActiveFilters={setActiveFilters}
             />
-            
-            <FilterOrderBar
-              activeFilters={activeFilters}
-              setActiveFilters={setActiveFilters}
-              order={order}
-              setOrder={setOrder}
-            />
-
             <RecipeList {...props} recipes={filteredRecipes} />
           </SafeAreaView>
         )}

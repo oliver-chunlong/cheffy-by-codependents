@@ -5,6 +5,7 @@ import { requestRecipes } from "../../utils/axios";
 import { styles } from "../../styles/styles";
 import Loading from "../Loading";
 import RecipeCard from "./RecipeCard";
+import FilterOrderBar from "../HomePage-components/FilterOrderBar";
 
 const screenWidth = Dimensions.get("window").width;
 const numColumns = 2;
@@ -61,6 +62,12 @@ export default function RecipeList({ recipes, query }) {
 
   return (
     <View style={{ flex: 1 }}>
+      <FilterOrderBar
+        activeFilters={activeFilters}
+        setActiveFilters={setActiveFilters}
+        order={order}
+        setOrder={setOrder}
+      />
       <FlatList
         style={{ alignContent: "center" }}
         contentInsetAdjustmentBehavior="automatic"
@@ -74,7 +81,7 @@ export default function RecipeList({ recipes, query }) {
         contentContainerStyle={{
           paddingHorizontal: 10,
           paddingBottom: 10,
-          gap: 10
+          gap: 10,
         }}
         columnWrapperStyle={{ justifyContent: "space-evenly" }}
       />
