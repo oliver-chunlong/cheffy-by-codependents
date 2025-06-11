@@ -12,27 +12,44 @@ import {
   Timeline,
   ListItem,
 } from "react-native-ui-lib";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { requestRecipeById } from "../utils/axios";
 import Toast from "react-native-toast-message";
 import Loading from "../components/Loading";
 import Stepper from "../components/Stepper";
 import FavouriteButton from "../components/FavouriteButton";
 
-function Step({ instruction }) {
+function Step({ instruction, lastStep }) {
+  const color = "#fc9f5d";
+  const anchorRef = useRef();
+
   return (
     <Timeline
       topLine={
         instruction.step_number > 1
-          ? { state: Timeline.states.CURRENT }
+          ? {
+              state: Timeline.states.CURRENT,
+              type: Timeline.lineTypes.DASHED,
+              color,
+            }
           : undefined
       }
-      bottomLine={{ state: Timeline.states.CURRENT }}
-      point={{ label: instruction.step_number }}
+      bottomLine={
+        instruction.step_number !== lastStep
+          ? {
+              state: Timeline.states.CURRENT,
+              type: Timeline.lineTypes.DASHED,
+              color,
+            }
+          : undefined
+      }
+      point={{ label: instruction.step_number, color, anchorRef }}
     >
-      <Card>
-        <Text>{instruction.step_description}</Text>
-        <Text>{instruction.time_required} mins</Text>
+      <Card style={{ padding: 5 }}>
+        <Text ref={anchorRef}>{instruction.step_description}</Text>
+        {instruction.time_required > 0 && (
+          <Text>{instruction.time_required} mins</Text>
+        )}
       </Card>
     </Timeline>
   );
@@ -144,7 +161,11 @@ export default function RecipeDetail({
 
       {recipeState.instructions && recipeState.instructions.length > 0 ? (
         recipeState.instructions?.map((instruction) => (
-          <Step key={instruction.step_number} instruction={instruction} />
+          <Step
+            key={instruction.step_number}
+            lastStep={recipeState.instructions.at(-1).step_number}
+            instruction={instruction}
+          />
         ))
       ) : (
         <Loading />
