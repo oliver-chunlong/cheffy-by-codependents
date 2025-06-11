@@ -5,9 +5,6 @@ import { requestRecipes } from "../../utils/axios";
 import { styles } from "../../styles/styles";
 import Loading from "../Loading";
 import RecipeCard from "./RecipeCard";
-import { BlurView } from "expo-blur";
-
-import FilterOrderBar from "./FilterOrderBar";
 
 const screenWidth = Dimensions.get("window").width;
 const numColumns = 2;
@@ -64,14 +61,6 @@ export default function RecipeList({ recipes, query }) {
 
   return (
     <View style={{ flex: 1 }}>
-      <View style={{ paddingHorizontal: 10, paddingTop: 0, paddingBottom: 13 }}>
-        <FilterOrderBar
-          activeFilters={activeFilters}
-          setActiveFilters={setActiveFilters}
-          order={order}
-          setOrder={setOrder}
-        />
-      </View>
       <FlatList
         style={{ alignContent: "center" }}
         contentInsetAdjustmentBehavior="automatic"
@@ -83,21 +72,12 @@ export default function RecipeList({ recipes, query }) {
         numColumns={numColumns}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{
-          paddingHorizontal: 9,
+          paddingHorizontal: 10,
+          paddingBottom: 10,
+          gap: 10
         }}
         columnWrapperStyle={{ justifyContent: "space-evenly" }}
       />
-      {/* <BlurView
-        intensity={40}
-        tint="light"
-        style={{
-          position: "absolute",
-          bottom: 0,
-          left: 0,
-          right: 0,
-          height: 90,
-        }}
-      /> */}
     </View>
   );
 }
