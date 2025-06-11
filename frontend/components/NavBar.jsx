@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { View, Image, SafeAreaView, ScrollView } from "react-native";
-import { Text, Button } from "react-native-ui-lib";
+import { Text, Button, Icon } from "react-native-ui-lib";
 
 import { styles } from "../styles/styles";
 import { requestRecipes } from "../utils/axios";
@@ -102,7 +102,7 @@ function HomeStack({ navigation }) {
         headerRight: () => (
         <Button
         label="Home"
-        onPress={() => navigation.navigate('Homepage')}
+        onPress={() => navigation.navigate('Home')}
         style={styles.homeButton}
         />
         ),

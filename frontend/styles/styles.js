@@ -339,12 +339,16 @@ export const styles = StyleSheet.create({
     backgroundColor: '#FCF8F0',
   },
 
+  /////////////////
+
   sectionTitle: {
     fontSize: 18,
-    fontWeight: '500',
+    fontWeight: 'bold',
     margin: 12,
     fontFamily: shared.fontFamily,
+    textAlign: "center"
   },
+
   input: {
     flex: 1,
     borderBottomWidth: 1,
@@ -353,6 +357,7 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 4,
     fontFamily: shared.fontFamily,
   },
+
   textArea: {
     flex: 1,
     borderWidth: 1,
@@ -364,6 +369,7 @@ export const styles = StyleSheet.create({
     minHeight: 100,
     fontFamily: shared.fontFamily,
   },
+
   toggleRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -371,21 +377,25 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 8,
   },
+
   saveButton: {
     borderRadius: 8,
     marginBottom: 12,
     backgroundColor: shared.accent,
   },
+
   cancelButton: {
     borderRadius: 8,
     backgroundColor: shared.lightGrey,
   },
+
   errorText: {
     color: 'red',
     textAlign: 'center',
     marginBottom: 12,
     fontFamily: shared.fontFamily,
   },
+  
   listContainer: {
     paddingHorizontal: itemMargin,
     paddingTop: itemMargin,
@@ -416,6 +426,32 @@ sectionTitle: {
 },
 
 actionButton: {
+  width: "90%",
+  backgroundColor: "#f6c47b",
+  shadowColor: "#000",
+  shadowOffset: { width: 0, height: 2 },
+  shadowOpacity: 0.05,
+  shadowRadius: 4,
+  alignSelf: "center",
+  paddingHorizontal: 20,
+  paddingVertical: 10,
+  borderRadius: 20,
+  marginHorizontal: 16,
+  marginVertical: 8,
+  borderRadius: 8,
+},
+
+actionButton2: {
+  width: "90%",
+  backgroundColor: "red",
+  shadowColor: "#000",
+  shadowOffset: { width: 0, height: 2 },
+  shadowOpacity: 0.05,
+  shadowRadius: 4,
+  alignSelf: "center",
+  paddingHorizontal: 20,
+  paddingVertical: 10,
+  borderRadius: 20,
   marginHorizontal: 16,
   marginVertical: 8,
   borderRadius: 8,
@@ -455,6 +491,24 @@ loading: {
     color: "#f6c47b",
     justifyContent: "center",
     textAlign: "center",
+  },
+
+  // Create Recipe styles
+
+  createRecipeButton: {
+    width: "90%",
+    backgroundColor: "#f6c47b",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 4,
+    alignSelf: "center",
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 20,
+     marginHorizontal: 16,
+     marginVertical: 8,
+     borderRadius: 8,
   },
 
   // Shopping List Styles

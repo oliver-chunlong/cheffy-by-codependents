@@ -117,9 +117,9 @@ export const api = axios.create({
   withCredentials: true,
 });
 
-// export const getDietaryFlags = ingredients =>
-//   api.post('/dietary/flags', { ingredients })
-//      .then(response => response.data);
+export const getDietaryFlags = ingredients =>
+  api.post('/dietary/flags', { ingredients })
+     .then(response => response.data);
 
 export const getAllIngredients = () =>
   api.get('/ingredients')

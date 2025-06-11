@@ -7,7 +7,7 @@ import { UserContext } from '../context/UserContext';
 import LoginForm from '../components/ProfileComponents/LoginForm';
 import RecipeCard from '../components/HomePage-components/RecipeCard';
 import FavouriteButton from '../components/FavouriteButton';
-import { requestUserRecipes, requestFavouriteRecipes, requestRecipeById, deleteUserRecipe } from '../utils/axios';
+import { requestUserRecipes, requestFavouriteRecipes, requestRecipeById, deleteUserRecipe, getDietaryFlags } from '../utils/axios';
 import { styles } from '../styles/styles';
 
 const normalizeRecipeImage = recipe => ({
@@ -24,23 +24,30 @@ export default function Profile({ navigation, route }) {
 
   const userId = user?.id || null;
   
-  useEffect(() => {
-    if (!userId) return;
-    setIsLoading(true);
-    setErrorMsg("");
+useEffect(() => {
+  if (!userId) return;
+  setIsLoading(true);
+  setErrorMsg('');
 
-    requestFavouriteRecipes(userId)
-      .then(res => {
-        const arr = Array.isArray(res) ? res : res.recipes || [];
-        const normalized = arr.map(normalizeRecipeImage);
-        setFavourites(normalized);
-      })
-      .catch(err => {
-        console.error("Error loading favourites:", err.message);
-        setErrorMsg("Failed to load favourite recipes.");
-      })
-      .finally(() => setIsLoading(false));
-  }, [userId]);
+  requestFavouriteRecipes(userId)
+    .then(res => {
+      const ids = Array.isArray(res)
+        ? res.map(fav => fav.recipe_id)
+        : (res.favourites || []).map(fav => fav.recipe_id);
+
+      return Promise.all(ids.map(id =>
+        requestRecipeById(id).then(r => normalizeRecipeImage(r))
+      ));
+    })
+    .then(favRecipes => {
+      setFavourites(favRecipes);
+    })
+    .catch(err => {
+      console.error("Error loading favourites:", err);
+      setErrorMsg("Failed to load favourite recipes.");
+    })
+    .finally(() => setIsLoading(false));
+}, [userId]);
 
   useEffect(() => {
     if (route.params?.newRecipe) {
@@ -93,19 +100,27 @@ if (!user) {
 
   return (
 
-       <SafeAreaView style={styles.container}>
+       <SafeAreaView style={styles.container} >
       <ScrollView>
-        <Text style={styles.sectionTitle}>Favourite recipes</Text>
+        <View style={{ alignItems: 'center', marginVertical: 16 }}>
+          <Text style={styles.sectionTitle}>Favourite recipes</Text>
+          </View>
         {isLoading && favourites.length === 0 ? (
           <ActivityIndicator size="large" style={styles.loading}/>
         ) : favourites.length === 0 ? (
-          <View>
+          <View style={{ alignItems: 'center', marginVertical: 16 }}>
             <Text text90>No favourites yet</Text>
           </View>
         ) : (
           <ScrollView
             horizontal
             showsHorizontalScrollIndicator={false}
+             contentContainerStyle={{ 
+              flexGrow: 1,
+              alignItems: 'center',
+              justifyContent: 'center',
+              paddingHorizontal: 16
+             }}
           >
             {favourites.map(recipe => (
               <View key={recipe.recipe_id}>
@@ -127,7 +142,7 @@ if (!user) {
           </ScrollView>
         )}
 
-        <View>
+        <View style={{ alignItems: 'center', marginVertical: 16 }}>
         <Text style={styles.sectionTitle}>My recipes</Text>
         </View>
 
@@ -141,6 +156,12 @@ if (!user) {
           <ScrollView
             horizontal
             showsHorizontalScrollIndicator={false}
+            contentContainerStyle={{ 
+              flexGrow: 1,
+              alignItems: 'center',
+              justifyContent: 'center',
+              paddingHorizontal: 16
+             }}
           >
             {myRecipes.map(recipe => (
               <View key={recipe.recipe_id} style={styles.horizontalItem}> 
@@ -173,7 +194,7 @@ if (!user) {
         />
         <Button
           label="Log out"
-          style={styles.actionButton}
+          style={styles.actionButton2}
           onPress={handleLogout}
           backgroundColor="red"
         />
