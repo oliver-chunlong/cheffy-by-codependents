@@ -171,7 +171,6 @@ export const styles = StyleSheet.create({
     alignItems: "center",
     paddingVertical: 8,
     paddingHorizontal: 10,
-    backgroundColor: "fff",
   },
 
   filterBar: {
@@ -179,7 +178,6 @@ export const styles = StyleSheet.create({
     alignItems: "center",
     paddingVertical: 8,
     paddingHorizontal: 10,
-    backgroundColor: "fff",
   },
 
   filterText: {
@@ -191,7 +189,7 @@ export const styles = StyleSheet.create({
   },
 
   activeFilterText: {
-    borderBottomColor: "#f6c47b",
+    borderBottomColor: "#ffcba0",
   },
 
   orderPickerWrapper: {
@@ -202,7 +200,7 @@ export const styles = StyleSheet.create({
   },
 
   orderPicker: {
-    height: 35,
+    height: 25,
     width: "80%",
     minWidth: 100,
     flexDirection: "row",
@@ -463,8 +461,10 @@ actionButton2: {
 },
 
 scrollContent: {
-  paddingVertical: 16,
-  paddingBottom: 100,
+  paddingVertical: 0,
+  paddingBottom: 5,
+  paddingLeft: 15,
+  paddingRight: 15,
 },
 
 loading: {
