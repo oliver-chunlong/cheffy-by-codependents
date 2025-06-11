@@ -1,53 +1,48 @@
-import { useState, useContext } from 'react';
-import { View, Text, TextField, Button } from 'react-native-ui-lib';
-import { UserContext } from '../../context/UserContext';
+import { useState, useContext } from "react";
+import { View, Text, TextField, Button, Image } from "react-native-ui-lib";
+import { UserContext } from "../../context/UserContext";
+import LogInText from "../../assets/login.webp";
+import Eggy from "../../assets/CookingEggy.png";
+import { styles } from "../../styles/styles";
 
-export default function LoginForm() {
+export default function LoginForm({ setHasSeenStartScreen }) {
   const { login } = useContext(UserContext);
-  const [username, setUsername] = useState('test user');
-  const [password, setPassword] = useState('123');
+  const [username, setUsername] = useState("test user");
+  const [password, setPassword] = useState("123");
 
   const handleSubmit = () => {
-    login( username, password );
+    login(username, password, setHasSeenStartScreen);
   };
 
   return (
-    <View style={{
-            borderWidth: 1,
-            borderColor: 'black',
-            borderRadius: 20,
-            marginBottom: 24,
-            padding: 20,
-            width: '90%',
-            maxWidth: 400,
-            minHeight: 300,
-          }} >
-      <Text text50 margin-20 center>Sign In</Text>
-
+    <View style={styles.logInBox}>
+      <View style={styles.LoginImages}>
+        <Image source={LogInText} style={{ width: 200, height: 90 }} />
+        <Image source={Eggy} style={{ width: 80, height: 120 }} />
+      </View>
       <TextField
-        floatingPlaceholder
         placeholder="Username:"
         onChangeText={setUsername}
         value={username}
-        marginB-16
-        style={{ borderColor: "black", borderWidth: 1}}
+        style={styles.logInField}
       />
-
       <TextField
-        floatingPlaceholder
         placeholder="Password:"
         secureTextEntry
         onChangeText={setPassword}
         value={password}
-        marginB-24
-        style={{ borderColor: "black", borderWidth: 1}}
+        style={styles.logInField}
       />
-
       <Button
         label="Log In"
+        labelStyle={{
+          fontSize: 15,
+          color: "white",
+          fontWeight: "bold",
+        }}
         onPress={handleSubmit}
         fullWidth
-        style={{ borderRadius: 8 }}
+        style={[styles.loginButton, { marginTop: 30 }]}
       />
     </View>
   );

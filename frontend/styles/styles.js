@@ -8,13 +8,12 @@ const numColumns = screenWidth > 500 ? 2 : 1;
 const itemWidth = (screenWidth - itemMargin * (numColumns + 1)) / numColumns;
 
 const shared = {
-  fontFamily: 'Calibri',
-  backgroundColor: '#f6c47b',
-  cardBg:        '#fff',
-  accent:        '#FF8C00',
-  lightGrey:     '#D3D3D3',
-  borderGrey:    '#DDD',
-
+  fontFamily: "Calibri",
+  backgroundColor: "#f6c47b",
+  cardBg: "#fff",
+  accent: "#FF8C00",
+  lightGrey: "#D3D3D3",
+  borderGrey: "#DDD",
 };
 
 const isMobile = Dimensions.get("window").width < 600;
@@ -341,17 +340,17 @@ export const styles = StyleSheet.create({
 
   screen: {
     flex: 1,
-    backgroundColor: '#FCF8F0',
+    backgroundColor: "#FCF8F0",
   },
 
   /////////////////
 
   sectionTitle: {
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     margin: 12,
     fontFamily: shared.fontFamily,
-    textAlign: "center"
+    textAlign: "center",
   },
 
   input: {
@@ -369,16 +368,16 @@ export const styles = StyleSheet.create({
     borderColor: shared.borderGrey,
     borderRadius: 8,
     padding: 12,
-    textAlignVertical: 'top',
+    textAlignVertical: "top",
     margin: 12,
     minHeight: 100,
     fontFamily: shared.fontFamily,
   },
 
   toggleRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     paddingHorizontal: 12,
     paddingVertical: 8,
   },
@@ -395,81 +394,79 @@ export const styles = StyleSheet.create({
   },
 
   errorText: {
-    color: 'red',
-    textAlign: 'center',
+    color: "red",
+    textAlign: "center",
     marginBottom: 12,
     fontFamily: shared.fontFamily,
   },
-  
+
   listContainer: {
     paddingHorizontal: itemMargin,
     paddingTop: itemMargin,
   },
 
   listCard: {
-    width: '100%',
+    width: "100%",
     marginBottom: itemMargin * 2,
     backgroundColor: shared.cardBg,
     borderRadius: 12,
-    overflow: 'hidden',
-    shadowColor: '#000',
+    overflow: "hidden",
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.3,
     shadowRadius: 4,
     elevation: 5,
   },
 
-centered: {
-  flex: 1,
-  justifyContent: 'center',
-  alignItems: 'center',
-  backgroundColor: 'white'
-},
+  centered: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "white",
+  },
 
-sectionTitle: {
-  fontSize: 22,
-},
+  sectionTitle: {
+    fontSize: 22,
+  },
 
-actionButton: {
-  width: "90%",
-  backgroundColor: "#f6c47b",
-  shadowColor: "#000",
-  shadowOffset: { width: 0, height: 2 },
-  shadowOpacity: 0.05,
-  shadowRadius: 4,
-  alignSelf: "center",
-  paddingHorizontal: 20,
-  paddingVertical: 10,
-  borderRadius: 20,
-  marginHorizontal: 16,
-  marginVertical: 8,
-  borderRadius: 8,
-},
+  actionButton: {
+    width: "90%",
+    backgroundColor: "#f6c47b",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 4,
+    alignSelf: "center",
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 20,
+    marginHorizontal: 16,
+    marginVertical: 8,
+    borderRadius: 8,
+  },
 
-actionButton2: {
-  width: "90%",
-  backgroundColor: "red",
-  shadowColor: "#000",
-  shadowOffset: { width: 0, height: 2 },
-  shadowOpacity: 0.05,
-  shadowRadius: 4,
-  alignSelf: "center",
-  paddingHorizontal: 20,
-  paddingVertical: 10,
-  borderRadius: 20,
-  marginHorizontal: 16,
-  marginVertical: 8,
-  borderRadius: 8,
-},
+  actionButton2: {
+    width: "90%",
+    backgroundColor: "red",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 4,
+    alignSelf: "center",
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 20,
+    marginHorizontal: 16,
+    marginVertical: 8,
+    borderRadius: 8,
+  },
 
-scrollContent: {
-  paddingVertical: 16,
-  paddingBottom: 100,
-},
+  scrollContent: {
+    paddingVertical: 16,
+    paddingBottom: 100,
+  },
 
-loading: {
-  
-},
+  loading: {},
 
   cookingModeStepWrapper: {
     flex: 1,
@@ -520,9 +517,9 @@ loading: {
     paddingHorizontal: 20,
     paddingVertical: 10,
     borderRadius: 20,
-     marginHorizontal: 16,
-     marginVertical: 8,
-     borderRadius: 8,
+    marginHorizontal: 16,
+    marginVertical: 8,
+    borderRadius: 8,
   },
 
   // Shopping List Styles
@@ -682,5 +679,45 @@ loading: {
     fontSize: 14,
     color: Colors.grey30,
     marginTop: 5,
+  },
+  //login
+  startBackground: {
+    width: 1100,
+    height: 1100,
+  },
+  startWrapper: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  LoginImages: {
+    flexDirection: "row",
+    margin: 20,
+  },
+  logInBox: {
+    width: 350,
+
+    maxWidth: 400,
+    padding: 20,
+    borderWidth: 1,
+    borderColor: "black",
+    borderRadius: 20,
+    marginBottom: 24,
+    minHeight: 300,
+    backgroundColor: "#f9c680",
+    borderColor: "transparent",
+  },
+  loginButton: {
+    borderRadius: 20,
+    backgroundColor: "#efa369",
+    width: 200,
+    alignSelf: "center",
+  },
+  logInField: {
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 10,
+    height: 30,
+    margin: 10,
   },
 });

@@ -13,10 +13,9 @@ import ShoppingList from "../pages/ShoppingList.jsx";
 import RecipeDetail from "../pages/RecipeDetail.jsx";
 import Profile from "../pages/Profile.jsx";
 
-import SearchBar from "./HomePage-components/SearchBar.jsx"
-import CreateNewRecipe from "../pages/CreateNewRecipe.jsx"
+import SearchBar from "./HomePage-components/SearchBar.jsx";
+import CreateNewRecipe from "../pages/CreateNewRecipe.jsx";
 import RecipeList from "./HomePage-components/RecipeList";
-
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -36,7 +35,6 @@ function HomeStack({ navigation }) {
 
   return (
     <Stack.Navigator screenOptions={{ headerShown: true }}>
-
       <Stack.Screen
         name="Home"
         options={{
@@ -47,6 +45,7 @@ function HomeStack({ navigation }) {
           headerShadowVisible: false,
           headerTitleAlign: "center",
           headerTitle: "H O M E",
+          headerTintColor: "white",
           headerRight: () => (
             <Button
               round
@@ -77,7 +76,6 @@ function HomeStack({ navigation }) {
             />
             <RecipeList {...props} recipes={filteredRecipes} />
           </SafeAreaView>
-
         )}
       </Stack.Screen>
 
@@ -99,39 +97,29 @@ function HomeStack({ navigation }) {
       <Stack.Screen
         name="Profile"
         component={Profile}
-
         options={({ navigation }) => ({
-        headerStyle: styles.header,
-        headerTitleAlign: "center",
-        headerTitle: () => (
-        <View style={styles.titleWrapper}>
-          <Text style={styles.titleText}>P R O F I L E</Text>
-        </View>
-        ),
-        headerRight: () => (
-        <Button
-        label="Home"
-        onPress={() => navigation.navigate('Home')}
-        style={styles.homeButton}
-        />
-        ),
+          headerStyle: styles.header,
+          headerTitleStyle: {
+            color: "white",
+          },
+          headerShadowVisible: false,
+          headerTitleAlign: "center",
+          headerTintColor: "white",
+          headerTitle: "P R O F I L E",
         })}
-
       />
       <Stack.Screen
         name="CreateNewRecipe"
         component={CreateNewRecipe}
         options={{
-        headerTitle: "Create a recipe",
-        headerTitleAlign: "center",
-        headerStyle: styles.header,
-        headerTitle: () => (
-      <View style={styles.titleWrapper}>
-        <Text style={styles.titleText}>C R E A T E  A  R E C I P E</Text>
-      </View>
-      ),
-      }}
-
+          headerTitle: "Create a recipe",
+          headerTitleAlign: "center",
+          headerTitleStyle: {
+            color: "white",
+          },
+          headerTintColor: "white",
+          headerTitle: "N E W  R E C I P E",
+        }}
       />
     </Stack.Navigator>
   );
@@ -198,13 +186,13 @@ export default function NavBar() {
         component={HomeStack}
         options={{ headerShown: false }}
         listeners={({ navigation }) => ({
-    tabPress: (e) => {
-      e.preventDefault();
-      navigation.navigate("Home", {
-        screen: "Home", 
-      });
-    },
-  })}
+          tabPress: (e) => {
+            e.preventDefault();
+            navigation.navigate("Home", {
+              screen: "Home",
+            });
+          },
+        })}
       />
       <Tab.Screen
         name="Cooking Mode"
