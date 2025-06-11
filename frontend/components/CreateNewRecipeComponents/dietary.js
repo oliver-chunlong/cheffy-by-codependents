@@ -1,3 +1,7 @@
+
+//TEST FILE FOR DIET
+
+
 const MEATS = ['chicken', 'beef', 'pork', 'lamb', 'fish', 'anchovy', 'bacon', 'ham'];
 const DAIRIES = ['milk', 'cream', 'cheese', 'butter', 'yoghurt', 'yogurt'];
 const NUTS = ['almond', 'cashew', 'walnut', 'pecan', 'peanut', 'hazelnut'];

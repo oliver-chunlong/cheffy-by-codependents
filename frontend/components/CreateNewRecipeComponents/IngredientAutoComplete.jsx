@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, TextInput, FlatList, TouchableOpacity, Text, StyleSheet } from 'react-native';
 
 export default function IngredientAutocomplete({ allIngredients, onAdd }) {
-  const [query, setQuery] = useState('');
+  const [query, setQuery] = useState("");
   const [suggestions, setSuggestions] = useState([]);
 
   useEffect(() => {
@@ -29,22 +29,37 @@ export default function IngredientAutocomplete({ allIngredients, onAdd }) {
     </TouchableOpacity>
   );
 
+  const showAddOption = () => {
+    const exists = allIngredients
+      .map(i => i.toLowerCase())
+      .includes(query.toLowerCase());
+    return query.length > 0 && !exists;
+  };
+
   return (
     <View style={styles.container}>
       <TextInput
-        placeholder="Search ingredients"
+        placeholder="Search or add ingredients"
         value={query}
         onChangeText={setQuery}
         style={styles.input}
       />
-      {suggestions.length > 0 && (
-        <FlatList
-          data={suggestions}
-          keyExtractor={item => item}
-          renderItem={renderItem}
-          style={styles.suggestionsList}
-          keyboardShouldPersistTaps="handled"
-        />
+      {(suggestions.length > 0 || showAddOption()) && (
+        <View style={styles.suggestionsList}>
+          {suggestions.length > 0 && (
+            <FlatList
+              data={suggestions}
+              keyExtractor={item => item}
+              renderItem={renderItem}
+              keyboardShouldPersistTaps="handled"
+            />
+          )}
+          {showAddOption() && (
+            <TouchableOpacity style={styles.addItem} onPress={() => handleAdd(query)}>
+              <Text style={styles.addText}>Add "{query}"</Text>
+            </TouchableOpacity>
+          )}
+        </View>
       )}
     </View>
   );
@@ -60,7 +75,7 @@ const styles = StyleSheet.create({
     marginVertical: 8,
   },
   suggestionsList: {
-    backgroundColor: '#fff',
+    backgroundColor: 'white',
     borderWidth: 1,
     borderColor: '#ccc',
     borderRadius: 8,
@@ -71,5 +86,12 @@ const styles = StyleSheet.create({
     padding: 12,
     borderBottomWidth: 1,
     borderColor: '#eee',
+  },
+  addItem: {
+    padding: 12,
+    alignItems: 'center',
+  },
+  addText: {
+    fontStyle: 'italic',
   },
 });

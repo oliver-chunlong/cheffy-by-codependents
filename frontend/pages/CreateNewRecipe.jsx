@@ -2,7 +2,7 @@ import React, { useState, useContext, useEffect } from 'react';
 import { ScrollView, StyleSheet, SafeAreaView, View, Alert } from 'react-native';
 import { TextField, Text, Button, Card } from 'react-native-ui-lib';
 import { useNavigation } from '@react-navigation/native';
-import { styles as shared } from '../styles/styles';
+import { styles as shared} from '../styles/styles';
 import { postNewRecipe, getAllIngredients } from '../utils/axios';
 import { UserContext } from '../context/UserContext';
 import IngredientAutocomplete from '../components/CreateNewRecipeComponents/IngredientAutoComplete';
@@ -43,23 +43,23 @@ export default function CreateNewRecipe() {
     }
 
     if (!recipeName.trim()) {
-      return setError('Name required.');
+      return setError("Name required.");
     }
 
     if (!description.trim()) {
-      return setError('Description required.');
+      return setError("Description required.");
     }
 
     if (!imageUrl.trim()) {
-      return setError('Image URL required.');
+      return setError("Image URL required.");
     }
 
     if (!selectedIngredients.length) {
-      return setError('Add at least one ingredient.');
+      return setError("Add at least one ingredient.");
     }
 
     if (!steps.trim()) {
-      return setError('Steps required.');
+      return setError("Steps required.");
     }
 
     setError("");
@@ -133,12 +133,12 @@ export default function CreateNewRecipe() {
           />
         </Card>
 
-        <Button 
+        <Button style={shared.createRecipeButton}
         label="Save" 
         fullWidth onPress={onSavePress} 
         />
 
-        <Button
+        <Button style={shared.createRecipeButton}
         label="Cancel"
         fullWidth
         backgroundColor={shared.lightGrey}
