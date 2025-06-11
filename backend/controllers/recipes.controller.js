@@ -1,6 +1,7 @@
 const { get } = require('../app');
 const db = require('../db/connection.js');
 const endpointsJson = require("../endpoints.json");
+const dietaryService = require("../utils/dietaryService.js");
 const {
   selectRecipes,
   selectRecipeById,
@@ -77,13 +78,6 @@ const getUserFavourites = async (req, res, next) => {
   }
 };
 
-// const deleteFromFavourites = async (req, res, next) => {
-//   const { user_id, recipe_id } = req.params;
-//   try {
-//     const recipeToDelete = await removeFromFavourites(recipe_id)
-//   }
-// }
-
 const deleteFromFavourites = (req, res, next) => {
   const { user_id, recipe_id } = req.params;
 
@@ -157,15 +151,25 @@ const postRecipe = async (req, res, next) => {
 
 
 const deleteUserRecipe = async (req, res, next) => {
-  const {user_id, recipe_id} = req.params
-  console.log(req.params)
+  const { user_id, recipe_id } = req.params;
+  console.log(`DELETE /users/${user_id}/recipes/${recipe_id}`);
+
   try {
-    await removeUserRecipe(user_id, recipe_id)
-    res.status(204).send();
-  } catch(err) {
-    next(err)
+    const deletedCount = await removeUserRecipe(user_id, recipe_id);
+
+    console.log('removeUserRecipe returned:', deletedCount);
+
+    if (deletedCount === 0) {
+      return res.status(404).json({ msg: 'Recipe not found or not owned by user' });
+    }
+
+    return res.status(204).end();
+    
+  } catch (err) {
+    console.error('Error in deleteUserRecipe controller:', err);
+    return next(err);
   }
-}
+};
 
 
 const editUserRecipe = async (req, res) => {
@@ -181,6 +185,17 @@ const editUserRecipe = async (req, res) => {
   }
 };
 
+const getDietaryFlags = async (req, res) => {
+  try {
+    const { ingredients } = req.body;
+    const flags = await dietaryService.calculateDietaryFlags(ingredients);
+    res.json(flags);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Server error while calculating dietary flags." });
+  }
+};
+
 
 module.exports = {
   getRecipes,
@@ -192,5 +207,6 @@ module.exports = {
   getUserRecipes,
   postRecipe,
   deleteUserRecipe,
-  editUserRecipe
+  editUserRecipe,
+  getDietaryFlags
 };

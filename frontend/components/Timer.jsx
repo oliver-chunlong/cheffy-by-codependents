@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Text } from "react-native";
+import { Text } from "react-native-ui-lib";
 import { styles } from "../styles/styles";
 
 function removingLeading0(text) {

@@ -1,16 +1,23 @@
 import { StyleSheet, Dimensions } from "react-native";
+import { Colors } from "react-native-ui-lib";
 
 const screenWidth = Dimensions.get("window").width;
+const height = Dimensions.get("window").width;
 const itemMargin = 6;
 const numColumns = screenWidth > 500 ? 2 : 1;
 const itemWidth = (screenWidth - itemMargin * (numColumns + 1)) / numColumns;
 
 const shared = {
-  fontFamily: "Calibri",
-  backgroundColor: "#f6c47b",
+  fontFamily: 'Calibri',
+  backgroundColor: '#f6c47b',
+  cardBg:        '#fff',
+  accent:        '#FF8C00',
+  lightGrey:     '#D3D3D3',
+  borderGrey:    '#DDD',
+
 };
 
-const isMobile = Dimensions.get("window").width < 400;
+const isMobile = Dimensions.get("window").width < 600;
 
 export const styles = StyleSheet.create({
   container: {
@@ -148,7 +155,7 @@ export const styles = StyleSheet.create({
   iconContainer: {
     alignItems: "center",
     justifyContent: "center",
-    paddingTop: isMobile ? 30 : 10,
+    paddingTop: isMobile ? 20 : 10,
   },
 
   iconImage: {
@@ -157,19 +164,26 @@ export const styles = StyleSheet.create({
     resizeMode: "contain",
   },
 
-  
-//filtering bar
+  //filtering bar
 
-filterBar: {
-  flexDirection: 'row',
-  alignItems: 'center',
-  paddingVertical: 8,
-  paddingHorizontal: 10,
-  backgroundColor: 'fff',
-},
+  filterBar: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingVertical: 8,
+    paddingHorizontal: 10,
+    backgroundColor: "fff",
+  },
+
+  filterBar: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingVertical: 8,
+    paddingHorizontal: 10,
+    backgroundColor: "fff",
+  },
 
   filterText: {
-    marginRight: 20,
+    marginRight: 10,
     fontSize: 16,
     color: "#888",
     borderBottomWidth: 2,
@@ -181,25 +195,88 @@ filterBar: {
   },
 
   orderPickerWrapper: {
-    minWidth: 140,
+    minWidth: 100,
     justifyContent: "center",
+    marginRight: 10,
+    zIndex: 1,
   },
 
   orderPicker: {
+    height: 35,
+    width: "80%",
+    minWidth: 100,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingHorizontal: 10,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: "#ccc",
+    backgroundColor: "#fff",
+  },
+
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: "rgba(0,0,0,0.5)",
+    justifyContent: "flex-end",
+    alignItems: "center",
+  },
+  sortButtonText: {
+    fontSize: 14,
+    color: "#555",
+  },
+  dropdownArrow: {
+    fontSize: 10,
+    color: "#555",
+  },
+
+  dropdownContent: {
+    backgroundColor: "#fff",
+    borderRadius: 8,
+    paddingVertical: 5,
+    width: "100%",
+    maxHeight: height * 0.6,
+    paddingBottom: 20,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  dropdownItem: {
+    paddingVertical: 12,
+    paddingHorizontal: 15,
+    borderBottomWidth: 1,
+    borderBottomColor: "#f0f0f0",
+  },
+  dropdownItemText: {
+    fontSize: 16,
+    color: "#333",
+  },
+  activeDropdownItem: {
+    backgroundColor: "#FDEBD0",
+  },
+  activeDropdownItemText: {
+    color: "#E67E22",
+    fontWeight: "bold",
     height: 40,
     width: "100%",
   },
 
-  //Cooking Mode Styles
+  // Cooking Mode Styles
 
   cookingContainerNoRecipe: {
-    flex: 1, // Fill the screen
+    flex: 1,
     padding: itemMargin,
-    justifyContent: "center", // vertical center
-    alignItems: "center", // horizontal center
+    justifyContent: "center",
+    alignItems: "center",
     width: "100%",
   },
-
+  cookingNoRecipeText: {
+    fontFamily: shared.fontFamily,
+    fontSize: 19,
+    color: "#2b2b2b",
+  },
   cookingModeText: {
     fontFamily: shared.fontFamily,
     fontSize: 22,
@@ -207,19 +284,19 @@ filterBar: {
   },
 
   cookingModeButton: {
-    backgroundColor: "#f6c47b",
+    backgroundColor: "#fc9f5d",
     borderRadius: 20,
     paddingVertical: 10,
     paddingHorizontal: 32,
     marginVertical: 6,
-    width: "25%",
+    width: "60%",
     alignItems: "center",
     marginTop: 20,
   },
 
   cookingModeButtonText: {
     fontFamily: shared.fontFamily,
-    fontSize: 22,
+    fontSize: 19,
     color: "#fff",
     textAlign: "center",
     padding: 5,
@@ -231,7 +308,7 @@ filterBar: {
     alignItems: "center", // horizontal center
     width: "100%",
     backgroundColor: "#fff",
-    padding: 16,
+    padding: 20,
     borderRadius: 16,
     elevation: 5,
     shadowColor: "#000",
@@ -246,6 +323,7 @@ filterBar: {
     color: "#2b2b2b",
     justifyContent: "center",
     textAlign: "center",
+    padding: 20,
   },
 
   cookingModeStepContainer: {
@@ -261,6 +339,138 @@ filterBar: {
     alignItems: "center",
   },
 
+  screen: {
+    flex: 1,
+    backgroundColor: '#FCF8F0',
+  },
+
+  /////////////////
+
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    margin: 12,
+    fontFamily: shared.fontFamily,
+    textAlign: "center"
+  },
+
+  input: {
+    flex: 1,
+    borderBottomWidth: 1,
+    borderColor: shared.borderGrey,
+    paddingVertical: 8,
+    paddingHorizontal: 4,
+    fontFamily: shared.fontFamily,
+  },
+
+  textArea: {
+    flex: 1,
+    borderWidth: 1,
+    borderColor: shared.borderGrey,
+    borderRadius: 8,
+    padding: 12,
+    textAlignVertical: 'top',
+    margin: 12,
+    minHeight: 100,
+    fontFamily: shared.fontFamily,
+  },
+
+  toggleRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+  },
+
+  saveButton: {
+    borderRadius: 8,
+    marginBottom: 12,
+    backgroundColor: shared.accent,
+  },
+
+  cancelButton: {
+    borderRadius: 8,
+    backgroundColor: shared.lightGrey,
+  },
+
+  errorText: {
+    color: 'red',
+    textAlign: 'center',
+    marginBottom: 12,
+    fontFamily: shared.fontFamily,
+  },
+  
+  listContainer: {
+    paddingHorizontal: itemMargin,
+    paddingTop: itemMargin,
+  },
+
+  listCard: {
+    width: '100%',
+    marginBottom: itemMargin * 2,
+    backgroundColor: shared.cardBg,
+    borderRadius: 12,
+    overflow: 'hidden',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+
+centered: {
+  flex: 1,
+  justifyContent: 'center',
+  alignItems: 'center',
+  backgroundColor: 'white'
+},
+
+sectionTitle: {
+  fontSize: 22,
+},
+
+actionButton: {
+  width: "90%",
+  backgroundColor: "#f6c47b",
+  shadowColor: "#000",
+  shadowOffset: { width: 0, height: 2 },
+  shadowOpacity: 0.05,
+  shadowRadius: 4,
+  alignSelf: "center",
+  paddingHorizontal: 20,
+  paddingVertical: 10,
+  borderRadius: 20,
+  marginHorizontal: 16,
+  marginVertical: 8,
+  borderRadius: 8,
+},
+
+actionButton2: {
+  width: "90%",
+  backgroundColor: "red",
+  shadowColor: "#000",
+  shadowOffset: { width: 0, height: 2 },
+  shadowOpacity: 0.05,
+  shadowRadius: 4,
+  alignSelf: "center",
+  paddingHorizontal: 20,
+  paddingVertical: 10,
+  borderRadius: 20,
+  marginHorizontal: 16,
+  marginVertical: 8,
+  borderRadius: 8,
+},
+
+scrollContent: {
+  paddingVertical: 16,
+  paddingBottom: 100,
+},
+
+loading: {
+  
+},
+
   cookingModeStepWrapper: {
     flex: 1,
     alignItems: "center",
@@ -270,21 +480,207 @@ filterBar: {
     width: "100%",
     alignItems: "center",
     marginTop: 20,
+    paddingTop: 40,
+    elevation: 0,
+    shadowColor: "transparent",
   },
 
   timerPlayIcon: {
     color: "#f6c47b",
   },
 
+  speakerPlayIcon: {
+    color: "#f6c47b",
+  },
+
   cookingIconButton: {
     backgroundColor: "#fff",
+    margin: 0,
+    marginBottom: 10,
   },
 
   cookingTimerText: {
     fontFamily: shared.fontFamily,
     fontSize: 96,
-    color: "#f6c47b",
+    color: "#fc9f5d",
     justifyContent: "center",
     textAlign: "center",
+  },
+
+  // Create Recipe styles
+
+  createRecipeButton: {
+    width: "90%",
+    backgroundColor: "#f6c47b",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 4,
+    alignSelf: "center",
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 20,
+     marginHorizontal: 16,
+     marginVertical: 8,
+     borderRadius: 8,
+  },
+
+  // Shopping List Styles
+
+  shoppingListItem: {
+    backgroundColor: "white",
+    padding: 10,
+    borderRadius: 20,
+    width: "90%",
+    maxWidth: 480,
+    alignSelf: "center",
+    flexDirection: "row",
+    justifyContent: "flex-start",
+    alignItems: "center",
+    marginBottom: 20,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+  },
+  shoppingListText: {
+    marginBottom: 15,
+    fontFamily: shared.fontFamily,
+    fontSize: 16,
+  },
+  listIngredientText: {
+    flexShrink: 1,
+    paddingLeft: 12,
+    fontFamily: shared.fontFamily,
+    fontSize: 16,
+  },
+  listIngredientPart: {
+    flexDirection: "row",
+    alignItems: "center",
+    width: "100%",
+  },
+  shoppingListButton: {
+    width: "90%",
+    backgroundColor: "#f6c47b",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 4,
+    alignSelf: "center",
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 20,
+  },
+  shoppingListButtonText: {
+    color: "white",
+    fontFamily: shared.fontFamily,
+    fontSize: 16,
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+
+  // Recipe Detail Styles
+
+  scrollViewContainer: {
+    flex: 1,
+    backgroundColor: Colors.white,
+  },
+
+  innerContentContainer: {
+    padding: 15,
+    paddingBottom: 30,
+  },
+
+  topButtonsRow: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: 15,
+    paddingTop: 10,
+  },
+
+  button: {
+    backgroundColor: "#fc9f5d",
+    marginLeft: 10,
+    marginRight: 10,
+  },
+
+  recipeImage: {
+    width: "100%",
+    height: 200,
+    resizeMode: "cover",
+    borderRadius: 8,
+    marginBottom: 0,
+  },
+
+  recipeName: {
+    fontSize: 28,
+    fontWeight: "bold",
+    marginBottom: 5,
+    textAlign: "center",
+  },
+
+  recipeDescription: {
+    fontSize: 16,
+    color: Colors.grey20,
+    marginBottom: 3,
+    textAlign: "center",
+  },
+
+  createdBy: {
+    fontSize: 14,
+    color: Colors.grey30,
+    marginBottom: 20,
+    textAlign: "center",
+  },
+
+  ingredientsListSpacing: {
+    marginBottom: 10,
+  },
+
+  shoppingListSection: {
+    marginBottom: 20,
+    justifyContent: "center",
+  },
+
+  shoppingAddButton: {
+    backgroundColor: "#fc9f5d",
+    marginLeft: 0,
+  },
+  buttonText: {
+    fontWeight: "bold",
+  },
+
+  sectionTitle: {
+    fontSize: 20,
+    fontWeight: "bold",
+    marginTop: 20,
+    marginBottom: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: "#eee",
+    paddingBottom: 5,
+  },
+
+  ingredientsList: {
+    marginBottom: 20,
+  },
+
+  ingredientText: {
+    fontSize: 16,
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+  },
+
+  instructionCard: {
+    backgroundColor: "",
+    padding: 5,
+    borderRadius: 8,
+    marginBottom: 10,
+  },
+
+  instructionTime: {
+    fontSize: 14,
+    color: Colors.grey30,
+    marginTop: 5,
   },
 });

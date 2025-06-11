@@ -1,7 +1,7 @@
 import Timer from "../Timer";
 import { useEffect, useState } from "react";
 import { styles } from "../../styles/styles";
-import { Card, View, Text, Button, Switch } from "react-native-ui-lib";
+import { Card, View, Text, Button, Switch, Image } from "react-native-ui-lib";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { speak, stopSpeaking } from "../../utils/Speak";
 import Toast from "react-native-toast-message";
@@ -47,32 +47,54 @@ export default function CookingModeStep({
         <Text style={styles.cookingModeText}>Step {step_number}</Text>
         <Text style={styles.cookingModeText}>{step_description}</Text>
       </View>
-      {time_required && (
-        <Card style={styles.cookingTimerCard}>
+
+      <Card style={styles.cookingTimerCard}>
+        {time_required ? (
           <Timer
             seconds={time_required * 60}
             isRunning={isTimerRunning}
             handleTimerEnd={handleTimerEnd}
             key={step_number}
           />
+        ) : (
+          <View style={{ height: 96 }} />
+        )}
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          {time_required && (
+            <Button
+              style={styles.cookingIconButton}
+              onPress={() => setIsTimerRunning((prev) => !prev)}
+            >
+              <Icon
+                name={
+                  isTimerRunning
+                    ? "pause-circle-outline"
+                    : "play-circle-outline"
+                }
+                size={70}
+                style={styles.timerPlayIcon}
+              />
+            </Button>
+          )}
           <Button
             style={styles.cookingIconButton}
-            onPress={() => setIsTimerRunning((prev) => !prev)}
+            margin-20
+            onPress={() => setHasReading(!hasReading)}
           >
             <Icon
-              name={
-                isTimerRunning ? "pause-circle-outline" : "play-circle-outline"
-              }
-              size={100}
-              style={styles.timerPlayIcon}
+              name={hasReading ? "volume-high" : "volume-mute"}
+              size={70}
+              style={styles.speakerPlayIcon}
             />
           </Button>
-        </Card>
-      )}
-      <View style={styles.cookingReadSection}>
-        <Text style={styles.cookingModeText}>Read outloud</Text>
-        <Switch margin-20 value={hasReading} onValueChange={setHasReading} />
-      </View>
+        </View>
+      </Card>
     </Card>
   );
 }
