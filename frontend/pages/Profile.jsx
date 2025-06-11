@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { ScrollView, ActivityIndicator, View, TouchableOpacity, Alert, SafeAreaView } from 'react-native';
-import { Text, Button } from 'react-native-ui-lib';
+import { Text, Button, Modal } from 'react-native-ui-lib';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useNavigation } from '@react-navigation/native';
 import { UserContext } from '../context/UserContext';
@@ -21,6 +21,8 @@ export default function Profile({ navigation, route }) {
   const [favourites, setFavourites] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [recipeToDelete, setRecipeToDelete] = useState(null)
 
   const userId = user?.id || null;
   
@@ -178,13 +180,54 @@ if (!user) {
                       }
                     }}
                   />
-                  <TouchableOpacity onPress={() => handleDelete(recipe.recipe_id)}>
+                  <TouchableOpacity onPress={() => {setRecipeToDelete(recipe.recipe_id); setShowConfirmModal(true)}}>
                     <Icon name="delete" size={20} style={styles.deleteIcon} />
                   </TouchableOpacity>
                   </View>
                 </RecipeCard>
               </View>
             ))}
+            <Modal
+  transparent
+  animationType="fade"
+  visible={showConfirmModal}
+  onRequestClose={() => setShowConfirmModal(false)}
+>
+  <View style={{
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    justifyContent: 'center',
+    alignItems: 'center'
+  }}>
+    <View style={{
+      width: 300,
+      backgroundColor: 'white',
+      padding: 20,
+      borderRadius: 10,
+      elevation: 5
+    }}>
+      <Text style={styles.buttonText}>
+        Are you sure you want to delete the recipe?
+      </Text>
+      <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
+        <Button
+          label="Cancel"
+          onPress={() => setShowConfirmModal(false)}
+          style={styles.shoppingListCancelButton}
+        />
+        <Button
+          label="Delete"
+          onPress={() => {
+            handleDelete(recipeToDelete);
+            setShowConfirmModal(false);
+            setRecipeToDelete(null)            
+          }}
+          style={styles.shoppingListClearButton}
+        />
+      </View>
+    </View>
+  </View>
+</Modal>
           </ScrollView>
         )}
           <Button
@@ -202,3 +245,4 @@ if (!user) {
     </SafeAreaView>
   );
 }
+
