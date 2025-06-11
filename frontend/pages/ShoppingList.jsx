@@ -1,13 +1,15 @@
-import { FlatList, StyleSheet } from "react-native";
+import { FlatList, StyleSheet, Alert } from "react-native";
 import ListIngredient from "../components/ShoppingListComponents/ListIngredient";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { ShoppingListContext } from "../context/ShoppingListContext";
 import { useNavigation } from "@react-navigation/native";
 import { styles } from "../styles/styles";
-import { Text, View, Button } from "react-native-ui-lib";
+import { Text, View, Button, Modal } from "react-native-ui-lib";
 
 export default function ShoppingList() {
   const { shoppingList, setShoppingList } = useContext(ShoppingListContext);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+
   const navigation = useNavigation();
 
   const safeShoppingList = Array.isArray(shoppingList) ? shoppingList : [];
@@ -41,13 +43,18 @@ export default function ShoppingList() {
   // If empty, show a message
   if (shoppingList?.length === 0) {
     return (
-      <View style={styles.container}>
-        <Text
-          style={{ color: "blue" }}
-          onPress={() => navigation.navigate("Home")}
-        >
+      <View style={styles.cookingContainerNoRecipe}>
+        <Text style={styles.cookingNoRecipeText}>
           Select a recipe to add ingredients
         </Text>
+        <Button
+          onPress={() => {
+            navigation.navigate("Home", {screen: "Home"});
+          }}
+          style={styles.cookingModeButton}
+        >
+          <Text style={styles.cookingModeButtonText}>return to homepage</Text>
+        </Button>
       </View>
     );
   }
@@ -85,9 +92,7 @@ export default function ShoppingList() {
         ListFooterComponent={() => (
           <View>
             <Button
-              onPress={() => {
-                setShoppingList([]);
-              }}
+              onPress={() => setShowConfirmModal(true)}
               style={styles.shoppingListButton}
             >
               <Text style={styles.shoppingListButtonText}>Clear List</Text>
@@ -96,6 +101,48 @@ export default function ShoppingList() {
         )}
         contentContainerStyle={{ paddingBottom: 20 }}
       />
+      <Modal
+  transparent
+  animationType="fade"
+  visible={showConfirmModal}
+  onRequestClose={() => setShowConfirmModal(false)}
+>
+  <View style={{
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    justifyContent: 'center',
+    alignItems: 'center'
+  }}>
+    <View style={{
+      width: 300,
+      backgroundColor: 'white',
+      padding: 20,
+      borderRadius: 10,
+      elevation: 5
+    }}>
+      <Text style={styles.buttonText}>
+        Are you sure you want to clear the shopping list?
+      </Text>
+      <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
+        <Button
+          label="Cancel"
+          onPress={() => setShowConfirmModal(false)}
+          style={styles.shoppingListCancelButton}
+        />
+        <Button
+          label="Clear"
+          onPress={() => {
+            setShoppingList([]);
+            setShowConfirmModal(false);
+            
+          }}
+          style={styles.shoppingListClearButton}
+        />
+      </View>
+    </View>
+  </View>
+</Modal>
+
     </View>
   );
 }

@@ -11,7 +11,7 @@ export default function Completed() {
       <Text style={styles.cookingModeText}>Want to save this recipe for later?</Text>
       <FavouriteButton style={styles.cookingModeButton}/>
       <Button
-        onPress={() => navigation.navigate("Home")}
+        onPress={() => navigation.navigate("Home", {screen: "Home"})}
         style={styles.cookingModeButton}
         >
            <Text style={styles.cookingModeButtonText}>Return to Homepage</Text>

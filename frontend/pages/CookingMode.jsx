@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { ScrollView } from "react-native";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
-import { Button, View, Text } from "react-native-ui-lib";
+import { Button, View, Text, Image } from "react-native-ui-lib";
 import { styles } from "../styles/styles";
 
 import CookingModeStep from "../components/CookingModeComponents/CookingModeStep";
@@ -87,7 +87,6 @@ export default function CookingMode(props) {
 
   return (
     <ScrollView contentContainerStyle={styles.cookingModeContainer}>
-      <Text style={styles.cookingModeText}>Cooking Mode</Text>
       <Progressbar
         step={step}
         totalSteps={currentRecipe?.instructions?.length - 1}

@@ -5,8 +5,12 @@ import { UserProvider } from "./context/UserContext";
 import { useFonts } from "expo-font";
 import { ActivityIndicator, View } from "react-native";
 import Toast from "react-native-toast-message";
+import CustomToast from "./styles/CustomToast";
+import React, { useContext, useState, useEffect } from "react";
+import StartPage from "./pages/StartPage";
 
 export default function App() {
+  const [hasSeenStartScreen, setHasSeenStartScreen] = useState(false);
   const [fontsLoaded] = useFonts({
     calibri: require("./assets/fonts/Calibri.ttf"),
   });
@@ -19,13 +23,23 @@ export default function App() {
     );
   }
 
+  const toastConfig = {
+    customToast: ({ props }) => {
+      return <CustomToast {...props} />;
+    },
+  };
+  
   return (
     <UserProvider>
       <ShoppingListProvider>
         <NavigationContainer>
-          <NavBar />
+          {hasSeenStartScreen ? (
+            <NavBar />
+          ) : (
+            <StartPage setHasSeenStartScreen={setHasSeenStartScreen} />
+          )}
         </NavigationContainer>
-        <Toast />
+        <Toast config={toastConfig} />
       </ShoppingListProvider>
     </UserProvider>
   );

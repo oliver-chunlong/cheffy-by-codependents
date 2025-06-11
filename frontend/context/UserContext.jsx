@@ -14,11 +14,12 @@ export const UserProvider = ({ children }) => {
     return Promise.resolve({ id: 1, username, name: "test user" });
   };
 
-  const login = (username, password) => {
+  const login = (username, password, func) => {
     return fetchUser(username)
       .then((user) => {
         if (password === "123") {
           setUser(user);
+          func(true);
           setError("");
           return user;
         } else {
@@ -30,7 +31,7 @@ export const UserProvider = ({ children }) => {
 
   const logout = () => {
     setUser(null);
-  }
+  };
 
   return (
     <UserContext.Provider value={{ user, login, error, logout }}>

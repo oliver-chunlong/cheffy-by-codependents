@@ -1,39 +1,66 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState, useRef } from "react";
 import { ScrollView, FlatList } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { ShoppingListContext } from "../context/ShoppingListContext";
 import { Colors, Card, Button, Image, Text, View, Timeline, ListItem } from "react-native-ui-lib";
 import { requestRecipeById, requestFavouriteRecipes, postRecipeToFavourites, removeRecipeFromFavourites } from "../utils/axios";
+
 import Toast from "react-native-toast-message";
 import Loading from "../components/Loading";
 import Stepper from "../components/Stepper";
 import FavouriteButton from "../components/FavouriteButton";
 import { UserContext } from "../context/UserContext";
 import { styles } from "../styles/styles";
+import AddToList from "../assets/AddToList.webp";
 
-function Step({ instruction }) {
-  const timelineColor = "#f6c47b";
+
+// function Step({ instruction }) {
+//   const timelineColor = "#f6c47b";
   
-  return (
+//   return (
 
-  <Timeline
-  topLine={
-    instruction.step_number > 1 ? { state: Timeline.states.CURRENT, color: timelineColor } : undefined
-    }
-    bottomLine={{ state: Timeline.states.CURRENT, color: timelineColor }}
-    point={{
-      label: instruction.step_number,
-      labelStyle: { color: timelineColor },
-    }}
-    pointColor={timelineColor}
-    stateColor={timelineColor}
+//   <Timeline
+//   topLine={
+//     instruction.step_number > 1 ? { state: Timeline.states.CURRENT, color: timelineColor } : undefined
+//     }
+//     bottomLine={{ state: Timeline.states.CURRENT, color: timelineColor }}
+//     point={{
+//       label: instruction.step_number,
+//       labelStyle: { color: timelineColor },
+//     }}
+//     pointColor={timelineColor}
+//     stateColor={timelineColor}
+
+function Step({ instruction, lastStep }) {
+  const color = "#fc9f5d";
+  const anchorRef = useRef();
+
+  return (
+    <Timeline
+      topLine={
+        instruction.step_number > 1
+          ? {
+              state: Timeline.states.CURRENT,
+              type: Timeline.lineTypes.DASHED,
+              color,
+            }
+          : undefined
+      }
+      bottomLine={
+        instruction.step_number !== lastStep
+          ? {
+              state: Timeline.states.CURRENT,
+              type: Timeline.lineTypes.DASHED,
+              color,
+            }
+          : undefined
+      }
+      point={{ label: instruction.step_number, color, anchorRef }}
     >
-      <Card style={styles.instructionCard}>
-        <Text>{instruction.step_description}</Text>
+      <Card style={{ padding: 5 }}>
+        <Text ref={anchorRef}>{instruction.step_description}</Text>
         {instruction.time_required > 0 && (
-          <Text style={styles.instructionTime}>
-            {instruction.time_required} mins
-          </Text>
+          <Text>{instruction.time_required} mins</Text>
         )}
       </Card>
     </Timeline>
@@ -193,16 +220,21 @@ export default function RecipeDetail({
                   return prev ? [...prev, ...newItems] : newItems;
                 });
                 Toast.show({
-                  type: "success",
-                  text1: "Ingredients added to shopping list",
+                  type: "customToast",
                   position: "bottom",
+                  props: {
+                    text1: "Ingredients added to shopping list",
+                    icon: AddToList,
+                  },
                 });
               } catch {
                 Toast.show({
-                  type: "error",
-                  text1: "Oh no! Something went wrong!",
-                  text2: "Please try again later.",
+                  type: "customToast",
                   position: "bottom",
+                  props: {
+                    text1: "Oh no! Something went wrong!",
+                    text2: "Please try again later.",
+                  },
                 });
               }
             }}
@@ -217,6 +249,7 @@ export default function RecipeDetail({
             style={styles.favouriteButtonDetail}
           />
         </View>
+
 
         <Text style={styles.sectionTitle}>Instructions</Text>
         <View style={styles.timelineContainer}>
@@ -234,7 +267,34 @@ export default function RecipeDetail({
           )}
         </View>
         <View style={{ height: 10 }} />
+
+//         {recipeState.instructions && recipeState.instructions.length > 0 ? (
+//           recipeState.instructions?.map((instruction) => (
+//             <Step
+//               key={instruction.step_number}
+//               lastStep={recipeState.instructions.at(-1).step_number}
+//               instruction={instruction}
+//             />
+//           ))
+//         ) : (
+//           <Loading />
+//         )}
+
       </View>
     </ScrollView>
   );
 }
+
+
+
+
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//     justifyContent: "center",
+//     backgroundColor: "#ecf0f1",
+//     padding: 8,
+//   },
+// });
+
+

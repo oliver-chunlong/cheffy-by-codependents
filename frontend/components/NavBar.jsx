@@ -13,10 +13,9 @@ import ShoppingList from "../pages/ShoppingList.jsx";
 import RecipeDetail from "../pages/RecipeDetail.jsx";
 import Profile from "../pages/Profile.jsx";
 
-import SearchBar from "./HomePage-components/SearchBar.jsx"
-import CreateNewRecipe from "../pages/CreateNewRecipe.jsx"
+import SearchBar from "./HomePage-components/SearchBar.jsx";
+import CreateNewRecipe from "../pages/CreateNewRecipe.jsx";
 import RecipeList from "./HomePage-components/RecipeList";
-
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -26,6 +25,7 @@ function HomeStack({ navigation }) {
   const [filteredRecipes, setFilteredRecipes] = useState([]);
   const [query, setQuery] = useState("");
   const [activeFilters, setActiveFilters] = useState({});
+  const [order, setOrder] = useState("");
 
   useEffect(() => {
     requestRecipes().then((recipes) => {
@@ -36,7 +36,6 @@ function HomeStack({ navigation }) {
 
   return (
     <Stack.Navigator screenOptions={{ headerShown: true }}>
-
       <Stack.Screen
         name="Home"
         options={{
@@ -46,22 +45,19 @@ function HomeStack({ navigation }) {
           },
           headerShadowVisible: false,
           headerTitleAlign: "center",
-          // headerTitle: () => (
-          //   <View style={styles.titleWrapper}>
-          //     <Text text60BO>H O M E</Text>
-          //   </View>
-          // ),
+          headerTitle: "H O M E",
+          headerTintColor: "white",
           headerRight: () => (
             <Button
               round
               size={Button.sizes.small}
-              backgroundColor="#eee"
+              backgroundColor="transparent"
               onPress={() => navigation.navigate("Home", { screen: "Profile" })}
               style={{ marginRight: 10 }}
             >
               <Image
                 source={require("../assets/ProfileIcon.png")}
-                style={{ width: 24, height: 24 }}
+                style={{ width: 40, height: 40 }}
                 resizeMode="contain"
               />
             </Button>
@@ -81,48 +77,48 @@ function HomeStack({ navigation }) {
             />
             <RecipeList {...props} recipes={filteredRecipes} />
           </SafeAreaView>
-
         )}
       </Stack.Screen>
 
-      <Stack.Screen name="RecipeDetail" component={RecipeDetail} />
+      <Stack.Screen
+        name="RecipeDetail"
+        component={RecipeDetail}
+        options={{
+          headerStyle: styles.header,
+          headerTitleStyle: {
+            color: "white",
+          },
+          headerShadowVisible: false,
+          headerTitleAlign: "center",
+          headerTitle: "R E C I P E",
+          headerTintColor: "white",
+        }}
+      />
 
       <Stack.Screen
         name="Profile"
         component={Profile}
-
         options={({ navigation }) => ({
-        headerStyle: styles.header,
-        headerTitleAlign: "center",
-        headerTitle: () => (
-        <View style={styles.titleWrapper}>
-          <Text style={styles.titleText}>P R O F I L E</Text>
-        </View>
-        ),
-        headerRight: () => (
-        <Button
-        label="Home"
-        onPress={() => navigation.navigate('Home')}
-        style={styles.homeButton}
-        />
-        ),
+          headerStyle: styles.header,
+          headerShadowVisible: false,
+          headerTitleAlign: "center",
+          headerTintColor: "white",
+          headerTitle: "P R O F I L E",
         })}
-
       />
       <Stack.Screen
         name="CreateNewRecipe"
         component={CreateNewRecipe}
         options={{
-        headerTitle: "Create a recipe",
-        headerTitleAlign: "center",
-        headerStyle: styles.header,
-        headerTitle: () => (
-      <View style={styles.titleWrapper}>
-        <Text style={styles.titleText}>C R E A T E  A  R E C I P E</Text>
-      </View>
-      ),
-      }}
-
+          headerTitle: "Create a recipe",
+          headerTitleAlign: "center",
+          headerTitleStyle: {
+            color: "white",
+          },
+          headerTintColor: "white",
+          headerTitle: "N E W  R E C I P E",
+          headerStyle: styles.header,
+        }}
       />
     </Stack.Navigator>
   );
@@ -188,8 +184,28 @@ export default function NavBar() {
         name="Home"
         component={HomeStack}
         options={{ headerShown: false }}
+        listeners={({ navigation }) => ({
+          tabPress: (e) => {
+            e.preventDefault();
+            navigation.navigate("Home", {
+              screen: "Home",
+            });
+          },
+        })}
       />
-      <Tab.Screen name="Cooking Mode" component={CookingMode} />
+      <Tab.Screen
+        name="Cooking Mode"
+        component={CookingMode}
+        options={{
+          headerStyle: styles.header,
+          headerTitleStyle: {
+            color: "white",
+          },
+          headerShadowVisible: false,
+          headerTitleAlign: "center",
+          headerTitle: "C O O K I N G   M O D E",
+        }}
+      />
       <Tab.Screen
         name="Shopping List"
         component={ShoppingList}
