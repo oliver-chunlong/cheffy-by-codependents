@@ -788,4 +788,8 @@ export const styles = StyleSheet.create({
     height: 30,
     margin: 10,
   },
+    deleteText: {
+    color: "black",
+    fontWeight: "bold",
+  },
 });

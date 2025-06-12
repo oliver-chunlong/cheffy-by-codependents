@@ -320,7 +320,7 @@ export default function Profile({ navigation, route }) {
                     elevation: 5,
                   }}
                 >
-                  <Text style={styles.buttonText}>
+                  <Text style={styles.deleteText}>
                     Are you sure you want to delete the recipe?
                   </Text>
                   <View
