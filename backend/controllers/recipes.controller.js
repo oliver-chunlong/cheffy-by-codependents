@@ -112,6 +112,9 @@ const postRecipe = async (req, res, next) => {
   const { recipe_name, recipe_description, recipe_img_url, ingredients, instructions } = req.body;
   const user_id = Number(req.params.user_id);
 
+  console.log('postRecipe: Received request body:', req.body);
+  console.log('postRecipe: Ingredients received:', ingredients);
+
   if (!recipe_name || !recipe_description || !recipe_img_url) {
     return res.status(400).json({ msg: 'Missing required fields' });
   }
@@ -133,18 +136,39 @@ const postRecipe = async (req, res, next) => {
       created_by: user_id 
     });
 
+    console.log('postRecipe: Recipe created:', recipe);
+
     let insertedIngredients = [];
     if (ingredients && ingredients.length > 0) {
-      insertedIngredients = await addIngredientsToRecipe(recipe.recipe_id, ingredients);
+      console.log('postRecipe: Processing ingredients:', ingredients);
+      
+      // Filter out ingredients without valid ingredient_id
+      const validIngredients = ingredients.filter(ing => {
+        const isValid = ing.ingredient_id && !isNaN(Number(ing.ingredient_id));
+        console.log(`postRecipe: Ingredient ${ing.ingredient_name || 'unknown'} - ID: ${ing.ingredient_id}, Valid: ${isValid}`);
+        return isValid;
+      });
+      
+      console.log('postRecipe: Valid ingredients for insertion:', validIngredients);
+      
+      if (validIngredients.length > 0) {
+        insertedIngredients = await addIngredientsToRecipe(recipe.recipe_id, validIngredients);
+        console.log('postRecipe: Inserted ingredients:', insertedIngredients);
+      } else {
+        console.log('postRecipe: No valid ingredients to insert');
+      }
     }
 
     let insertedInstructions = [];
     if (instructions && instructions.length > 0) {
+      console.log('postRecipe: Processing instructions:', instructions);
       insertedInstructions = await addInstructionsToRecipe(recipe.recipe_id, instructions);
+      console.log('postRecipe: Inserted instructions:', insertedInstructions);
     }
 
     res.status(201).json({ recipe, ingredients: insertedIngredients, instructions: insertedInstructions });  
   } catch (err) {
+    console.error('postRecipe: Error:', err);
     next(err);
   }
 };
