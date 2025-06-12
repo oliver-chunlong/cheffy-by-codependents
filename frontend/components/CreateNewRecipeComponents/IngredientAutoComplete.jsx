@@ -5,38 +5,6 @@ export default function IngredientAutocomplete({ allIngredients, onAdd }) {
   const [query, setQuery] = useState("");
   const [suggestions, setSuggestions] = useState([]);
 
-  
-  // const ingredientIdMap = {
-  //   'chickpeas': 1,
-  //   'onion': 2,
-  //   'garlic': 3,
-  //   'ginger': 4,
-  //   'tomato': 5,
-  //   'cumin': 6,
-  //   'coriander': 7,
-  //   'turmeric': 8,
-  //   'olive oil': 9,
-  //   'basmati rice': 10,
-  //   'mozzarella': 11,
-  //   'pepperoni': 12,
-  //   'basil': 13,
-  //   'pasta': 14,
-  //   'milk': 15,
-  //   'butter': 16,
-  //   'cheddar': 17,
-  //   'tortilla': 18,
-  //   'black beans': 19,
-  //   'avocado': 20,
-  //   'lime': 21,
-  //   'soy sauce': 22,
-  //   'tofu': 23,
-  //   'broccoli': 24,
-  //   'carrot': 25,
-  //   'gluten-free flour': 26,
-  //   'coconut milk': 27,
-  //   'chilli pepper': 28
-  // };
-
   useEffect(() => {
     console.log("All ingredients received:", allIngredients?.length || 0);
     if (allIngredients?.length > 0) {
@@ -46,21 +14,11 @@ export default function IngredientAutocomplete({ allIngredients, onAdd }) {
 
   useEffect(() => {
     if (query.length > 0) {
-      // Filter ingredients that match the query and add correct IDs
       const filtered = allIngredients
         .filter(ingredient => {
           const name = ingredient.ingredient_name || ingredient;
           return name.toLowerCase().startsWith(query.toLowerCase());
         })
-        .map(ingredient => {
-          const name = ingredient.ingredient_name || ingredient;
-          const correctId = ingredientIdMap[name.toLowerCase()] || ingredientIdMap[name];
-          return {
-            ingredient_id: correctId,
-            ingredient_name: name
-          };
-        })
-        .filter(item => item.ingredient_id) // Only include items with valid IDs
         .slice(0, 5);
 
       console.log("Filtered suggestions:", filtered.map(item => 
@@ -75,13 +33,13 @@ export default function IngredientAutocomplete({ allIngredients, onAdd }) {
 
   const handleAdd = ingredient => {
     console.log("Adding ingredient:", ingredient);
-    onAdd(ingredient); // send full object
+    onAdd(ingredient);
     setQuery("");
   };
 
   const renderItem = ({ item }) => (
     <TouchableOpacity style={styles.suggestionItem} onPress={() => handleAdd(item)}>
-      <Text>{item.ingredient_name} (ID: {item.ingredient_id})</Text>
+      <Text>{item.ingredient_name}</Text>
     </TouchableOpacity>
   );
 
@@ -112,7 +70,7 @@ export default function IngredientAutocomplete({ allIngredients, onAdd }) {
                   style={styles.suggestionItem}
                   onPress={() => handleAdd(item)}
                 >
-                  <Text>{item.ingredient_name} (ID: {item.ingredient_id})</Text>
+                  <Text>{item.ingredient_name}</Text>
                 </TouchableOpacity>
               )}
               keyboardShouldPersistTaps="handled"
