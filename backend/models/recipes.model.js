@@ -9,7 +9,7 @@ const validFilters = [
 ];
 
 const selectRecipes = (filters = {}, order_by, sort_order = "asc") => {
-  const filterKeys = Object.keys(filters).filter(key =>
+  const filterKeys = Object.keys(filters).filter((key) =>
     validFilters.includes(key)
   );
   const queryValues = [];
@@ -76,27 +76,22 @@ const selectRecipeById = async (recipe_id) => {
     return Promise.reject({ status: 404, msg: "Recipe not found" });
   }
   const recipe = recipeRes.rows[0];
-
   const ingredientsRes = await db.query(
-   `
-    SELECT
-      iq.iq_id,
-      iq.recipe_id,
-      iq.ingredient_id,
-      iq.quantity_numerical::float   AS quantity_numerical,
-      iq.quantity_unit,
-      iq.optional,
-      ing.ingredient_name
-    FROM ingredient_quantities AS iq
-    JOIN ingredients AS ing
-      ON iq.ingredient_id = ing.ingredient_id
-    WHERE iq.recipe_id = $1;
-  `,
+    `
+       SELECT
+      ingredients.id AS ingredient_id,
+      ingredients.ingredient_name,
+      ingredient_quantities.quantity_numerical::float AS quantity_numerical,
+      ingredient_quantities.quantity_unit,
+      ingredient_quantities.optional
+    FROM ingredient_quantities
+    JOIN ingredients ON ingredient_quantities.ingredient_id = ingredients.id
+    WHERE ingredient_quantities.recipe_id = $1;
+    `,
     [recipe_id]
   );
   recipe.ingredients = ingredientsRes.rows;
-
-  const ingredientIds = recipe.ingredients.map(i => i.ingredient_id);
+  const ingredientIds = recipe.ingredients.map((i) => i.ingredient_id);
   if (ingredientIds.length) {
     const restrictionsRes = await db.query(
       `
@@ -139,14 +134,13 @@ const selectRecipeById = async (recipe_id) => {
   const dietTypesRes = await db.query(
     `SELECT restriction_name FROM dietary_restrictions;`
   );
-  const dietTypes = dietTypesRes.rows.map(r => r.restriction_name);
-  dietTypes.forEach(diet => {
+  const dietTypes = dietTypesRes.rows.map((r) => r.restriction_name);
+  dietTypes.forEach((diet) => {
     const flagKey = `is_${diet.replace(/-/g, "_")}`;
-    recipe[flagKey] = recipe.ingredients.every(ing =>
+    recipe[flagKey] = recipe.ingredients.every((ing) =>
       ing.dietary_restrictions.includes(diet)
     );
   });
-
   return recipe;
 };
 
@@ -268,7 +262,7 @@ const insertRecipe = async ({
 const addIngredientsToRecipe = async (recipe_id, ingredients) => {
   if (!Array.isArray(ingredients) || ingredients.length === 0) return [];
   const valuePlaceholders = ingredients
-    .map((_, i) => `($1, $${i*3+2}, $${i*3+3}, $${i*3+4})`)
+    .map((_, i) => `($1, $${i * 3 + 2}, $${i * 3 + 3}, $${i * 3 + 4})`)
     .join(", ");
   const queryStr = `
     INSERT INTO ingredient_quantities (recipe_id, ingredient_id, quantity_numerical, quantity_unit)
@@ -277,11 +271,13 @@ const addIngredientsToRecipe = async (recipe_id, ingredients) => {
   `;
   const values = [
     recipe_id,
-    ...ingredients.flatMap(({ ingredient_id, quantity_numerical, quantity_unit }) => [
-      ingredient_id,
-      quantity_numerical,
-      quantity_unit
-    ])
+    ...ingredients.flatMap(
+      ({ ingredient_id, quantity_numerical, quantity_unit }) => [
+        ingredient_id,
+        quantity_numerical,
+        quantity_unit,
+      ]
+    ),
   ];
   const result = await db.query(queryStr, values);
   return result.rows;
@@ -352,29 +348,33 @@ const removeUserRecipe = async (user_id, recipe_id) => {
 };
 
 const updateUserRecipe = async (user_id, recipe_id, updateData) => {
-  if (isNaN(Number(user_id))) throw { status: 400, msg: "Invalid user ID" }
-  if (isNaN(Number(recipe_id))) throw { status: 400, msg: "Invalid recipe ID" }
-  if (!updateData || Object.keys(updateData).length === 0) throw { status: 400, msg: "No data to update" }
+  if (isNaN(Number(user_id))) throw { status: 400, msg: "Invalid user ID" };
+  if (isNaN(Number(recipe_id))) throw { status: 400, msg: "Invalid recipe ID" };
+  if (!updateData || Object.keys(updateData).length === 0)
+    throw { status: 400, msg: "No data to update" };
 
-  let setParts = []
-  let values = []
-  let i = 1
+  let setParts = [];
+  let values = [];
+  let i = 1;
 
   for (const key in updateData) {
     if (key !== "ingredients" && key !== "instructions") {
-      setParts.push(`${key} = $${i}`)
-      values.push(updateData[key])
-      i++
+      setParts.push(`${key} = $${i}`);
+      values.push(updateData[key]);
+      i++;
     }
   }
 
   if (setParts.length > 0) {
-    values.push(user_id)
-    values.push(recipe_id)
+    values.push(user_id);
+    values.push(recipe_id);
 
-    const sql = `UPDATE recipes SET ${setParts.join(", ")} WHERE created_by = $${i} AND recipe_id = $${i+1} RETURNING *`
-    const res = await db.query(sql, values)
-    if (res.rows.length === 0) throw { status: 404, msg: "Recipe not found or not owned by user" }
+    const sql = `UPDATE recipes SET ${setParts.join(
+      ", "
+    )} WHERE created_by = $${i} AND recipe_id = $${i + 1} RETURNING *`;
+    const res = await db.query(sql, values);
+    if (res.rows.length === 0)
+      throw { status: 404, msg: "Recipe not found or not owned by user" };
   }
 
   if (Array.isArray(updateData.ingredients)) {
@@ -382,17 +382,29 @@ const updateUserRecipe = async (user_id, recipe_id, updateData) => {
       const res = await db.query(
         "SELECT iq_id FROM ingredient_quantities WHERE recipe_id = $1 AND ingredient_id = $2",
         [recipe_id, ing.ingredient_id]
-      )
+      );
       if (res.rows.length) {
         await db.query(
           "UPDATE ingredient_quantities SET quantity_numerical = $1, quantity_unit = $2, optional = $3 WHERE recipe_id = $4 AND ingredient_id = $5",
-          [ing.quantity_numerical, ing.quantity_unit, ing.optional || false, recipe_id, ing.ingredient_id]
-        )
+          [
+            ing.quantity_numerical,
+            ing.quantity_unit,
+            ing.optional || false,
+            recipe_id,
+            ing.ingredient_id,
+          ]
+        );
       } else {
         await db.query(
           "INSERT INTO ingredient_quantities (recipe_id, ingredient_id, quantity_numerical, quantity_unit, optional) VALUES ($1,$2,$3,$4,$5)",
-          [recipe_id, ing.ingredient_id, ing.quantity_numerical, ing.quantity_unit, ing.optional || false]
-        )
+          [
+            recipe_id,
+            ing.ingredient_id,
+            ing.quantity_numerical,
+            ing.quantity_unit,
+            ing.optional || false,
+          ]
+        );
       }
     }
   }
@@ -402,27 +414,41 @@ const updateUserRecipe = async (user_id, recipe_id, updateData) => {
       const res = await db.query(
         "SELECT instruction_id FROM instructions WHERE recipe_id = $1 AND step_number = $2",
         [recipe_id, ins.step_number]
-      )
+      );
       if (res.rows.length) {
         await db.query(
           "UPDATE instructions SET step_description = $1, iq_id = $2, time_required = $3, timed_task = $4 WHERE recipe_id = $5 AND step_number = $6",
-          [ins.step_description, ins.iq_id || null, ins.time_required || null, ins.timed_task || false, recipe_id, ins.step_number]
-        )
+          [
+            ins.step_description,
+            ins.iq_id || null,
+            ins.time_required || null,
+            ins.timed_task || false,
+            recipe_id,
+            ins.step_number,
+          ]
+        );
       } else {
         await db.query(
           "INSERT INTO instructions (recipe_id, step_number, step_description, iq_id, time_required, timed_task) VALUES ($1,$2,$3,$4,$5,$6)",
-          [recipe_id, ins.step_number, ins.step_description, ins.iq_id || null, ins.time_required || null, ins.timed_task || false]
-        )
+          [
+            recipe_id,
+            ins.step_number,
+            ins.step_description,
+            ins.iq_id || null,
+            ins.time_required || null,
+            ins.timed_task || false,
+          ]
+        );
       }
     }
   }
 
-const recipeRes = await db.query(
+  const recipeRes = await db.query(
     "SELECT * FROM recipes WHERE recipe_id = $1",
     [recipe_id]
   );
   const ingredientsRes = await db.query(
-  `
+    `
     SELECT
       iq.iq_id,
       iq.recipe_id,
@@ -473,5 +499,5 @@ module.exports = {
   addIngredientsToRecipe,
   addInstructionsToRecipe,
   removeUserRecipe,
-  updateUserRecipe
+  updateUserRecipe,
 };
