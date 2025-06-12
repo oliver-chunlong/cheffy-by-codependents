@@ -49,7 +49,7 @@ export default function ShoppingList() {
         </Text>
         <Button
           onPress={() => {
-            navigation.navigate("Home", {screen: "Home"});
+            navigation.navigate("Home", { screen: "Home" });
           }}
           style={styles.cookingModeButton}
         >
@@ -102,47 +102,55 @@ export default function ShoppingList() {
         contentContainerStyle={{ paddingBottom: 20 }}
       />
       <Modal
-  transparent
-  animationType="fade"
-  visible={showConfirmModal}
-  onRequestClose={() => setShowConfirmModal(false)}
->
-  <View style={{
-    flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.5)',
-    justifyContent: 'center',
-    alignItems: 'center'
-  }}>
-    <View style={{
-      width: 300,
-      backgroundColor: 'white',
-      padding: 20,
-      borderRadius: 10,
-      elevation: 5
-    }}>
-      <Text style={styles.buttonText}>
-        Are you sure you want to clear the shopping list?
-      </Text>
-      <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
-        <Button
-          label="Cancel"
-          onPress={() => setShowConfirmModal(false)}
-          style={styles.shoppingListCancelButton}
-        />
-        <Button
-          label="Clear"
-          onPress={() => {
-            setShoppingList([]);
-            setShowConfirmModal(false);
-            
+        transparent
+        animationType="fade"
+        visible={showConfirmModal}
+        onRequestClose={() => setShowConfirmModal(false)}
+      >
+        <View
+          style={{
+            flex: 1,
+            backgroundColor: "rgba(0,0,0,0.5)",
+            justifyContent: "center",
+            alignItems: "center",
           }}
-          style={styles.shoppingListClearButton}
-        />
-      </View>
-    </View>
-  </View>
-</Modal>
-
+        >
+          <View
+            style={{
+              width: 300,
+              backgroundColor: "white",
+              padding: 20,
+              borderRadius: 10,
+              elevation: 5,
+            }}
+          >
+            <Text style={[styles.buttonText, { color: "black" }]}>
+              Are you sure you want to clear the shopping list?
+            </Text>
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "center",
+                marginTop: 6,
+              }}
+            >
+              <Button
+                label="Cancel"
+                onPress={() => setShowConfirmModal(false)}
+                style={styles.shoppingListCancelButton}
+              />
+              <Button
+                label="Clear"
+                onPress={() => {
+                  setShoppingList([]);
+                  setShowConfirmModal(false);
+                }}
+                style={styles.shoppingListClearButton}
+              />
+            </View>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 }

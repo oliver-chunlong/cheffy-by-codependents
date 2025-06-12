@@ -1,20 +1,32 @@
-import React, { useContext, useState, useEffect } from 'react';
-import { ScrollView, ActivityIndicator, View, TouchableOpacity, Alert, SafeAreaView } from 'react-native';
-import { Text, Button, Modal } from 'react-native-ui-lib';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { useNavigation } from '@react-navigation/native';
-import { UserContext } from '../context/UserContext';
-import LoginForm from '../components/ProfileComponents/LoginForm';
-import RecipeCard from '../components/HomePage-components/RecipeCard';
-import FavouriteButton from '../components/FavouriteButton';
-import { requestUserRecipes, requestFavouriteRecipes, requestRecipeById, deleteUserRecipe } from '../utils/axios';
-import { styles } from '../styles/styles';
+import React, { useContext, useState, useEffect } from "react";
+import {
+  ScrollView,
+  ActivityIndicator,
+  View,
+  TouchableOpacity,
+  Alert,
+  SafeAreaView,
+} from "react-native";
+import { Text, Button, Modal } from "react-native-ui-lib";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import { useNavigation } from "@react-navigation/native";
+import { UserContext } from "../context/UserContext";
+import LoginForm from "../components/ProfileComponents/LoginForm";
+import RecipeCard from "../components/HomePage-components/RecipeCard";
+import FavouriteButton from "../components/FavouriteButton";
+import {
+  requestUserRecipes,
+  requestFavouriteRecipes,
+  requestRecipeById,
+  deleteUserRecipe,
+} from "../utils/axios";
+import { styles } from "../styles/styles";
 
-const normalizeRecipeImage = recipe => {
-  if (!recipe || typeof recipe !== 'object') return null;
+const normalizeRecipeImage = (recipe) => {
+  if (!recipe || typeof recipe !== "object") return null;
   return {
     ...recipe,
-    recipe_img_url: recipe.recipe_img_url || recipe.image_url
+    recipe_img_url: recipe.recipe_img_url || recipe.image_url,
   };
 };
 
@@ -32,13 +44,13 @@ export default function Profile({ navigation, route }) {
   useEffect(() => {
     if (!userId) return;
     setIsLoading(true);
-    setErrorMsg('');
+    setErrorMsg("");
 
     const loadFavorites = async () => {
       try {
         const favorites = await requestFavouriteRecipes(userId);
         console.log("Favourites response in Profile:", favorites);
-        
+
         if (!favorites || !favorites.length) {
           console.log("No favorites found, setting empty array");
           setFavourites([]);
@@ -46,21 +58,23 @@ export default function Profile({ navigation, route }) {
         }
 
         console.log("Starting to fetch recipes for favorites:", favorites);
-        const recipePromises = favorites.map(fav => {
+        const recipePromises = favorites.map((fav) => {
           console.log("Fetching recipe for favorite ID:", fav.recipe_id);
           return requestRecipeById(fav.recipe_id)
-            .then(recipe => {
+            .then((recipe) => {
               if (!recipe) {
-                console.error(`No recipe data returned for ID ${fav.recipe_id}`);
+                console.error(
+                  `No recipe data returned for ID ${fav.recipe_id}`
+                );
                 return null;
               }
               console.log("Successfully fetched recipe:", {
                 id: recipe.recipe_id,
-                name: recipe.recipe_name
+                name: recipe.recipe_name,
               });
               return normalizeRecipeImage(recipe);
             })
-            .catch(err => {
+            .catch((err) => {
               console.error(`Failed to fetch recipe ${fav.recipe_id}:`, err);
               return null;
             });
@@ -85,7 +99,10 @@ export default function Profile({ navigation, route }) {
 
   useEffect(() => {
     if (route.params?.newRecipe) {
-      setMyRecipes(prev => [...prev, normalizeRecipeImage(route.params.newRecipe)]);
+      setMyRecipes((prev) => [
+        ...prev,
+        normalizeRecipeImage(route.params.newRecipe),
+      ]);
       navigation.setParams({ newRecipe: undefined });
     }
   }, [route.params?.newRecipe]);
@@ -96,22 +113,22 @@ export default function Profile({ navigation, route }) {
     setErrorMsg("");
 
     requestUserRecipes(userId)
-      .then(res => {
+      .then((res) => {
         const arr = res || [];
         setMyRecipes(arr.map(normalizeRecipeImage).filter(Boolean));
       })
-      .catch(err => {
+      .catch((err) => {
         console.error("Error loading my recipes:", err.message);
         setErrorMsg("Failed to load your recipes.");
       })
       .finally(() => setIsLoading(false));
   }, [userId]);
 
-  const handleDelete = async recipeId => {
+  const handleDelete = async (recipeId) => {
     try {
       await deleteUserRecipe(userId, recipeId);
-      setMyRecipes(prev => prev.filter(r => r.recipe_id !== recipeId));
-      setFavourites(prev => prev.filter(r => r.recipe_id !== recipeId));
+      setMyRecipes((prev) => prev.filter((r) => r.recipe_id !== recipeId));
+      setFavourites((prev) => prev.filter((r) => r.recipe_id !== recipeId));
       Alert.alert("Your recipe has been removed.");
     } catch (err) {
       console.error("Delete recipe error:", err.response?.data || err.message);
@@ -128,7 +145,11 @@ export default function Profile({ navigation, route }) {
     return (
       <View style={styles.centered}>
         <LoginForm />
-        {userError && <Text text80 red10 marginT-10>{userError}</Text>}
+        {userError && (
+          <Text text80 red10 marginT-10>
+            {userError}
+          </Text>
+        )}
       </View>
     );
   }
@@ -136,17 +157,19 @@ export default function Profile({ navigation, route }) {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView>
-        <View style={{ alignItems: 'center', marginVertical: 16 }}>
+        <View style={{ alignItems: "center", marginVertical: 5 }}>
           <Text style={styles.sectionTitle}>Favourite recipes</Text>
         </View>
         {isLoading && favourites.length === 0 ? (
           <ActivityIndicator size="large" style={styles.loading} />
         ) : errorMsg ? (
-          <View style={{ alignItems: 'center', marginVertical: 16 }}>
-            <Text text90 red10>{errorMsg}</Text>
+          <View style={{ alignItems: "center", marginVertical: 16 }}>
+            <Text text90 red10>
+              {errorMsg}
+            </Text>
           </View>
         ) : favourites.length === 0 ? (
-          <View style={{ alignItems: 'center', marginVertical: 16 }}>
+          <View style={{ alignItems: "center", marginVertical: 16 }}>
             <Text text90>No favourites yet</Text>
           </View>
         ) : (
@@ -155,12 +178,12 @@ export default function Profile({ navigation, route }) {
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={{
               flexGrow: 1,
-              alignItems: 'center',
-              justifyContent: 'center',
-              paddingHorizontal: 16
+              alignItems: "center",
+              justifyContent: "center",
+              paddingHorizontal: 16,
             }}
           >
-            {favourites.map(recipe => (
+            {favourites.map((recipe) => (
               <View key={recipe.recipe_id} style={styles.horizontalItem}>
                 <RecipeCard recipe={recipe}>
                   <FavouriteButton
@@ -168,39 +191,63 @@ export default function Profile({ navigation, route }) {
                     onToggle={async () => {
                       try {
                         console.log("Refreshing favorites after toggle");
-                        const updatedFavourites = await requestFavouriteRecipes(user.id);
-                        console.log("Updated favorites response:", updatedFavourites);
+                        const updatedFavourites = await requestFavouriteRecipes(
+                          user.id
+                        );
+                        console.log(
+                          "Updated favorites response:",
+                          updatedFavourites
+                        );
 
                         if (!updatedFavourites || !updatedFavourites.length) {
-                          console.log("No favorites after toggle, setting empty array");
+                          console.log(
+                            "No favorites after toggle, setting empty array"
+                          );
                           setFavourites([]);
                           return;
                         }
 
-                        const recipePromises = updatedFavourites.map(fav => {
+                        const recipePromises = updatedFavourites.map((fav) => {
                           console.log("Fetching recipe for favorite:", fav);
                           return requestRecipeById(fav.recipe_id)
-                            .then(recipe => {
+                            .then((recipe) => {
                               if (!recipe) {
-                                console.error(`No recipe data returned for ID ${fav.recipe_id}`);
+                                console.error(
+                                  `No recipe data returned for ID ${fav.recipe_id}`
+                                );
                                 return null;
                               }
-                              console.log("Recipe fetched successfully:", recipe);
+                              console.log(
+                                "Recipe fetched successfully:",
+                                recipe
+                              );
                               return normalizeRecipeImage(recipe);
                             })
-                            .catch(err => {
-                              console.error(`Failed to fetch recipe ${fav.recipe_id}:`, err);
+                            .catch((err) => {
+                              console.error(
+                                `Failed to fetch recipe ${fav.recipe_id}:`,
+                                err
+                              );
                               return null;
                             });
                         });
 
                         const recipes = await Promise.all(recipePromises);
-                        console.log("All recipes fetched after toggle:", recipes);
+                        console.log(
+                          "All recipes fetched after toggle:",
+                          recipes
+                        );
                         const validRecipes = recipes.filter(Boolean);
-                        console.log("Valid recipes to display after toggle:", validRecipes);
+                        console.log(
+                          "Valid recipes to display after toggle:",
+                          validRecipes
+                        );
                         setFavourites(validRecipes);
                       } catch (err) {
-                        console.error("Failed to refresh favourites after toggle:", err);
+                        console.error(
+                          "Failed to refresh favourites after toggle:",
+                          err
+                        );
                         setErrorMsg("Failed to refresh favourites.");
                       }
                     }}
@@ -211,14 +258,16 @@ export default function Profile({ navigation, route }) {
           </ScrollView>
         )}
 
-        <View style={{ alignItems: 'center', marginVertical: 16 }}>
+        <View style={{ alignItems: "center", marginVertical: 5 }}>
           <Text style={styles.sectionTitle}>My recipes</Text>
         </View>
 
         {isLoading && myRecipes.length === 0 ? (
           <ActivityIndicator size="large" style={styles.loading} />
         ) : errorMsg ? (
-          <Text text90 red10>{errorMsg}</Text>
+          <Text text90 red10>
+            {errorMsg}
+          </Text>
         ) : myRecipes.length === 0 ? (
           <Text text90>No recipes yet</Text>
         ) : (
@@ -227,19 +276,21 @@ export default function Profile({ navigation, route }) {
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={{
               flexGrow: 1,
-              alignItems: 'center',
-              justifyContent: 'center',
-              paddingHorizontal: 16
+              alignItems: "center",
+              justifyContent: "center",
+              paddingHorizontal: 16,
             }}
           >
-            {myRecipes.map(recipe => (
+            {myRecipes.map((recipe) => (
               <View key={recipe.recipe_id} style={styles.horizontalItem}>
                 <RecipeCard recipe={recipe}>
                   <View>
-                    <TouchableOpacity onPress={() => {
-                      setRecipeToDelete(recipe.recipe_id);
-                      setShowConfirmModal(true);
-                    }}>
+                    <TouchableOpacity
+                      onPress={() => {
+                        setRecipeToDelete(recipe.recipe_id);
+                        setShowConfirmModal(true);
+                      }}
+                    >
                       <Icon name="delete" size={20} style={styles.deleteIcon} />
                     </TouchableOpacity>
                   </View>
@@ -252,23 +303,29 @@ export default function Profile({ navigation, route }) {
               visible={showConfirmModal}
               onRequestClose={() => setShowConfirmModal(false)}
             >
-              <View style={{
-                flex: 1,
-                backgroundColor: 'rgba(0,0,0,0.5)',
-                justifyContent: 'center',
-                alignItems: 'center'
-              }}>
-                <View style={{
-                  width: 300,
-                  backgroundColor: 'white',
-                  padding: 20,
-                  borderRadius: 10,
-                  elevation: 5
-                }}>
+              <View
+                style={{
+                  flex: 1,
+                  backgroundColor: "rgba(0,0,0,0.5)",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <View
+                  style={{
+                    width: 300,
+                    backgroundColor: "white",
+                    padding: 20,
+                    borderRadius: 10,
+                    elevation: 5,
+                  }}
+                >
                   <Text style={styles.buttonText}>
                     Are you sure you want to delete the recipe?
                   </Text>
-                  <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
+                  <View
+                    style={{ flexDirection: "row", justifyContent: "flex-end" }}
+                  >
                     <Button
                       label="Cancel"
                       onPress={() => setShowConfirmModal(false)}
@@ -292,7 +349,7 @@ export default function Profile({ navigation, route }) {
         <Button
           label="Create new recipe"
           style={styles.actionButton}
-          onPress={() => navigation.navigate('CreateNewRecipe')}
+          onPress={() => navigation.navigate("CreateNewRecipe")}
         />
         <Button
           label="Log out"
@@ -304,5 +361,3 @@ export default function Profile({ navigation, route }) {
     </SafeAreaView>
   );
 }
-
-

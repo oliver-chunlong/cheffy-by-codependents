@@ -65,7 +65,7 @@ export default function RecipeList({ recipes, query }) {
 
   return (
     <View style={{ flex: 1 }}>
-      <View style={{ paddingHorizontal: 10, paddingTop: 0, paddingBottom: 13 }}>
+      <View style={{ paddingHorizontal: 10, paddingTop: 0, paddingBottom: 7 }}>
         <FilterOrderBar
           activeFilters={activeFilters}
           setActiveFilters={setActiveFilters}
@@ -86,6 +86,7 @@ export default function RecipeList({ recipes, query }) {
             flexDirection: "row",
             flexWrap: "wrap",
             justifyContent: "flex-start",
+            paddingHorizontal: itemMargin,
           }}
         />
       </View>

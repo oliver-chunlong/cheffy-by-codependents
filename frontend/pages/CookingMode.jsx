@@ -3,7 +3,7 @@ import { ScrollView } from "react-native";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { Button, View, Text, Image } from "react-native-ui-lib";
 import { styles } from "../styles/styles";
-
+import Egg from "../assets/Start_Cooking.webp";
 import CookingModeStep from "../components/CookingModeComponents/CookingModeStep";
 import Progressbar from "../components/Progressbar";
 import Completed from "../components/CookingModeComponents/Completed";
@@ -69,18 +69,19 @@ export default function CookingMode(props) {
     );
   }
 
-  if (complete) return <Completed />;
+  if (complete) return <Completed recipe={recipe} />;
 
   if (!start)
     return (
       <View style={styles.cookingContainerNoRecipe}>
+        {/* <Image source={Egg} style={{ width: 220, height: 180 }} /> */}
         <Button
           onPress={() => {
             setStart(true);
           }}
           style={styles.cookingModeButton}
         >
-          <Text style={styles.cookingModeButtonText}>Start Cooking</Text>
+          <Text style={styles.cookingModeButtonText}>Start Cooking!</Text>
         </Button>
       </View>
     );
