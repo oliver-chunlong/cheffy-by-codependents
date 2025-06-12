@@ -7,13 +7,26 @@ import { styles } from '../../styles/styles';
 export default function RecipeCard({ recipe, children }) {
   const navigation = useNavigation();
   
+  if (!recipe) {
+    console.error('RecipeCard: No recipe data provided');
+    return null;
+  }
+
   const imageUri = recipe.recipe_img_url || recipe.image_url;
+  const recipeName = recipe.recipe_name || recipe.name;
+
+  const handlePress = () => {
+    console.log('Navigating to RecipeDetail with recipe:', {
+      id: recipe.recipe_id,
+      name: recipeName
+    });
+    navigation.navigate('RecipeDetail', { recipe });
+  };
 
   return (
-    
     <TouchableOpacity
       style={styles.card}
-      onPress={() => navigation.navigate('RecipeDetail', { recipe })}
+      onPress={handlePress}
       activeOpacity={0.8}
     >
       <View style={styles.imageContainer}>
@@ -22,17 +35,17 @@ export default function RecipeCard({ recipe, children }) {
             source={{ uri: imageUri }}
             style={styles.image}
             resizeMode="cover"
+            onError={(e) => console.error('Image loading error:', e.nativeEvent.error)}
           />
         ) : (
           <View style={styles.placeholderImage}>
             <Text style={styles.placeholderText}>No image</Text>
           </View>
         )}
-
       </View>
       <View style={styles.textWrapper}>
         <Text style={styles.recipeTitle} numberOfLines={1}>
-          {recipe.recipe_name}
+          {recipeName}
         </Text>
 
         <View style={styles.iconRow}>

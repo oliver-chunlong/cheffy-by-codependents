@@ -79,72 +79,70 @@ const addIngredient = ingredientObj => {
   
 
   const onSavePress = async () => {
-    console.log("Payload being sent:", JSON.stringify(payload, null, 2));
-  if (!userId) {
-    return setError("You must be logged in.");
-  }
-
-  if (!recipeName.trim()) {
-    return setError("Name required.");
-  }
-
-  if (!imageUrl.trim()) {
-    return setError("Image URL required.");
-  }
-
-  if (!description.trim()) {
-    return setError("Description required.");
-  }
-
-  if (!selectedIngredients.length) {
-    return setError("Add at least one ingredient.");
-  }
-
-  setError("");
-
-  const validIngredients = selectedIngredients.filter(i => !!i.ingredient_id);
-
-  if (validIngredients.length === 0) {
-    return setError("Add at least one valid ingredient.");
-  }
-
-  const ingredientsPayload = validIngredients.map(i => ({
-    ingredient_id: i.ingredient_id,
-    quantity_numerical: 1,
-    quantity_unit: i.quantity_unit ?? ""
-  }));
-
-  const instructionsPayload = steps.map(s => ({
-    step_number: s.step_number,
-    step_description: s.step_description.trim(),
-    time_required: 0
-  }));
-
-  const payload = {
-    recipe_name: recipeName.trim(),
-    recipe_img_url: imageUrl.trim(),
-    recipe_description: description.trim(),
-    ingredients: ingredientsPayload,
-    instructions: instructionsPayload
-  };
-
-  try {
-    console.log("Payload being sent:", payload);
-
-    const savedRecipe = await postNewRecipe(userId, payload);
-
-    if (!savedRecipe) {
-      throw new Error("Recipe creation failed with no response.");
+    if (!userId) {
+      return setError("You must be logged in.");
     }
 
-    Alert.alert(`"${savedRecipe.recipe_name}" saved.`);
-    navigation.navigate("Profile", { newRecipe: savedRecipe });
-  } catch (err) {
-    console.error("Error saving recipe:", err.response?.data || err.message);
-    const serverMsg = err.response?.data?.message;
-    setError(serverMsg || `Save failed: ${err.message}`);
-  }
-};
+    if (!recipeName.trim()) {
+      return setError("Name required.");
+    }
+
+    if (!imageUrl.trim()) {
+      return setError("Image URL required.");
+    }
+
+    if (!description.trim()) {
+      return setError("Description required.");
+    }
+
+    if (!selectedIngredients.length) {
+      return setError("Add at least one ingredient.");
+    }
+
+    setError("");
+
+    const validIngredients = selectedIngredients.filter(i => !!i.ingredient_id);
+
+    if (validIngredients.length === 0) {
+      return setError("Add at least one valid ingredient.");
+    }
+
+    const ingredientsPayload = validIngredients.map(i => ({
+      ingredient_id: i.ingredient_id,
+      quantity_numerical: 1,
+      quantity_unit: i.quantity_unit ?? ""
+    }));
+
+    const instructionsPayload = steps.map(s => ({
+      step_number: s.step_number,
+      step_description: s.step_description.trim(),
+      time_required: 0
+    }));
+
+    const payload = {
+      recipe_name: recipeName.trim(),
+      recipe_img_url: imageUrl.trim(),
+      recipe_description: description.trim(),
+      ingredients: ingredientsPayload,
+      instructions: instructionsPayload
+    };
+
+    try {
+      console.log("Sending recipe payload:", payload);
+      const savedRecipe = await postNewRecipe(userId, payload);
+
+      if (!savedRecipe) {
+        throw new Error("Recipe creation failed with no response.");
+      }
+
+      Alert.alert("Success", `"${savedRecipe.recipe_name}" saved successfully.`);
+      navigation.navigate("Profile", { newRecipe: savedRecipe });
+    } catch (err) {
+      console.error("Error saving recipe:", err);
+      const serverMsg = err.response?.data?.msg || err.message;
+      setError(serverMsg || "Failed to save recipe. Please try again.");
+    }
+  };
 
 
   return (

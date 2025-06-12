@@ -22,13 +22,28 @@ export const requestRecipes = ({ searchQuery, filters = {}, order } = {}) => {
 };
 
 export const requestRecipeById = (recipeId) => {
+  console.log('Requesting recipe by ID:', recipeId);
   return axios
     .get(`${endpoint}/recipes/${recipeId}`)
     .then((response) => {
+      console.log('Raw recipe response:', response.data);
+      if (!response.data || !response.data.recipe) {
+        console.error('Invalid recipe response format:', response.data);
+        throw new Error('Invalid recipe response format');
+      }
+      console.log('Successfully processed recipe:', {
+        id: response.data.recipe.recipe_id,
+        name: response.data.recipe.recipe_name
+      });
       return response.data.recipe;
     })
     .catch((error) => {
-      console.log(error);
+      console.error('Error fetching recipe:', {
+        status: error.response?.status,
+        data: error.response?.data,
+        message: error.message
+      });
+      throw error;
     });
 };
 
@@ -44,33 +59,47 @@ export const requestUserRecipes = (userId) => {
 };
 
 export const postNewRecipe = (userId, recipeObject) => {
+  console.log('Creating new recipe:', { userId, recipeObject });
   return axios
     .post(`${endpoint}/users/${userId}/recipes`, recipeObject)
     .then((response) => {
+      console.log('Recipe creation response:', response.data);
+      if (!response.data.recipe) {
+        throw new Error('Invalid response format from server');
+      }
       return response.data.recipe;
     })
     .catch((error) => {
-      console.log(error);
+      console.error('Error creating recipe:', error.response?.data || error.message);
+      throw error;
     });
 };
 
 export const requestFavouriteRecipes = (userId) => {
+  console.log('Requesting favourites for user:', userId);
   return axios
     .get(`${endpoint}/users/${userId}/favourites`)
     .then((response) => {
-      return response.data.favourites;
+      console.log('Raw favourites response:', response.data);
+      const favourites = response.data.favourites || [];
+      console.log('Processed favourites:', favourites);
+      return favourites;
     })
     .catch((error) => {
-      console.log(error);
+      console.error('Error fetching favourites:', error.response?.data || error.message);
+      throw error;
     });
 };
 
 export const postRecipeToFavourites = (userId, recipeId) => {
+  console.log('Adding favourite:', { userId, recipeId });
   return axios
     .post(`${endpoint}/users/${userId}/favourites`, { recipe_id: recipeId })
     .then((response) => {
-      console.log("Favourite added response:", response.data);
-      return response.data.favourite; // <- correct key
+      console.log("Raw favourite added response:", response.data);
+      const favourite = response.data.favourite || response.data;
+      console.log("Processed favourite:", favourite);
+      return favourite;
     })
     .catch((error) => {
       console.error("postRecipeToFavourites failed:", error.response?.data || error.message);
@@ -79,17 +108,18 @@ export const postRecipeToFavourites = (userId, recipeId) => {
 };
 
 export const removeRecipeFromFavourites = (userId, recipeId) => {
+  console.log('Removing favourite:', { userId, recipeId });
   return axios
     .delete(`${endpoint}/users/${userId}/favourites/${recipeId}`)
     .then((response) => {
-      console.log("Favourite removed response:", response.data); // usually empty
-      return { success: true }; // or null/true to indicate success
+      console.log("Favourite removed response:", response.data);
+      return { success: true };
     })
     .catch((error) => {
       console.error("removeRecipeFromFavourites failed:", error.response?.data || error.message);
       throw error;
     });
-}
+};
 
 export const updateUserRecipe = (userId, recipeId, recipeObject) => {
   return axios
