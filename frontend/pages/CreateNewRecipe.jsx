@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { ScrollView, StyleSheet, SafeAreaView, View, Alert } from 'react-native';
+import { ScrollView, StyleSheet, SafeAreaView, View, Alert, TouchableOpacity } from 'react-native';
 import { TextField, Text, Button, Card } from 'react-native-ui-lib';
 import { useNavigation } from '@react-navigation/native';
 import { styles as shared} from '../styles/styles';
@@ -334,22 +334,25 @@ const addIngredient = ingredientObj => {
                 )}
               </View>
             ))}
-            <Button label="+ Add step" link onPress={addStep} style={localStyles.addButton} />
+            <TouchableOpacity style={localStyles.addStepButton} onPress={addStep}>
+              <Text style={localStyles.addStepText}>+ Add Step</Text>
+            </TouchableOpacity>
           </View>
         </Card>
 
-        <Button style={shared.createRecipeButton}
-        label="Save" 
-        fullWidth onPress={onSavePress} 
-        />
-
-        <Button style={shared.createRecipeButton}
-        label="Cancel"
-        fullWidth
-        backgroundColor={shared.lightGrey}
-        labelStyle={{ color: 'black' }}
-        onPress={() => navigation.goBack()}
-        />
+        <TouchableOpacity 
+          style={localStyles.saveButton}
+          onPress={onSavePress}
+        >
+          <Text style={localStyles.buttonText}>Save Recipe</Text>
+        </TouchableOpacity>
+        
+        <TouchableOpacity 
+          style={localStyles.cancelButton}
+          onPress={() => navigation.goBack()}
+        >
+          <Text style={localStyles.buttonText}>Cancel</Text>
+        </TouchableOpacity>
         
       </ScrollView>
     </SafeAreaView>
@@ -357,42 +360,50 @@ const addIngredient = ingredientObj => {
 }
 
 const localStyles = StyleSheet.create({
-  container: { flex: 1, 
+  container: { 
+    flex: 1, 
     padding: 16, 
-    backgroundColor: '#f2f2f2' 
+    backgroundColor: '#f8f9fa' 
   },
 
   contentContainer: { 
-    paddingBottom: 32 
+    paddingBottom: 40 
   },
 
   card: { 
-    padding: 20, 
-    borderRadius: 16, 
-    backgroundColor: '#fff', 
-    marginBottom: 20, 
+    padding: 24, 
+    borderRadius: 20, 
+    backgroundColor: '#ffffff', 
+    marginBottom: 32, 
     shadowColor: '#000', 
-    shadowOpacity: 0.1, 
-    shadowOffset: { width: 0, height: 2 }, 
-    shadowRadius: 8, 
-    elevation: 3 },
+    shadowOpacity: 0.08, 
+    shadowOffset: { width: 0, height: 4 }, 
+    shadowRadius: 12, 
+    elevation: 4,
+    borderWidth: 1,
+    borderColor: '#f0f0f0'
+  },
 
   input: { 
-    marginVertical: 8 
+    marginVertical: 24,
+    fontSize: 16
   },
 
   field: { 
-    backgroundColor: '#fafafa', 
-    borderRadius: 8, 
-    addingHorizontal: 12, 
-    paddingVertical: 8, 
-    borderWidth: 1, 
-    borderColor: '#ddd' 
+    backgroundColor: '#f8f9fa', 
+    borderRadius: 12, 
+    paddingHorizontal: 16, 
+    paddingVertical: 12, 
+    borderWidth: 1.5, 
+    borderColor: '#e9ecef',
+    fontSize: 16,
+    marginBottom: 8
   },
 
   textArea: { 
-    minHeight: 80,
-    marginVertical: 8 
+    minHeight: 100,
+    marginVertical: 24,
+    fontSize: 16
   },
 
   previewImage: { width: '100%', 
@@ -402,101 +413,182 @@ const localStyles = StyleSheet.create({
   },
 
   section: { 
-    marginVertical: 12 
+    marginVertical: 24,
+    paddingVertical: 12
   },
 
   sectionTitle: { 
-    fontSize: 18, 
-    fontWeight: '600', 
-    marginBottom: 8, 
-    color: '#333' 
+    fontSize: 20, 
+    fontWeight: '700', 
+    marginBottom: 16, 
+    color: '#2c3e50',
+    letterSpacing: 0.5
   },
 
   chipContainer: { 
     flexDirection: 'row', 
     flexWrap: 'wrap', 
-    marginTop: 8 
+    marginTop: 12,
+    gap: 8
   },
 
   chip: { 
     flexDirection: 'row', 
     alignItems: 'center', 
-    backgroundColor: '#e0e0e0', 
-    paddingHorizontal: 10, 
-    paddingVertical: 6, 
-    borderRadius: 16, 
-    margin: 4 
+    backgroundColor: '#e8f4fd', 
+    paddingHorizontal: 16, 
+    paddingVertical: 10, 
+    borderRadius: 20, 
+    marginRight: 8,
+    marginBottom: 8,
+    borderWidth: 1,
+    borderColor: '#bee5eb'
   },
+
   chipText: { 
-    marginRight: 6, 
-    color: '#555' 
+    marginRight: 8, 
+    color: '#1e6091',
+    fontWeight: '500',
+    fontSize: 14
   },
 
   chipRemove: { 
     fontWeight: 'bold', 
-    color: '#888' 
+    color: '#dc3545',
+    fontSize: 16,
+    paddingLeft: 4
   },
 
   stepRow: { 
-    backgroundColor: '#fafafa', 
-    padding: 12, 
-    borderRadius: 8, 
-    marginBottom: 12, 
+    backgroundColor: '#f8f9fa', 
+    padding: 20, 
+    borderRadius: 16, 
+    marginBottom: 20, 
     borderWidth: 1, 
-    borderColor: '#ececec' 
+    borderColor: '#e9ecef',
+    shadowColor: '#000',
+    shadowOpacity: 0.03,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 8,
+    elevation: 2
   },
 
   stepLabel: { 
-    fontWeight: '500', 
-    marginBottom: 6, 
-    color: '#444' 
+    fontSize: 18, 
+    fontWeight: '600', 
+    marginBottom: 12, 
+    color: '#495057'
   },
+
   stepInput: { 
-    minHeight: 60, 
-    marginBottom: 4 
-  },
-  removeButton: { 
-    alignSelf: 'flex-end', 
-    marginTop: 4 
-  },
-
-  addButton: { 
-    alignSelf: 'flex-start', 
-    marginTop: 8 
-  },
-
-  error: { color: '#d32f2f',
-     textAlign: 'center',
-      marginBottom: 12 
-    },
-  cancelButton: { 
-    backgroundColor: '#e0e0e0',
-    marginTop: 12 },
-
-  cancelLabel: { 
-    color: '#333' 
+    marginBottom: 12,
+    fontSize: 16
   },
 
   timeRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 4
+    marginBottom: 8,
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    backgroundColor: '#fff3cd',
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: '#ffeaa7'
   },
 
   timeLabel: {
-    marginRight: 8,
-    fontWeight: '500',
-    color: '#444'
+    marginRight: 12,
+    fontWeight: '600',
+    color: '#856404',
+    fontSize: 14
   },
 
   timeInput: {
     marginLeft: 8,
-    marginRight: 8,
-    width: 80
+    marginRight: 12,
+    width: 80,
+    textAlign: 'center'
   },
 
   timePreview: {
-    marginLeft: 8,
-    color: '#888'
+    marginLeft: 12,
+    color: '#856404',
+    fontStyle: 'italic',
+    fontWeight: '500'
+  },
+
+  removeButton: { 
+    marginTop: 12,
+    alignSelf: 'flex-end'
+  },
+
+  addButton: { 
+    marginTop: 8,
+    alignSelf: 'center',
+    paddingVertical: 12
+  },
+
+  addStepButton: {
+    backgroundColor: '#f6c47b',
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+    borderRadius: 25,
+    alignSelf: 'center',
+    marginTop: 16,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 4,
+    elevation: 3
+  },
+
+  addStepText: {
+    color: 'black',
+    fontSize: 16,
+    fontWeight: '600',
+    textAlign: 'center'
+  },
+
+  error: { 
+    backgroundColor: '#f8d7da', 
+    color: '#721c24', 
+    padding: 16, 
+    borderRadius: 12, 
+    marginBottom: 16,
+    textAlign: 'center',
+    fontWeight: '500',
+    borderWidth: 1,
+    borderColor: '#f5c6cb'
+  },
+
+  saveButton: {
+    backgroundColor: '#f6c47b',
+    paddingVertical: 16,
+    borderRadius: 16,
+    marginBottom: 12,
+    shadowColor: '#000',
+    shadowOpacity: 0.15,
+    shadowOffset: { width: 0, height: 4 },
+    shadowRadius: 8,
+    elevation: 4
+  },
+
+  cancelButton: {
+    backgroundColor: '#f6c47b',
+    paddingVertical: 16,
+    borderRadius: 16,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 4,
+    elevation: 2
+  },
+
+  buttonText: {
+    color: 'black',
+    fontSize: 16,
+    fontWeight: '600',
+    textAlign: 'center'
   }
 });

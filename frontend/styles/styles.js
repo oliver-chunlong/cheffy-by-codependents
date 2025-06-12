@@ -802,4 +802,13 @@ export const styles = StyleSheet.create({
     color: "black",
     fontWeight: "bold",
   },
+
+  gridItem: {
+    marginBottom: 15,
+   
+  },
+
+  horizontalItem: {
+    marginRight: 16,
+  },
 });

@@ -251,18 +251,16 @@ export default function Profile({ navigation, route }) {
           ) : myRecipes.length === 0 ? (
             <Text text90>No recipes yet</Text>
           ) : (
-            <ScrollView
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              contentContainerStyle={{
-                flexGrow: 1,
-                alignItems: 'center',
-                justifyContent: 'center',
+            <View
+              style={{
+                flexDirection: 'row',
+                flexWrap: 'wrap',
+                justifyContent: 'flex-start',
                 paddingHorizontal: 16
               }}
             >
               {myRecipes.map(recipe => (
-                <View key={recipe.recipe_id} style={styles.horizontalItem}>
+                <View key={recipe.recipe_id} style={styles.gridItem}>
                   <RecipeCard recipe={recipe}>
                     <View>
                       <TouchableOpacity onPress={() => {
@@ -275,49 +273,49 @@ export default function Profile({ navigation, route }) {
                   </RecipeCard>
                 </View>
               ))}
-              <Modal
-                transparent
-                animationType="fade"
-                visible={showConfirmModal}
-                onRequestClose={() => setShowConfirmModal(false)}
-              >
-                <View style={{
-                  flex: 1,
-                  backgroundColor: 'rgba(0,0,0,0.5)',
-                  justifyContent: 'center',
-                  alignItems: 'center'
-                }}>
-                  <View style={{
-                    width: 300,
-                    backgroundColor: 'white',
-                    padding: 20,
-                    borderRadius: 10,
-                    elevation: 5
-                  }}>
-                    <Text style={styles.buttonText}>
-                      Are you sure you want to delete the recipe?
-                    </Text>
-                    <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
-                      <Button
-                        label="Cancel"
-                        onPress={() => setShowConfirmModal(false)}
-                        style={styles.shoppingListCancelButton}
-                      />
-                      <Button
-                        label="Delete"
-                        onPress={() => {
-                          handleDelete(recipeToDelete);
-                          setShowConfirmModal(false);
-                          setRecipeToDelete(null);
-                        }}
-                        style={styles.shoppingListClearButton}
-                      />
-                    </View>
-                  </View>
-                </View>
-              </Modal>
-            </ScrollView>
+            </View>
           )}
+          <Modal
+            transparent
+            animationType="fade"
+            visible={showConfirmModal}
+            onRequestClose={() => setShowConfirmModal(false)}
+          >
+            <View style={{
+              flex: 1,
+              backgroundColor: 'rgba(0,0,0,0.5)',
+              justifyContent: 'center',
+              alignItems: 'center'
+            }}>
+              <View style={{
+                width: 300,
+                backgroundColor: 'white',
+                padding: 20,
+                borderRadius: 10,
+                elevation: 5
+              }}>
+                <Text style={styles.buttonText}>
+                  Are you sure you want to delete the recipe?
+                </Text>
+                <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
+                  <Button
+                    label="Cancel"
+                    onPress={() => setShowConfirmModal(false)}
+                    style={styles.shoppingListCancelButton}
+                  />
+                  <Button
+                    label="Delete"
+                    onPress={() => {
+                      handleDelete(recipeToDelete);
+                      setShowConfirmModal(false);
+                      setRecipeToDelete(null);
+                    }}
+                    style={styles.shoppingListClearButton}
+                  />
+                </View>
+              </View>
+            </View>
+          </Modal>
           <View style={{ paddingHorizontal: 16, marginTop: 20, marginBottom: 40 }}>
             <Button
               label="Create new recipe"
