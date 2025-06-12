@@ -93,7 +93,6 @@ export default function RecipeDetail({
           >
             <Text style={styles.buttonText}>Start Cooking Mode</Text>
           </Button>
-          <FavouriteButton recipe_id={recipe.recipe_id} style={styles.button} />
         </View>
 
         <Text style={styles.recipeName}>{recipeState.recipe_name}</Text>
@@ -177,6 +176,7 @@ export default function RecipeDetail({
           >
             <Text style={styles.buttonText}>Add to Shopping List</Text>
           </Button>
+          <FavouriteButton recipe_id={recipe.recipe_id} style={styles.button} />
         </View>
 
         {recipeState.instructions && recipeState.instructions.length > 0 ? (
@@ -194,13 +194,3 @@ export default function RecipeDetail({
     </ScrollView>
   );
 }
-
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     justifyContent: "center",
-//     backgroundColor: "#ecf0f1",
-//     padding: 8,
-//   },
-// });

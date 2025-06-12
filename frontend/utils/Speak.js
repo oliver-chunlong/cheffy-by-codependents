@@ -14,6 +14,7 @@ export async function speak(text, onDone) {
       rate: 1,
       voice: voices.find((voice) => voice.quality === "Enhanced")?.identifier,
       onDone: onDone,
+      pitch: 1.3,
     });
   }
 }
