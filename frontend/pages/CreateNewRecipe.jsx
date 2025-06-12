@@ -362,6 +362,3 @@ const localStyles = StyleSheet.create({
     color: '#333' 
   }
 });
-
-
-	

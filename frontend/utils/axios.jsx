@@ -160,4 +160,3 @@ export const getAllIngredients = () =>
      .then(({ data }) =>
        data.ingredients.map(item => item.ingredient_name)
      );
-
