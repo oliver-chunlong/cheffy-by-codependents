@@ -22,23 +22,46 @@ export const requestRecipes = ({ searchQuery, filters = {}, order } = {}) => {
 };
 
 export const requestRecipeById = (recipeId) => {
-  console.log('Requesting recipe by ID:', recipeId);
+  console.log('requestRecipeById: Requesting recipe by ID:', recipeId);
   return axios
     .get(`${endpoint}/recipes/${recipeId}`)
     .then((response) => {
-      console.log('Raw recipe response:', response.data);
+      console.log('requestRecipeById: Raw recipe response:', response.data);
       if (!response.data || !response.data.recipe) {
-        console.error('Invalid recipe response format:', response.data);
+        console.error('requestRecipeById: Invalid recipe response format:', response.data);
         throw new Error('Invalid recipe response format');
       }
-      console.log('Successfully processed recipe:', {
-        id: response.data.recipe.recipe_id,
-        name: response.data.recipe.recipe_name
+      
+      const recipe = response.data.recipe;
+      console.log('requestRecipeById: Recipe basic info:', {
+        id: recipe.recipe_id,
+        name: recipe.recipe_name,
+        ingredientsCount: recipe.ingredients?.length || 0,
+        instructionsCount: recipe.instructions?.length || 0
       });
-      return response.data.recipe;
+      
+      if (recipe.ingredients) {
+        console.log('requestRecipeById: Recipe ingredients detail:', recipe.ingredients);
+        recipe.ingredients.forEach((ing, index) => {
+          console.log(`requestRecipeById: Ingredient ${index + 1}:`, {
+            id: ing.ingredient_id,
+            name: ing.ingredient_name,
+            quantity: ing.quantity_numerical,
+            unit: ing.quantity_unit
+          });
+        });
+      } else {
+        console.log('requestRecipeById: No ingredients found in recipe');
+      }
+      
+      console.log('requestRecipeById: Successfully processed recipe:', {
+        id: recipe.recipe_id,
+        name: recipe.recipe_name
+      });
+      return recipe;
     })
     .catch((error) => {
-      console.error('Error fetching recipe:', {
+      console.error('requestRecipeById: Error fetching recipe:', {
         status: error.response?.status,
         data: error.response?.data,
         message: error.message
@@ -157,6 +180,46 @@ export const getDietaryFlags = ingredients =>
 
 export const getAllIngredients = () =>
   api.get('/ingredients')
-     .then(({ data }) =>
-       data.ingredients.map(item => item.ingredient_name)
-     );
+     .then(({ data }) => {
+       console.log('getAllIngredients: Raw API response:', data);
+       console.log('getAllIngredients: Ingredients array:', data.ingredients);
+       
+       const ingredientIdMap = {
+         'avocado': 20,
+         'basil': 13,
+         'basmati rice': 10,
+         'black beans': 19,
+         'broccoli': 24,
+         'butter': 16,
+         'carrot': 25,
+         'cheddar': 17,
+         'chickpeas': 1,
+         'chilli pepper': 28,
+         'coconut milk': 27,
+         'coriander': 7,
+         'cumin': 6,
+         'flour': 26,
+         'garlic': 3,
+         'ginger': 4,
+         'lime': 21,
+         'milk': 15,
+         'mozzarella': 11,
+         'olive oil': 9,
+         'onion': 2,
+         'pasta': 14,
+         'sausage': 29,
+         'soy sauce': 22,
+         'tofu': 23,
+         'tomato': 5,
+         'tortilla': 18,
+         'turmeric': 8
+       };
+       
+       const ingredientsWithIds = data.ingredients.map(ingredient => ({
+         ingredient_id: ingredientIdMap[ingredient.ingredient_name.toLowerCase()] || Date.now() + Math.random(),
+         ingredient_name: ingredient.ingredient_name
+       }));
+       
+       console.log('getAllIngredients: Ingredients with IDs:', ingredientsWithIds.slice(0, 5));
+       return ingredientsWithIds;
+     });

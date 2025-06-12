@@ -47,10 +47,15 @@ function Step({ instruction, lastStep }) {
       }
       point={{ label: instruction.step_number, color, anchorRef }}
     >
-      <Card style={{ padding: 5 }}>
-        <Text ref={anchorRef}>{instruction.step_description}</Text>
+      <Card style={{ padding: 10 }}>
+        <Text ref={anchorRef} style={{ marginBottom: 8 }}>
+          {instruction.step_description}
+        </Text>
+        
         {instruction.time_required > 0 && (
-          <Text>{instruction.time_required} mins</Text>
+          <Text style={{ fontSize: 14, color: '#666', marginTop: 8 }}>
+            Duration: {instruction.time_required} minute{instruction.time_required !== 1 ? 's' : ''}
+          </Text>
         )}
       </Card>
     </Timeline>
@@ -71,9 +76,38 @@ export default function RecipeDetail({
   const countableIngredients = ["onion", "lime", "tortilla", "chilli pepper"];
 
   useEffect(() => {
-    setIsLoading(true);
-    requestRecipeById(recipe.recipe_id).then((recipe) => {
+    console.log("=== RECIPE DETAIL DEBUG ===");
+    console.log("RecipeDetail: Starting with recipe:", recipe);
+    console.log("Recipe ID:", recipe.recipe_id);
+    console.log("Recipe source (likely Profile if has ingredients/instructions):", {
+      hasIngredients: !!recipe.ingredients,
+      hasInstructions: !!recipe.instructions,
+      ingredientsLength: recipe.ingredients?.length,
+      instructionsLength: recipe.instructions?.length
+    });
+    console.log("=== END RECIPE DETAIL DEBUG ===");
+    
+    // Check if recipe already has complete data (ingredients and instructions)
+    const hasCompleteData = recipe.ingredients && recipe.instructions && 
+                           recipe.ingredients.length >= 0 && recipe.instructions.length >= 0;
+    
+    if (hasCompleteData) {
+      console.log("RecipeDetail: Recipe has complete data, using directly");
       setRecipeState(recipe);
+      setIsLoading(false);
+      return;
+    }
+    
+    console.log("RecipeDetail: Recipe incomplete, fetching from server for ID:", recipe.recipe_id);
+    setIsLoading(true);
+    requestRecipeById(recipe.recipe_id).then((fetchedRecipe) => {
+      console.log("RecipeDetail: Fetched recipe data:", fetchedRecipe);
+      console.log("RecipeDetail: Ingredients:", fetchedRecipe.ingredients);
+      console.log("RecipeDetail: Instructions:", fetchedRecipe.instructions);
+      setRecipeState(fetchedRecipe);
+      setIsLoading(false);
+    }).catch(err => {
+      console.error("RecipeDetail: Error fetching recipe:", err);
       setIsLoading(false);
     });
   }, [recipe]);
@@ -84,11 +118,14 @@ export default function RecipeDetail({
         <View style={styles.topButtonsRow}>
           <Button
             disabled={isLoading}
-            onPress={() =>
-              navigation
-                .getParent()
-                ?.navigate("Cooking Mode", { recipe: recipeState })
-            }
+            onPress={() => {
+              console.log("=== STARTING COOKING MODE ===");
+              console.log("Recipe state:", recipeState);
+              console.log("Recipe instructions:", recipeState.instructions);
+              console.log("Instructions with time:", recipeState.instructions?.filter(inst => inst.time_required > 0));
+              console.log("=== END COOKING MODE DEBUG ===");
+              navigation.navigate("Cooking Mode", { recipe: recipeState });
+            }}
             style={styles.button}
           >
             <Text style={styles.buttonText}>Start Cooking Mode</Text>
@@ -114,34 +151,51 @@ export default function RecipeDetail({
           <Text style={styles.sectionTitleText}>Ingredients</Text>
         </View>
 
-        {recipeState.ingredients && recipeState.ingredients.length > 0 ? (
-          <FlatList
-            scrollEnabled={false}
-            data={recipeState.ingredients}
-            keyExtractor={(item) => item.ingredient_id.toString()}
-            renderItem={({ item, index }) => (
-              <ListItem.Part
-                activeBackgroundColor={Colors.grey60}
-                activeOpacity={0.3}
-              >
-                <Text>{`${item.quantity_numerical}${
-                  item.quantity_unit ? " " + item.quantity_unit : ""
-                } ${
-                  item.quantity_numerical > 1 &&
-                  countableIngredients.includes(item.ingredient_name)
-                    ? item.ingredient_name + "s"
-                    : item.ingredient_name
-                }`}</Text>
-              </ListItem.Part>
-            )}
-            style={[
-              styles.ingredientsListSpacing,
-              { marginTop: 0, paddingTop: 5 },
-            ]}
-          />
-        ) : (
-          <Loading />
-        )}
+        {(() => {
+          console.log("RecipeDetail: Checking ingredients condition");
+          console.log("RecipeDetail: recipeState.ingredients:", recipeState.ingredients);
+          console.log("RecipeDetail: ingredients length:", recipeState.ingredients?.length);
+          console.log("RecipeDetail: ingredients exists:", !!recipeState.ingredients);
+          
+          if (recipeState.ingredients && recipeState.ingredients.length > 0) {
+            console.log("RecipeDetail: Rendering ingredients list");
+            return (
+              <FlatList
+                scrollEnabled={false}
+                data={recipeState.ingredients}
+                keyExtractor={(item, index) => {
+                  console.log("RecipeDetail: Ingredient item for key:", item);
+                  return item.ingredient_id ? item.ingredient_id.toString() : `ingredient-${index}`;
+                }}
+                renderItem={({ item, index }) => {
+                  console.log("RecipeDetail: Rendering ingredient:", item);
+                  return (
+                    <ListItem.Part
+                      activeBackgroundColor={Colors.grey60}
+                      activeOpacity={0.3}
+                    >
+                      <Text>{`${item.quantity_numerical}${
+                        item.quantity_unit ? " " + item.quantity_unit : ""
+                      } ${
+                        item.quantity_numerical > 1 &&
+                        countableIngredients.includes(item.ingredient_name)
+                          ? item.ingredient_name + "s"
+                          : item.ingredient_name
+                      }`}</Text>
+                    </ListItem.Part>
+                  );
+                }}
+                style={[
+                  styles.ingredientsListSpacing,
+                  { marginTop: 0, paddingTop: 5 },
+                ]}
+              />
+            );
+          } else {
+            console.log("RecipeDetail: Showing loading for ingredients");
+            return <Loading />;
+          }
+        })()}
 
         <View row style={styles.shoppingListContainer}>
           <Stepper
@@ -182,7 +236,13 @@ export default function RecipeDetail({
           >
             <Text style={styles.buttonText}>Add to Shopping List</Text>
           </Button>
-          <FavouriteButton recipe_id={recipe.recipe_id} style={styles.button} />
+          <FavouriteButton 
+            recipe_id={recipeState.recipe_id} 
+            style={styles.button}
+            onToggle={() => {
+              console.log("FavouriteButton toggled for recipe:", recipeState.recipe_id);
+            }}
+          />
         </View>
 
         {recipeState.instructions && recipeState.instructions.length > 0 ? (
