@@ -69,10 +69,12 @@ export const postRecipeToFavourites = (userId, recipeId) => {
   return axios
     .post(`${endpoint}/users/${userId}/favourites`, { recipe_id: recipeId })
     .then((response) => {
-      return response.data.recipe;
+      console.log("Favourite added response:", response.data);
+      return response.data.favourite; // <- correct key
     })
     .catch((error) => {
-      console.log(error);
+      console.error("postRecipeToFavourites failed:", error.response?.data || error.message);
+      throw error;
     });
 };
 
@@ -80,12 +82,14 @@ export const removeRecipeFromFavourites = (userId, recipeId) => {
   return axios
     .delete(`${endpoint}/users/${userId}/favourites/${recipeId}`)
     .then((response) => {
-      return response.data.recipe;
+      console.log("Favourite removed response:", response.data); // usually empty
+      return { success: true }; // or null/true to indicate success
     })
     .catch((error) => {
-      console.log(error);
+      console.error("removeRecipeFromFavourites failed:", error.response?.data || error.message);
+      throw error;
     });
-};
+}
 
 export const updateUserRecipe = (userId, recipeId, recipeObject) => {
   return axios

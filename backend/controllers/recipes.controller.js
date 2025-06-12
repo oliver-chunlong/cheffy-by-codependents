@@ -133,32 +133,19 @@ const postRecipe = async (req, res, next) => {
       created_by: user_id 
     });
 
-   let insertedIngredients = [];
-   
-   if (Array.isArray(ingredients) && ingredients.length > 0) {
-     insertedIngredients = await addIngredientsToRecipe(recipe.recipe_id, ingredients);
-   }
-
-   let insertedInstructions = [];
-   if (Array.isArray(instructions) && instructions.length > 0) {
-     insertedInstructions = await addInstructionsToRecipe(recipe.recipe_id, instructions);
-   }
-   
-   if (Array.isArray(ingredients) && ingredients.length > 0) {
-      await addIngredientsToRecipe(recipe.recipe_id, ingredients);
-        console.log("🔍 insertedIngredients for recipe", recipe.recipe_id, "→", insertedIngredients);
+    let insertedIngredients = [];
+    if (ingredients && ingredients.length > 0) {
+      insertedIngredients = await addIngredientsToRecipe(recipe.recipe_id, ingredients);
     }
 
-    if (Array.isArray(instructions) && instructions.length > 0) {
-      await addInstructionsToRecipe(recipe.recipe_id, instructions);
+    let insertedInstructions = [];
+    if (instructions && instructions.length > 0) {
+      insertedInstructions = await addInstructionsToRecipe(recipe.recipe_id, instructions);
     }
 
-    const fullRecipe = await selectRecipeById(recipe.recipe_id);
-
-    return res.status(201).json({ recipe: fullRecipe });
+    res.status(201).json({ recipe, ingredients: insertedIngredients, instructions: insertedInstructions });  
   } catch (err) {
-    console.error("Error in postRecipe:", err);
-    res.status(500).json({ msg: err.message || "Internal Server Error" });
+    next(err);
   }
 };
 

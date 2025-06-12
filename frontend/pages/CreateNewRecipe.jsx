@@ -39,14 +39,14 @@ export default function CreateNewRecipe() {
       .catch(err => console.error("Failed to load ingredients:", err));
   }, []);
 
-const addIngredient = ingredientObj =>
-  setSelectedIngredients(prev => {
-    const exists = prev.some(i =>
-      i.ingredient_name === ingredientObj.ingredient_name
-    );
-    if (exists) return prev;
-    return [...prev, ingredientObj];
-  });
+const addIngredient = ingredientObj => {
+  if (!ingredientObj || !ingredientObj.ingredient_id) {
+    console.warn("Invalid ingredient attempted:", ingredientObj);
+    return;
+  }
+
+  setSelectedIngredients(prev => [...prev, ingredientObj]);
+};
 
  const removeIngredient = idOrName =>
   setSelectedIngredients(prev =>
@@ -76,62 +76,76 @@ const addIngredient = ingredientObj =>
       return next.map((s, i) => ({ ...s, step_number: i + 1 }));
     });
   };
+  
 
   const onSavePress = async () => {
-    if (!userId) {
-      return setError("You must be logged in.");
+    console.log("Payload being sent:", JSON.stringify(payload, null, 2));
+  if (!userId) {
+    return setError("You must be logged in.");
+  }
+
+  if (!recipeName.trim()) {
+    return setError("Name required.");
+  }
+
+  if (!imageUrl.trim()) {
+    return setError("Image URL required.");
+  }
+
+  if (!description.trim()) {
+    return setError("Description required.");
+  }
+
+  if (!selectedIngredients.length) {
+    return setError("Add at least one ingredient.");
+  }
+
+  setError("");
+
+  const validIngredients = selectedIngredients.filter(i => !!i.ingredient_id);
+
+  if (validIngredients.length === 0) {
+    return setError("Add at least one valid ingredient.");
+  }
+
+  const ingredientsPayload = validIngredients.map(i => ({
+    ingredient_id: i.ingredient_id,
+    quantity_numerical: 1,
+    quantity_unit: i.quantity_unit ?? ""
+  }));
+
+  const instructionsPayload = steps.map(s => ({
+    step_number: s.step_number,
+    step_description: s.step_description.trim(),
+    time_required: 0
+  }));
+
+  const payload = {
+    recipe_name: recipeName.trim(),
+    recipe_img_url: imageUrl.trim(),
+    recipe_description: description.trim(),
+    ingredients: ingredientsPayload,
+    instructions: instructionsPayload
+  };
+
+  try {
+    console.log("Payload being sent:", payload);
+
+    const savedRecipe = await postNewRecipe(userId, payload);
+
+    if (!savedRecipe) {
+      throw new Error("Recipe creation failed with no response.");
     }
 
-    if (!recipeName.trim()) {
-      return setError("Name required.");
-    }
-
-    if (!imageUrl.trim()) {
-        return setError('Image URL required.')
-    }
-
-    if (!description.trim()) {
-      return setError("Description required.");
-    }
-
-    if (!selectedIngredients.length) {
-      return setError("Add at least one ingredient.");
-    }
-
-    setError("");
-    
-    const ingredientsPayload = selectedIngredients.map(i => ({
-      ingredient_id: i.ingredient_id, 
-      quantity_numerical: 1,
-      quantity_unit: null
-    }));
-
-const instructionsPayload = steps.map(s => ({
-      step_number: s.step_number,
-      step_description: s.step_description.trim(),
-      time_required: 0
-    }));
-
-   const payload = {
-     recipe_name: recipeName.trim(),
-     recipe_img_url: imageUrl.trim(),
-     recipe_description: description.trim(),
-     ingredients: ingredientsPayload,
-     instructions: instructionsPayload
-   };
-
-try {
-   const response = await postNewRecipe(userId, payload);
-   const savedRecipe = response.recipe || response;
     Alert.alert(`"${savedRecipe.recipe_name}" saved.`);
     navigation.navigate("Profile", { newRecipe: savedRecipe });
-  } 
-  catch (err) {
+  } catch (err) {
     console.error("Error saving recipe:", err.response?.data || err.message);
     const serverMsg = err.response?.data?.message;
     setError(serverMsg || `Save failed: ${err.message}`);
   }
 };
+
 
   return (
     <SafeAreaView style={shared.screen}>
@@ -187,21 +201,26 @@ try {
             <Text style={localStyles.sectionTitle}>Steps</Text>
 
             {steps.map((s, index) => (
-              <View key={index} style={localStyles.stepRow}>
-                <Text style={localStyles.stepLabel}>Step {s.step_number}</Text>
-                <TextField
-                  placeholder={`Describe step ${s.step_number}`}
-                  value={s.step_description}
-                  onChangeText={text => updateStep(index, text)}
-                  multiline
-                  style={localStyles.stepInput}
-                  fieldStyle={localStyles.field}
-                />
-                {steps.length > 1 && (
-                  <Button label="Remove" link onPress={() => removeStep(index)} style={localStyles.removeButton} />
-                )}
-              </View>
-            ))}
+  <View key={`step-${s.step_number}`} style={localStyles.stepRow}>
+    <Text style={localStyles.stepLabel}>Step {s.step_number}</Text>
+    <TextField
+      placeholder={`Describe step ${s.step_number}`}
+      value={s.step_description}
+      onChangeText={text => updateStep(index, text)}
+      multiline
+      style={localStyles.stepInput}
+      fieldStyle={localStyles.field}
+    />
+    {steps.length > 1 && (
+      <Button
+        label="Remove"
+        link
+        onPress={() => removeStep(index)}
+        style={localStyles.removeButton}
+      />
+    )}
+  </View>
+))}
             <Button label="+ Add step" link onPress={addStep} style={localStyles.addButton} />
           </View>
         </Card>
@@ -345,3 +364,6 @@ const localStyles = StyleSheet.create({
     color: '#333' 
   }
 });
+
+
+	

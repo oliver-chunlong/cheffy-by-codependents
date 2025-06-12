@@ -1,4 +1,4 @@
-import { Button, View, Text } from "react-native-ui-lib";
+import { Button, View } from "react-native-ui-lib";
 import {
   postRecipeToFavourites,
   requestFavouriteRecipes,
@@ -13,7 +13,6 @@ import { styles } from "../styles/styles.js";
 
 export default function FavouriteButton({ recipe_id, onToggle }) {
   const { user, login } = useContext(UserContext);
-
   const [isClicked, setIsClicked] = useState(false);
 
   useEffect(() => {
@@ -21,16 +20,18 @@ export default function FavouriteButton({ recipe_id, onToggle }) {
 
     requestFavouriteRecipes(user.id)
       .then((res) => {
-        const arr = Array.isArray(res) ? res : res.recipes || [];
+        const arr = Array.isArray(res) ? res : res.favourites || [];
         const favourites = arr.map((recipe) => recipe.recipe_id);
         if (favourites.includes(recipe_id)) {
           setIsClicked(true);
         }
       })
-      .catch(() => {});
+      .catch((err) => {
+        console.error("Failed to load favourites:", err);
+      });
   }, [user, recipe_id]);
 
-  const handleToggle = (localUser = user) => {
+  const handleToggle = async (localUser = user) => {
     if (!localUser) {
       Toast.show({
         type: "error",
@@ -39,69 +40,74 @@ export default function FavouriteButton({ recipe_id, onToggle }) {
       });
       return;
     }
+
     const newClickedState = !isClicked;
     setIsClicked(newClickedState);
 
-    const action = newClickedState
-      ? postRecipeToFavourites(localUser.id, recipe_id)
-      : removeRecipeFromFavourites(localUser.id, recipe_id);
+    try {
+      if (newClickedState) {
+        const res = await postRecipeToFavourites(localUser.id, recipe_id);
+        console.log("Favourite added:", res);
+      } else {
+        const res = await removeRecipeFromFavourites(localUser.id, recipe_id);
+        console.log("Favourite removed:", res);
+      }
 
-    action
-      .then(() => {
-        Toast.show({
-          type: "customToast",
-          position: "bottom",
-          props: {
-            text1: newClickedState
-              ? "Added to favourites"
-              : "Removed from favourites",
-
-            icon: newClickedState ? HeartClicked : Heart,
-          },
-        });
-        if (onToggle) onToggle(newClickedState);
-      })
-      .catch(() => {
-        setIsClicked(!newClickedState);
-        Toast.show({
-          type: "customToast",
-          position: "bottom",
-          props: {
-            text1: "Oh no! Something went wrong!",
-            text2: "Please try again later.",
-          },
-        });
+      Toast.show({
+        type: "customToast",
+        position: "bottom",
+        props: {
+          text1: newClickedState
+            ? "Added to favourites"
+            : "Removed from favourites",
+          icon: newClickedState ? HeartClicked : Heart,
+        },
       });
+
+      if (onToggle) onToggle(newClickedState);
+    } catch (error) {
+      console.error("Error updating favourite:", error);
+      setIsClicked(!newClickedState);
+      Toast.show({
+        type: "customToast",
+        position: "bottom",
+        props: {
+          text1: "Oh no! Something went wrong!",
+          text2: "Please try again later.",
+        },
+      });
+    }
+  };
+
+  const onPress = async () => {
+    if (!user) {
+      const u = await login("default", "123");
+      if (u) {
+        handleToggle(u);
+      } else {
+        Toast.show({
+          type: "error",
+          position: "bottom",
+          props: {
+            text1: "Please log in to favourite",
+            icon: Heart,
+          },
+        });
+      }
+    } else {
+      handleToggle();
+    }
   };
 
   return (
     <View style={styles.favouriteContainer}>
       <Button
         style={styles.favouriteButton}
-        title="Add to favourites"
-        onPress={async () => {
-          if (!user) {
-            const u = await login("default", "123");
-            if (u) {
-              handleToggle(u);
-            } else {
-              Toast.show({
-                type: "error",
-                position: "bottom",
-                props: {
-                  text1: "Please log in to favourite",
-                  icon: Heart,
-                },
-              });
-            }
-          } else {
-            handleToggle();
-          }
-        }}
+        onPress={onPress}
         iconSource={isClicked ? HeartClicked : Heart}
         iconStyle={{ width: 30, height: 30, tintColor: undefined }}
         backgroundColor="transparent"
-      ></Button>
+      />
     </View>
   );
 }

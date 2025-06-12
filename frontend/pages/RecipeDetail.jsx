@@ -9,27 +9,8 @@ import Toast from "react-native-toast-message";
 import Loading from "../components/Loading";
 import Stepper from "../components/Stepper";
 import FavouriteButton from "../components/FavouriteButton";
-import { UserContext } from "../context/UserContext";
 import { styles } from "../styles/styles";
 import AddToList from "../assets/AddToList.webp";
-
-
-// function Step({ instruction }) {
-//   const timelineColor = "#f6c47b";
-  
-//   return (
-
-//   <Timeline
-//   topLine={
-//     instruction.step_number > 1 ? { state: Timeline.states.CURRENT, color: timelineColor } : undefined
-//     }
-//     bottomLine={{ state: Timeline.states.CURRENT, color: timelineColor }}
-//     point={{
-//       label: instruction.step_number,
-//       labelStyle: { color: timelineColor },
-//     }}
-//     pointColor={timelineColor}
-//     stateColor={timelineColor}
 
 function Step({ instruction, lastStep }) {
   const color = "#fc9f5d";
@@ -73,15 +54,11 @@ export default function RecipeDetail({
   },
 }) {
   const navigation = useNavigation();
-  const { user, login } = useContext(UserContext);
-  const { setShoppingList } = useContext(ShoppingListContext);
 
   const [recipeState, setRecipeState] = useState(recipe);
+  const { setShoppingList } = useContext(ShoppingListContext);
   const [ingredientQuantity, setIngredientQuantity] = useState(1);
-  const [isFav, setIsFav] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-
-
   const countableIngredients = ["onion", "lime", "tortilla", "chilli pepper"];
 
   useEffect(() => {
@@ -95,68 +72,22 @@ export default function RecipeDetail({
       .finally(() => setIsLoading(false));
   }, [recipe]);
 
-  useEffect(() => {
-    if (!user) {
-      setIsFav(false);
-      return;
-    }
-    requestFavouriteRecipes(user.id)
-      .then(res => {
-        const arr = Array.isArray(res) ? res : res.recipes || res.favourites || [];
-        const favIds = arr.map(r => r.recipe_id);
-        setIsFav(favIds.includes(recipe.recipe_id));
-      })
-      .catch(() => {
-      });
-  }, [user, recipe.recipe_id]);
-
-  const toggleFavourite = async () => {
-    if (!user) {
-      const u = await login("default", "123");
-      if (!u) {
-        Toast.show({
-          type: "error",
-          text1: "Please log in to favourite",
-          position: "bottom",
-        });
-        return;
-      }
-    }
-    
-    const next = !isFav;
-    const apiCall = next
-      ? postRecipeToFavourites(user.id, recipe.recipe_id)
-      : removeRecipeFromFavourites(user.id, recipe.recipe_id);
-
-    apiCall
-      .then(() => {
-        setIsFav(next);
-        Toast.show({
-          type: "success",
-          text1: next ? "Added to favourites" : "Removed from favourites",
-          position: "bottom",
-        });
-      })
-      .catch(() => {
-        Toast.show({
-          type: "error",
-          text1: "Couldn't update favourites",
-          position: "bottom",
-        });
-      });
-  };
-
   return (
     <ScrollView style={styles.scrollViewContainer}>
       <View style={styles.innerContentContainer}>
         <View style={styles.topButtonsRow}>
           <Button
             disabled={isLoading}
-            onPress={() => navigation.getParent() ?.navigate("Cooking Mode", { recipe: recipeState })}
+            onPress={() =>
+              navigation
+                .getParent()
+                ?.navigate("Cooking Mode", { recipe: recipeState })
+            }
             style={styles.button}
           >
             <Text style={styles.buttonText}>Start Cooking Mode</Text>
           </Button>
+          <FavouriteButton recipe_id={recipe.recipe_id} style={styles.button} />
         </View>
 
         <Text style={styles.recipeName}>{recipeState.recipe_name}</Text>
@@ -168,19 +99,16 @@ export default function RecipeDetail({
         </Text>
 
         <Image
-          source={{ uri: recipeState.recipe_img_url }}
+          source={{
+            uri: recipeState.recipe_img_url,
+          }}
           style={styles.recipeImage}
         />
 
         <Text style={styles.sectionTitle}>Ingredients</Text>
-        {isLoading ? (
-          <Loading />
-        ) : recipeState.ingredients?.length > 0 ? (
+        {recipeState.ingredients && recipeState.ingredients.length > 0 ? (
           <FlatList
           scrollEnabled={false}
-          keyExtractor={(item, index) => {
-            return (item.iq_id != null ? item.iq_id : index).toString();
-          }}
          data={recipeState.ingredients}
             renderItem={({ item }) => (
               <ListItem.Part
@@ -200,7 +128,7 @@ export default function RecipeDetail({
             style={styles.ingredientsListSpacing}
           />
         ) : (
-          <Text>No ingredients to show.</Text>
+          <Loading />
         )}
 
         <View row style={styles.shoppingListContainer}>
@@ -215,9 +143,10 @@ export default function RecipeDetail({
             disabled={isLoading}
             onPress={() => {
               try {
-                setShoppingList(prev => {
-                  const newItems = Array(ingredientQuantity).fill(recipeState);
-                  return prev ? [...prev, ...newItems] : newItems;
+                setShoppingList((prev) => {
+                  const newIngredients =
+                    Array(ingredientQuantity).fill(recipeState);
+                  return prev ? [...prev, ...newIngredients] : newIngredients;
                 });
                 Toast.show({
                   type: "customToast",
@@ -227,7 +156,7 @@ export default function RecipeDetail({
                     icon: AddToList,
                   },
                 });
-              } catch {
+              } catch (error) {
                 Toast.show({
                   type: "customToast",
                   position: "bottom",
@@ -241,51 +170,23 @@ export default function RecipeDetail({
           >
             <Text style={styles.buttonText}>Add to Shopping List</Text>
           </Button>
-
-          <FavouriteButton
-            recipeId={recipe.recipe_id}
-            isFavourite={isFav}
-            onToggle={toggleFavourite}
-            style={styles.favouriteButtonDetail}
-          />
         </View>
 
-
-        <Text style={styles.sectionTitle}>Instructions</Text>
-        <View style={styles.timelineContainer}>
-          {isLoading ? (
-            <Loading />
-          ) : recipeState.instructions?.length > 0 ? (
-            recipeState.instructions.map(instruction => (
+        {recipeState.instructions && recipeState.instructions.length > 0 ? (
+          recipeState.instructions?.map((instruction) => (
               <Step
                 key={instruction.step_number}
+              lastStep={recipeState.instructions.at(-1).step_number}
                 instruction={instruction}
               />
             ))
           ) : (
-            <Text>No instructions to show.</Text>
-          )}
-        </View>
-        <View style={{ height: 10 }} />
-
-//         {recipeState.instructions && recipeState.instructions.length > 0 ? (
-//           recipeState.instructions?.map((instruction) => (
-//             <Step
-//               key={instruction.step_number}
-//               lastStep={recipeState.instructions.at(-1).step_number}
-//               instruction={instruction}
-//             />
-//           ))
-//         ) : (
-//           <Loading />
-//         )}
-
+          <Loading />
+        )}
       </View>
     </ScrollView>
   );
 }
-
-
 
 
 // const styles = StyleSheet.create({
@@ -296,5 +197,4 @@ export default function RecipeDetail({
 //     padding: 8,
 //   },
 // });
-
 

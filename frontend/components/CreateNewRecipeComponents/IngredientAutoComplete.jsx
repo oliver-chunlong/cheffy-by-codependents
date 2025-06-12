@@ -1,79 +1,81 @@
 import React, { useState, useEffect } from 'react';
 import { View, TextInput, FlatList, TouchableOpacity, Text, StyleSheet } from 'react-native';
 
-export default function IngredientAutocomplete({ allIngredients = [], onAdd }) {
+export default function IngredientAutocomplete({ allIngredients, onAdd }) {
   const [query, setQuery] = useState("");
   const [suggestions, setSuggestions] = useState([]);
 
-  const normalized = allIngredients.map(item =>
-    typeof item === 'string' ? { ingredient_id: null, ingredient_name: item } : item );
-
   useEffect(() => {
-    if (query.length > 0) {
-      const filtered = normalized
-        .filter(item =>
-          item.ingredient_name &&
-          item.ingredient_name.toLowerCase().startsWith(query.toLowerCase())
-        )
-        .slice(0, 5);
-      setSuggestions(filtered);
-    } else {
-      setSuggestions([]);
-    }
-  }, [query, allIngredients]);
+  if (query.length > 0) {
+    const filtered = allIngredients
+      .map((name, index) => ({
+        ingredient_id: index + 1, // temp ID
+        ingredient_name: name
+      }))
+      .filter(item =>
+        item.ingredient_name.toLowerCase().startsWith(query.toLowerCase())
+      )
+      .slice(0, 5);
 
-  const handleAdd = ingredientObj => {
-    onAdd(ingredientObj);
-    setQuery("");
+    setSuggestions(filtered);
+  } else {
     setSuggestions([]);
+  }
+}, [query, allIngredients]);
+  const handleAdd = ingredient => {
+    onAdd(ingredient); // send full object
+    setQuery("");
   };
 
   const renderItem = ({ item }) => (
-    <TouchableOpacity
-      style={styles.suggestionItem}
-      onPress={() => handleAdd(item)}
-    >
+    <TouchableOpacity style={styles.suggestionItem} onPress={() => handleAdd(item)}>
       <Text>{item.ingredient_name}</Text>
     </TouchableOpacity>
   );
 
-  const showAddOption = () => {
-    if (!query.trim()) return false;
-    return !normalized.some(
-      i => i.ingredient_name && i.ingredient_name.toLowerCase() === query.toLowerCase() );
-  };
+const showAddOption = () => {
+  const exists = allIngredients
+    .filter(i => typeof i === 'object' && i.ingredient_name)
+    .map(i => i.ingredient_name.toLowerCase())
+    .includes(query.toLowerCase());
+
+  return query.length > 0 && !exists;
+};
 
   return (
-
     <View style={styles.container}>
       <TextInput
-      placeholder="Search or add ingredients"
-      value={query}
-      onChangeText={setQuery}
-      style={styles.input}
+        placeholder="Search or add ingredients"
+        value={query}
+        onChangeText={setQuery}
+        style={styles.input}
       />
-
       {(suggestions.length > 0 || showAddOption()) && (
         <View style={styles.suggestionsList}>
           {suggestions.length > 0 && (
             <FlatList
-            data={suggestions}
-            keyExtractor={item =>
-            item.ingredient_id != null
-                ? item.ingredient_id.toString()
-                : item.ingredient_name
-              }
-              renderItem={renderItem}
-              keyboardShouldPersistTaps="handled"
-            />
-          )}
-
+              data={suggestions}
+       keyExtractor={item => String(item.ingredient_id)}
+            renderItem={({ item }) => (
+              <TouchableOpacity
+                style={styles.suggestionItem}
+                onPress={() => handleAdd(item)}
+              >
+                <Text>{item.ingredient_name}</Text>
+              </TouchableOpacity>
+            )}
+            keyboardShouldPersistTaps="handled"
+          />
+        )}
           {showAddOption() && (
             <TouchableOpacity
-            style={styles.addItem}
-            onPress={() =>
-              handleAdd({ ingredient_id: null, ingredient_name: query })
-            }
+              style={styles.addItem}
+              onPress={() =>
+                handleAdd({
+                  ingredient_id: Date.now(),
+                  ingredient_name: query
+                })
+              }
             >
               <Text style={styles.addText}>Add "{query}"</Text>
             </TouchableOpacity>
@@ -83,6 +85,7 @@ export default function IngredientAutocomplete({ allIngredients = [], onAdd }) {
     </View>
   );
 }
+
 
 const styles = StyleSheet.create({
   container: { width: '100%' },
