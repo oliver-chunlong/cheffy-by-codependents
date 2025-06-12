@@ -725,7 +725,17 @@ export const styles = StyleSheet.create({
     borderBottomColor: "#eee",
     paddingBottom: 5,
   },
-
+  sectionTitleContainer: {
+    marginTop: 20,
+    marginBottom: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: "#eee",
+    paddingBottom: 5,
+  },
+  sectionTitleText: {
+    fontSize: 20,
+    fontWeight: "bold",
+  },
   ingredientsList: {
     marginBottom: 20,
   },
@@ -788,7 +798,7 @@ export const styles = StyleSheet.create({
     height: 30,
     margin: 10,
   },
-    deleteText: {
+  deleteText: {
     color: "black",
     fontWeight: "bold",
   },
