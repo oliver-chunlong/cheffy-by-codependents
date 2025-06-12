@@ -25,6 +25,7 @@ const styles = StyleSheet.create({
     shadowRadius: 6,
     elevation: 5,
     alignItems: "center",
+    width: "90%",
   },
   icon: {
     width: 24,

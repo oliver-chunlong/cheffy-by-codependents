@@ -26,13 +26,17 @@ export default function FavouriteButton({ recipe_id, onToggle }) {
       try {
         setIsLoading(true);
         const favorites = await requestFavouriteRecipes(user.id);
-        console.log('Checking if recipe is favorited:', { recipe_id, favorites });
-        
-        const isFavorited = Array.isArray(favorites) 
-          ? favorites.some(fav => fav.recipe_id === recipe_id)
-          : favorites?.favourites?.some(fav => fav.recipe_id === recipe_id) || false;
-        
-        console.log('Is recipe favorited:', isFavorited);
+        console.log("Checking if recipe is favorited:", {
+          recipe_id,
+          favorites,
+        });
+
+        const isFavorited = Array.isArray(favorites)
+          ? favorites.some((fav) => fav.recipe_id === recipe_id)
+          : favorites?.favourites?.some((fav) => fav.recipe_id === recipe_id) ||
+            false;
+
+        console.log("Is recipe favorited:", isFavorited);
         setIsClicked(isFavorited);
       } catch (err) {
         console.error("Failed to load favourites:", err);
@@ -48,7 +52,7 @@ export default function FavouriteButton({ recipe_id, onToggle }) {
   const handleToggle = async (localUser) => {
     if (!localUser) {
       Toast.show({
-        type: "error",
+        type: "customToast",
         position: "bottom",
         props: { text1: "Please log in to favourite", icon: Heart },
       });
@@ -58,7 +62,7 @@ export default function FavouriteButton({ recipe_id, onToggle }) {
     try {
       setIsLoading(true);
       const newClickedState = !isClicked;
-      
+
       if (newClickedState) {
         await postRecipeToFavourites(localUser.id, recipe_id);
         console.log("Favourite added successfully");
@@ -68,7 +72,7 @@ export default function FavouriteButton({ recipe_id, onToggle }) {
       }
 
       setIsClicked(newClickedState);
-      
+
       Toast.show({
         type: "customToast",
         position: "bottom",
@@ -106,7 +110,7 @@ export default function FavouriteButton({ recipe_id, onToggle }) {
         handleToggle(u);
       } else {
         Toast.show({
-          type: "error",
+          type: "customToast",
           position: "bottom",
           props: {
             text1: "Please log in to favourite",
