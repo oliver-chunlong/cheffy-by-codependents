@@ -32,17 +32,47 @@ const getRecipes = (req, res, next) => {
 };
 
 
-const getRecipeById = (req, res, next) => {
-  const { recipe_id } = req.params;
+const getRecipeById = async (req, res, next) => {
+  try {
+    const { recipe_id } = req.params;
+    console.log('getRecipeById called with recipe_id:', recipe_id);
 
-  selectRecipeById(recipe_id)
-    .then((recipe) => {
-      if (!recipe) {
-        return Promise.reject({ status: 404, msg: "Recipe not found" });
-      }
-      res.status(200).send({ recipe });
-    })
-    .catch(next);
+    if (!recipe_id) {
+      console.error('No recipe_id provided');
+      return res.status(400).json({ msg: "Recipe ID is required" });
+    }
+
+    if (isNaN(Number(recipe_id))) {
+      console.error('Invalid recipe_id format:', recipe_id);
+      return res.status(400).json({ msg: "Invalid recipe ID format" });
+    }
+
+    const recipe = await selectRecipeById(recipe_id);
+    console.log('Recipe found:', {
+      id: recipe.recipe_id,
+      name: recipe.recipe_name,
+      hasIngredients: recipe.ingredients?.length > 0,
+      hasInstructions: recipe.instructions?.length > 0
+    });
+
+    res.status(200).json({ recipe });
+  } catch (error) {
+    console.error('Error in getRecipeById:', {
+      error: error.message,
+      stack: error.stack,
+      recipe_id: req.params.recipe_id
+    });
+
+    if (error.status === 404) {
+      return res.status(404).json({ msg: error.msg });
+    }
+
+    if (error.status === 400) {
+      return res.status(400).json({ msg: error.msg });
+    }
+
+    next(error);
+  }
 };
 
 const postRecipeToFavourites = async (req, res, next) => {
@@ -61,19 +91,24 @@ const postRecipeToFavourites = async (req, res, next) => {
 
 const getUserFavourites = async (req, res, next) => {
   const { user_id } = req.params;
+  console.log('Getting favorites for user:', user_id);
 
   try {
     const favourites = await selectUserFavourites(user_id);
+    console.log('Favorites from database:', favourites);
 
-    if (favourites.length === 0) {
+    if (!favourites || favourites.length === 0) {
+      console.log('No favorites found for user');
       return res.status(200).json({
         msg: "User has no favourite recipes",
         favourites: [],
       });
     }
 
+    console.log('Sending favorites response:', { favourites });
     res.status(200).json({ favourites });
   } catch (err) {
+    console.error('Error in getUserFavourites:', err);
     next(err);
   }
 };

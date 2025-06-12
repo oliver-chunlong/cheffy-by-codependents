@@ -18,6 +18,26 @@ const normalizeRecipeImage = recipe => {
   };
 };
 
+const fetchFavourites = async (userId, setFavourites, setIsLoading, setErrorMsg) => {
+  setIsLoading(true);
+  setErrorMsg("");
+  try {
+    const favourites = await requestFavouriteRecipes(userId);
+    if (!favourites || !favourites.length) {
+      setFavourites([]);
+      return;
+    }
+    const recipePromises = favourites.map(fav => requestRecipeById(fav.recipe_id).catch(() => null));
+    const favRecipes = await Promise.all(recipePromises);
+    setFavourites(favRecipes.filter(Boolean));
+  } catch (err) {
+    setErrorMsg("Failed to load favourite recipes.");
+    setFavourites([]);
+  } finally {
+    setIsLoading(false);
+  }
+};
+
 export default function Profile({ navigation, route }) {
   const { user, error, userError, logout } = useContext(UserContext);
   const [myRecipes, setMyRecipes] = useState([]);
@@ -31,56 +51,7 @@ export default function Profile({ navigation, route }) {
 
   useEffect(() => {
     if (!userId) return;
-    setIsLoading(true);
-    setErrorMsg('');
-
-    const loadFavorites = async () => {
-      try {
-        const favorites = await requestFavouriteRecipes(userId);
-        console.log("Favourites response in Profile:", favorites);
-        
-        if (!favorites || !favorites.length) {
-          console.log("No favorites found, setting empty array");
-          setFavourites([]);
-          return;
-        }
-
-        console.log("Starting to fetch recipes for favorites:", favorites);
-        const recipePromises = favorites.map(fav => {
-          console.log("Fetching recipe for favorite ID:", fav.recipe_id);
-          return requestRecipeById(fav.recipe_id)
-            .then(recipe => {
-              if (!recipe) {
-                console.error(`No recipe data returned for ID ${fav.recipe_id}`);
-                return null;
-              }
-              console.log("Successfully fetched recipe:", {
-                id: recipe.recipe_id,
-                name: recipe.recipe_name
-              });
-              return normalizeRecipeImage(recipe);
-            })
-            .catch(err => {
-              console.error(`Failed to fetch recipe ${fav.recipe_id}:`, err);
-              return null;
-            });
-        });
-
-        const favRecipes = await Promise.all(recipePromises);
-        console.log("All recipes fetched:", favRecipes);
-        const validRecipes = favRecipes.filter(Boolean);
-        console.log("Valid recipes to display:", validRecipes);
-        setFavourites(validRecipes);
-      } catch (err) {
-        console.error("Error loading favourites:", err);
-        setErrorMsg("Failed to load favourite recipes.");
-        setFavourites([]);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    loadFavorites();
+    fetchFavourites(userId, setFavourites, setIsLoading, setErrorMsg);
   }, [userId]);
 
   useEffect(() => {
@@ -165,45 +136,7 @@ export default function Profile({ navigation, route }) {
                 <RecipeCard recipe={recipe}>
                   <FavouriteButton
                     recipe_id={recipe.recipe_id}
-                    onToggle={async () => {
-                      try {
-                        console.log("Refreshing favorites after toggle");
-                        const updatedFavourites = await requestFavouriteRecipes(user.id);
-                        console.log("Updated favorites response:", updatedFavourites);
-
-                        if (!updatedFavourites || !updatedFavourites.length) {
-                          console.log("No favorites after toggle, setting empty array");
-                          setFavourites([]);
-                          return;
-                        }
-
-                        const recipePromises = updatedFavourites.map(fav => {
-                          console.log("Fetching recipe for favorite:", fav);
-                          return requestRecipeById(fav.recipe_id)
-                            .then(recipe => {
-                              if (!recipe) {
-                                console.error(`No recipe data returned for ID ${fav.recipe_id}`);
-                                return null;
-                              }
-                              console.log("Recipe fetched successfully:", recipe);
-                              return normalizeRecipeImage(recipe);
-                            })
-                            .catch(err => {
-                              console.error(`Failed to fetch recipe ${fav.recipe_id}:`, err);
-                              return null;
-                            });
-                        });
-
-                        const recipes = await Promise.all(recipePromises);
-                        console.log("All recipes fetched after toggle:", recipes);
-                        const validRecipes = recipes.filter(Boolean);
-                        console.log("Valid recipes to display after toggle:", validRecipes);
-                        setFavourites(validRecipes);
-                      } catch (err) {
-                        console.error("Failed to refresh favourites after toggle:", err);
-                        setErrorMsg("Failed to refresh favourites.");
-                      }
-                    }}
+                    onToggle={() => fetchFavourites(userId, setFavourites, setIsLoading, setErrorMsg)}
                   />
                 </RecipeCard>
               </View>

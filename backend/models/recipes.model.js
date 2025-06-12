@@ -9,9 +9,7 @@ const validFilters = [
 ];
 
 const selectRecipes = (filters = {}, order_by, sort_order = "asc") => {
-  const filterKeys = Object.keys(filters).filter(key =>
-    validFilters.includes(key)
-  );
+  const filterKeys = Object.keys(filters).filter(key => validFilters.includes(key));
   const queryValues = [];
 
   let selectPart = `SELECT *`;
@@ -40,114 +38,223 @@ const selectRecipes = (filters = {}, order_by, sort_order = "asc") => {
   }
 
   if (order_by === "name") {
-    queryStr += ` ORDER BY recipe_name ${
-      sort_order === "desc" ? "DESC" : "ASC"
-    }`;
+    queryStr += ` ORDER BY recipe_name ${sort_order === "desc" ? "DESC" : "ASC"}`;
   } else if (order_by === "time") {
-    queryStr += ` ORDER BY total_time ${
-      sort_order === "desc" ? "DESC" : "ASC"
-    }`;
+    queryStr += ` ORDER BY total_time ${sort_order === "desc" ? "DESC" : "ASC"}`;
   }
 
   return db.query(queryStr, queryValues).then(({ rows }) => rows);
 };
 
 const selectRecipeById = async (recipe_id) => {
-  if (isNaN(Number(recipe_id))) {
-    return Promise.reject({ status: 400, msg: "Invalid recipe ID" });
-  }
+  try {
+    if (isNaN(Number(recipe_id))) {
+      console.error('Invalid recipe ID format:', recipe_id);
+      return Promise.reject({ status: 400, msg: "Invalid recipe ID" });
+    }
 
-  const recipeRes = await db.query(
-    `
-    SELECT
-      r.recipe_id,
-      r.recipe_name,
-      r.recipe_description,
-      r.recipe_img_url,
-      r.created_by,
-      u.username AS created_by_username
-    FROM recipes AS r
-    JOIN users AS u ON r.created_by = u.user_id
-    WHERE r.recipe_id = $1;
-    `,
-    [recipe_id]
-  );
-  if (!recipeRes.rows.length) {
-    return Promise.reject({ status: 404, msg: "Recipe not found" });
-  }
-  const recipe = recipeRes.rows[0];
+    console.log('Fetching recipe with ID:', recipe_id);
 
-  const ingredientsRes = await db.query(
-   `
-    SELECT
-      iq.iq_id,
-      iq.recipe_id,
-      iq.ingredient_id,
-      iq.quantity_numerical::float   AS quantity_numerical,
-      iq.quantity_unit,
-      iq.optional,
-      ing.ingredient_name
-    FROM ingredient_quantities AS iq
-    JOIN ingredients AS ing
-      ON iq.ingredient_id = ing.ingredient_id
-    WHERE iq.recipe_id = $1;
-  `,
-    [recipe_id]
-  );
-  recipe.ingredients = ingredientsRes.rows;
+    // First query to get recipe details
+    let recipeRes;
+    try {
+      recipeRes = await db.query(
+        `
+        SELECT r.recipe_id, r.recipe_name, r.recipe_description, r.recipe_img_url,
+               r.created_by, COALESCE(u.username, 'Unknown User') AS created_by_username
+        FROM recipes r
+        LEFT JOIN users u ON r.created_by = u.user_id
+        WHERE r.recipe_id = $1;
+        `,
+        [recipe_id]
+      );
+    } catch (error) {
+      console.error('Error fetching recipe details:', {
+        error: error.message,
+        stack: error.stack,
+        recipe_id
+      });
+      throw error;
+    }
 
-  const ingredientIds = recipe.ingredients.map(i => i.ingredient_id);
-  if (ingredientIds.length) {
-    const restrictionsRes = await db.query(
-      `
-      SELECT ingredient_id, restriction_name
-      FROM ingredient_dietary_restrictions AS idr
-      JOIN dietary_restrictions AS dr
-        ON idr.restriction_id = dr.restriction_id
-      WHERE ingredient_id = ANY($1);
-      `,
-      [ingredientIds]
-    );
+    console.log('Recipe query result:', {
+      found: recipeRes.rows.length > 0,
+      recipe: recipeRes.rows[0] ? {
+        id: recipeRes.rows[0].recipe_id,
+        name: recipeRes.rows[0].recipe_name
+      } : null
+    });
+
+    if (!recipeRes.rows.length) {
+      console.log('No recipe found with ID:', recipe_id);
+      return Promise.reject({ status: 404, msg: "Recipe not found" });
+    }
+
+    const recipe = recipeRes.rows[0];
+
+    // Get ingredients
+    let ingredientsRes;
+    try {
+      ingredientsRes = await db.query(
+        `
+        SELECT
+          ingredients.id AS ingredient_id,
+          ingredients.ingredient_name,
+          ingredient_quantities.quantity_numerical::float AS quantity_numerical,
+          ingredient_quantities.quantity_unit,
+          ingredient_quantities.optional
+        FROM ingredient_quantities
+        JOIN ingredients ON ingredient_quantities.ingredient_id = ingredients.id
+        WHERE ingredient_quantities.recipe_id = $1;
+        `,
+        [recipe_id]
+      );
+    } catch (error) {
+      console.error('Error fetching ingredients:', {
+        error: error.message,
+        stack: error.stack,
+        recipe_id
+      });
+      throw error;
+    }
+
+    console.log('Ingredients query result:', {
+      count: ingredientsRes.rows.length,
+      ingredients: ingredientsRes.rows.map(i => ({
+        id: i.ingredient_id,
+        name: i.ingredient_name
+      }))
+    });
+
+    // Get dietary restrictions
+    const ingredientIds = ingredientsRes.rows.map((i) => i.ingredient_id);
+    let restrictionsRes = { rows: [] };
+    
+    if (ingredientIds.length > 0) {
+      try {
+        restrictionsRes = await db.query(
+          `
+          SELECT ingredient_id, restriction_name
+          FROM ingredient_dietary_restrictions idr
+          JOIN dietary_restrictions dr ON idr.restriction_id = dr.restriction_id
+          WHERE ingredient_id = ANY($1)
+          `,
+          [ingredientIds]
+        );
+      } catch (error) {
+        console.error('Error fetching dietary restrictions:', {
+          error: error.message,
+          stack: error.stack,
+          ingredientIds
+        });
+      }
+    }
+
+    console.log('Restrictions query result:', {
+      count: restrictionsRes.rows.length,
+      restrictions: restrictionsRes.rows.map(r => ({
+        ingredient_id: r.ingredient_id,
+        restriction: r.restriction_name
+      }))
+    });
+
     const restrictionsMap = {};
     restrictionsRes.rows.forEach(({ ingredient_id, restriction_name }) => {
-      restrictionsMap[ingredient_id] = restrictionsMap[ingredient_id] || [];
+      if (!restrictionsMap[ingredient_id]) restrictionsMap[ingredient_id] = [];
       restrictionsMap[ingredient_id].push(restriction_name);
     });
-    recipe.ingredients.forEach((ing) => {
-      ing.dietary_restrictions = restrictionsMap[ing.ingredient_id] || [];
+
+    ingredientsRes.rows.forEach((ingredient) => {
+      ingredient.dietary_restrictions = restrictionsMap[ingredient.ingredient_id] || [];
     });
+
+    // Get instructions with LEFT JOIN to handle NULL iq_id
+    let instructionsRes;
+    try {
+      instructionsRes = await db.query(
+        `
+        SELECT 
+          i.step_number, 
+          i.step_description, 
+          i.time_required::int AS time_required, 
+          i.timed_task,
+          iq.ingredient_id,
+          ing.ingredient_name
+        FROM instructions i
+        LEFT JOIN ingredient_quantities iq ON i.iq_id = iq.iq_id
+        LEFT JOIN ingredients ing ON iq.ingredient_id = ing.id
+        WHERE i.recipe_id = $1
+        ORDER BY i.step_number ASC;
+        `,
+        [recipe_id]
+      );
+    } catch (error) {
+      console.error('Error fetching instructions:', {
+        error: error.message,
+        stack: error.stack,
+        recipe_id
+      });
+      throw error;
+    }
+
+    console.log('Instructions query result:', {
+      count: instructionsRes.rows.length,
+      steps: instructionsRes.rows.map(i => ({
+        step: i.step_number,
+        description: i.step_description.substring(0, 50) + '...',
+        hasIngredient: !!i.ingredient_id
+      }))
+    });
+
+    recipe.ingredients = ingredientsRes.rows;
+    recipe.instructions = instructionsRes.rows.map(row => ({
+      step_number: row.step_number,
+      step_description: row.step_description,
+      time_required: row.time_required,
+      timed_task: row.timed_task,
+      ingredient: row.ingredient_id ? {
+        id: row.ingredient_id,
+        name: row.ingredient_name
+      } : null
+    }));
+
+    // Get diet types
+    let dietTypes = [];
+    try {
+      const dietTypesRes = await db.query(
+        "SELECT restriction_name FROM dietary_restrictions"
+      );
+      dietTypes = dietTypesRes.rows.map((row) => row.restriction_name);
+    } catch (error) {
+      console.error('Error fetching diet types:', {
+        error: error.message,
+        stack: error.stack
+      });
+    }
+
+    dietTypes.forEach((diet) => {
+      recipe[`is_${diet.replace(/-/g, "_")}`] = recipe.ingredients.every(
+        (ingredient) => ingredient.dietary_restrictions.includes(diet)
+      );
+    });
+
+    console.log('Final recipe object:', {
+      id: recipe.recipe_id,
+      name: recipe.recipe_name,
+      ingredientsCount: recipe.ingredients.length,
+      instructionsCount: recipe.instructions.length,
+      dietTypes: dietTypes
+    });
+    
+    return recipe;
+  } catch (error) {
+    console.error('Error in selectRecipeById:', {
+      error: error.message,
+      stack: error.stack,
+      recipe_id
+    });
+    throw error;
   }
-
-  const instructionsRes = await db.query(
-    `
-    SELECT
-      instruction_id,
-      recipe_id,
-      step_number,
-      step_description,
-      iq_id,
-      time_required::int AS time_required,
-      timed_task
-    FROM instructions
-    WHERE recipe_id = $1
-    ORDER BY step_number ASC;
-    `,
-    [recipe_id]
-  );
-  recipe.instructions = instructionsRes.rows;
-
-  const dietTypesRes = await db.query(
-    `SELECT restriction_name FROM dietary_restrictions;`
-  );
-  const dietTypes = dietTypesRes.rows.map(r => r.restriction_name);
-  dietTypes.forEach(diet => {
-    const flagKey = `is_${diet.replace(/-/g, "_")}`;
-    recipe[flagKey] = recipe.ingredients.every(ing =>
-      ing.dietary_restrictions.includes(diet)
-    );
-  });
-
-  return recipe;
 };
 
 const addRecipeToFavourites = async (user_id, recipe_id) => {
@@ -181,20 +288,30 @@ const addRecipeToFavourites = async (user_id, recipe_id) => {
 };
 
 const selectUserFavourites = async (user_id) => {
-  const user = await db.query(`SELECT * FROM users WHERE user_id = $1`, [
-    user_id,
-  ]);
+  console.log('Selecting favorites for user:', user_id);
+  
+  try {
+    const user = await db.query(`SELECT * FROM users WHERE user_id = $1`, [
+      user_id,
+    ]);
+    console.log('User check result:', user.rows);
 
-  if (user.rowCount === 0) {
-    throw { status: 404, msg: "User not found" };
+    if (user.rowCount === 0) {
+      console.log('User not found');
+      throw { status: 404, msg: "User not found" };
+    }
+
+    const result = await db.query(
+      `SELECT user_id, recipe_id FROM user_favourites WHERE user_id = $1`,
+      [user_id]
+    );
+    console.log('Favorites query result:', result.rows);
+
+    return result.rows;
+  } catch (error) {
+    console.error('Error in selectUserFavourites:', error);
+    throw error;
   }
-
-  const result = await db.query(
-    `SELECT user_id, recipe_id FROM user_favourites WHERE user_id = $1`,
-    [user_id]
-  );
-
-  return result.rows;
 };
 
 const removeFromFavourites = async (user_id, recipe_id) => {
@@ -266,23 +383,25 @@ const insertRecipe = async ({
 };
 
 const addIngredientsToRecipe = async (recipe_id, ingredients) => {
-  if (!Array.isArray(ingredients) || ingredients.length === 0) return [];
-  const valuePlaceholders = ingredients
-    .map((_, i) => `($1, $${i*3+2}, $${i*3+3}, $${i*3+4})`)
-    .join(", ");
   const queryStr = `
     INSERT INTO ingredient_quantities (recipe_id, ingredient_id, quantity_numerical, quantity_unit)
-    VALUES ${valuePlaceholders}
+    VALUES ${ingredients
+      .map((_, i) => `($1, $${i * 3 + 2}, $${i * 3 + 3}, $${i * 3 + 4})`)
+      .join(", ")}
     RETURNING *;
   `;
+
   const values = [
     recipe_id,
-    ...ingredients.flatMap(({ ingredient_id, quantity_numerical, quantity_unit }) => [
-      ingredient_id,
-      quantity_numerical,
-      quantity_unit
-    ])
+    ...[].concat(
+      ...ingredients.map(({ ingredient_id, quantity, unit }) => [
+        ingredient_id,
+        quantity,
+        unit,
+      ])
+    ),
   ];
+
   const result = await db.query(queryStr, values);
   return result.rows;
 };
@@ -417,49 +536,25 @@ const updateUserRecipe = async (user_id, recipe_id, updateData) => {
     }
   }
 
-const recipeRes = await db.query(
-    "SELECT * FROM recipes WHERE recipe_id = $1",
-    [recipe_id]
-  );
+  const recipeRes = await db.query("SELECT * FROM recipes WHERE recipe_id = $1", [recipe_id])
+  if (!recipeRes.rows.length) throw { status: 404, msg: "Recipe not found" }
+
   const ingredientsRes = await db.query(
-  `
-    SELECT
-      iq.iq_id,
-      iq.recipe_id,
-      iq.ingredient_id,
-      iq.quantity_numerical::float   AS quantity_numerical,
-      iq.quantity_unit,
-      iq.optional,
-      ing.ingredient_name
-    FROM ingredient_quantities AS iq
-    JOIN ingredients AS ing
-      ON iq.ingredient_id = ing.ingredient_id
-    WHERE iq.recipe_id = $1;
-  `,
+    "SELECT iq.iq_id, iq.recipe_id, iq.ingredient_id, iq.quantity_numerical, iq.quantity_unit, iq.optional, ing.ingredient_name FROM ingredient_quantities iq JOIN ingredients ing ON iq.ingredient_id = ing.id WHERE iq.recipe_id = $1",
     [recipe_id]
-  );
+  )
+
   const instructionsRes = await db.query(
-    `
-      SELECT
-        instruction_id,
-        recipe_id,
-        step_number,
-        step_description,
-        iq_id,
-        time_required,
-        timed_task
-      FROM instructions
-      WHERE recipe_id = $1
-      ORDER BY step_number ASC;
-    `,
+    "SELECT instruction_id, recipe_id, step_number, step_description, iq_id, time_required, timed_task FROM instructions WHERE recipe_id = $1 ORDER BY step_number",
     [recipe_id]
-  );
+  )
+
   return {
     recipe: recipeRes.rows[0],
     ingredients: ingredientsRes.rows,
     instructions: instructionsRes.rows,
-  };
-};
+  }
+}
 
 module.exports = {
   selectRecipes,
