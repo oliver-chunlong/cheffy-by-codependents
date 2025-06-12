@@ -93,7 +93,6 @@ export default function RecipeDetail({
           >
             <Text style={styles.buttonText}>Start Cooking Mode</Text>
           </Button>
-          <FavouriteButton recipe_id={recipe.recipe_id} style={styles.button} />
         </View>
 
         <Text style={styles.recipeName}>{recipeState.recipe_name}</Text>
@@ -111,7 +110,10 @@ export default function RecipeDetail({
           style={styles.recipeImage}
         />
 
-        <Text style={styles.sectionTitle}>Ingredients</Text>
+        <View style={styles.sectionTitleContainer}>
+          <Text style={styles.sectionTitleText}>Ingredients</Text>
+        </View>
+
         {recipeState.ingredients && recipeState.ingredients.length > 0 ? (
           <FlatList
             scrollEnabled={false}
@@ -132,7 +134,10 @@ export default function RecipeDetail({
                 }`}</Text>
               </ListItem.Part>
             )}
-            style={styles.ingredientsListSpacing}
+            style={[
+              styles.ingredientsListSpacing,
+              { marginTop: 0, paddingTop: 5 },
+            ]}
           />
         ) : (
           <Loading />
@@ -177,6 +182,7 @@ export default function RecipeDetail({
           >
             <Text style={styles.buttonText}>Add to Shopping List</Text>
           </Button>
+          <FavouriteButton recipe_id={recipe.recipe_id} style={styles.button} />
         </View>
 
         {recipeState.instructions && recipeState.instructions.length > 0 ? (
@@ -194,13 +200,3 @@ export default function RecipeDetail({
     </ScrollView>
   );
 }
-
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     justifyContent: "center",
-//     backgroundColor: "#ecf0f1",
-//     padding: 8,
-//   },
-// });

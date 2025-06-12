@@ -6,6 +6,7 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { speak, stopSpeaking } from "../../utils/Speak";
 import Toast from "react-native-toast-message";
 import { Audio } from "expo-av";
+import TimesUp from "../../assets/TimesUp.webp";
 
 export default function CookingModeStep({
   step_number,
@@ -34,9 +35,13 @@ export default function CookingModeStep({
 
   const handleTimerEnd = () => {
     Toast.show({
-      type: "success",
-      text1: "Timer done!",
-      text2: "Move onto the next step!",
+      type: "customToast",
+      position: "top",
+      props: {
+        text1: "Timer done!",
+        text2: "Move onto the next step!",
+        icon: TimesUp,
+      },
     });
     playSound();
   };
@@ -44,7 +49,9 @@ export default function CookingModeStep({
   return (
     <Card style={styles.cookingModeStepContainer}>
       <View style={styles.cookingStepWrapper}>
-        <Text style={styles.cookingModeText}>Step {step_number}</Text>
+        <Text style={[styles.cookingModeText, { marginTop: 20 }]}>
+          Step {step_number}
+        </Text>
         <Text style={styles.cookingModeText}>{step_description}</Text>
       </View>
 

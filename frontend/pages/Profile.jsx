@@ -1,20 +1,32 @@
-import React, { useContext, useState, useEffect } from 'react';
-import { ScrollView, ActivityIndicator, View, TouchableOpacity, Alert, SafeAreaView } from 'react-native';
-import { Text, Button, Modal } from 'react-native-ui-lib';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { useNavigation } from '@react-navigation/native';
-import { UserContext } from '../context/UserContext';
-import LoginForm from '../components/ProfileComponents/LoginForm';
-import RecipeCard from '../components/HomePage-components/RecipeCard';
-import FavouriteButton from '../components/FavouriteButton';
-import { requestUserRecipes, requestFavouriteRecipes, requestRecipeById, deleteUserRecipe } from '../utils/axios';
-import { styles } from '../styles/styles';
+import React, { useContext, useState, useEffect } from "react";
+import {
+  ScrollView,
+  ActivityIndicator,
+  View,
+  TouchableOpacity,
+  Alert,
+  SafeAreaView,
+} from "react-native";
+import { Text, Button, Modal } from "react-native-ui-lib";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import { useNavigation } from "@react-navigation/native";
+import { UserContext } from "../context/UserContext";
+import LoginForm from "../components/ProfileComponents/LoginForm";
+import RecipeCard from "../components/HomePage-components/RecipeCard";
+import FavouriteButton from "../components/FavouriteButton";
+import {
+  requestUserRecipes,
+  requestFavouriteRecipes,
+  requestRecipeById,
+  deleteUserRecipe,
+} from "../utils/axios";
+import { styles } from "../styles/styles";
 
-const normalizeRecipeImage = recipe => {
-  if (!recipe || typeof recipe !== 'object') return null;
+const normalizeRecipeImage = (recipe) => {
+  if (!recipe || typeof recipe !== "object") return null;
   return {
     ...recipe,
-    recipe_img_url: recipe.recipe_img_url || recipe.image_url
+    recipe_img_url: recipe.recipe_img_url || recipe.image_url,
   };
 };
 
@@ -32,13 +44,13 @@ export default function Profile({ navigation, route }) {
   useEffect(() => {
     if (!userId) return;
     setIsLoading(true);
-    setErrorMsg('');
+    setErrorMsg("");
 
     const loadFavorites = async () => {
       try {
         const favorites = await requestFavouriteRecipes(userId);
         console.log("Favourites response in Profile:", favorites);
-        
+
         if (!favorites || !favorites.length) {
           console.log("No favorites found, setting empty array");
           setFavourites([]);
@@ -46,21 +58,23 @@ export default function Profile({ navigation, route }) {
         }
 
         console.log("Starting to fetch recipes for favorites:", favorites);
-        const recipePromises = favorites.map(fav => {
+        const recipePromises = favorites.map((fav) => {
           console.log("Fetching recipe for favorite ID:", fav.recipe_id);
           return requestRecipeById(fav.recipe_id)
-            .then(recipe => {
+            .then((recipe) => {
               if (!recipe) {
-                console.error(`No recipe data returned for ID ${fav.recipe_id}`);
+                console.error(
+                  `No recipe data returned for ID ${fav.recipe_id}`
+                );
                 return null;
               }
               console.log("Successfully fetched recipe:", {
                 id: recipe.recipe_id,
-                name: recipe.recipe_name
+                name: recipe.recipe_name,
               });
               return normalizeRecipeImage(recipe);
             })
-            .catch(err => {
+            .catch((err) => {
               console.error(`Failed to fetch recipe ${fav.recipe_id}:`, err);
               return null;
             });
@@ -85,7 +99,10 @@ export default function Profile({ navigation, route }) {
 
   useEffect(() => {
     if (route.params?.newRecipe) {
-      setMyRecipes(prev => [...prev, normalizeRecipeImage(route.params.newRecipe)]);
+      setMyRecipes((prev) => [
+        ...prev,
+        normalizeRecipeImage(route.params.newRecipe),
+      ]);
       navigation.setParams({ newRecipe: undefined });
     }
   }, [route.params?.newRecipe]);
@@ -96,22 +113,22 @@ export default function Profile({ navigation, route }) {
     setErrorMsg("");
 
     requestUserRecipes(userId)
-      .then(res => {
+      .then((res) => {
         const arr = res || [];
         setMyRecipes(arr.map(normalizeRecipeImage).filter(Boolean));
       })
-      .catch(err => {
+      .catch((err) => {
         console.error("Error loading my recipes:", err.message);
         setErrorMsg("Failed to load your recipes.");
       })
       .finally(() => setIsLoading(false));
   }, [userId]);
 
-  const handleDelete = async recipeId => {
+  const handleDelete = async (recipeId) => {
     try {
       await deleteUserRecipe(userId, recipeId);
-      setMyRecipes(prev => prev.filter(r => r.recipe_id !== recipeId));
-      setFavourites(prev => prev.filter(r => r.recipe_id !== recipeId));
+      setMyRecipes((prev) => prev.filter((r) => r.recipe_id !== recipeId));
+      setFavourites((prev) => prev.filter((r) => r.recipe_id !== recipeId));
       Alert.alert("Your recipe has been removed.");
     } catch (err) {
       console.error("Delete recipe error:", err.response?.data || err.message);
@@ -128,7 +145,11 @@ export default function Profile({ navigation, route }) {
     return (
       <View style={styles.centered}>
         <LoginForm />
-        {userError && <Text text80 red10 marginT-10>{userError}</Text>}
+        {userError && (
+          <Text text80 red10 marginT-10>
+            {userError}
+          </Text>
+        )}
       </View>
     );
   }

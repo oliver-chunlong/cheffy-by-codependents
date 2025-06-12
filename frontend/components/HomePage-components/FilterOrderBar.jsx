@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { ScrollView, Dimensions, TouchableOpacity, Modal } from "react-native";
 import { View, Text } from "react-native-ui-lib";
-import { styles } from "../../styles/styles"; 
+import { styles } from "../../styles/styles";
 
 const filters = [
   { label: "Vegan", key: "is_vegan" },
@@ -12,18 +12,17 @@ const filters = [
 ];
 
 const sortItems = [
-  { value: "name_asc", label: 'A-Z' },
-  { value: "name_desc", label: 'Z-A' },
-  { value: "time_asc", label: 'Quickest recipes' },
-  { value: "time_desc", label: 'Longest recipes' },
+  { value: "name_asc", label: "A-Z" },
+  { value: "name_desc", label: "Z-A" },
+  { value: "time_asc", label: "Quickest recipes" },
+  { value: "time_desc", label: "Longest recipes" },
 ];
-
 
 function FilterOrderBar({ activeFilters, setActiveFilters, order, setOrder }) {
   const [isSortDropdownOpen, setIsSortDropdownOpen] = useState(false);
 
-  const toggleFilter = key => {
-    setActiveFilters(prev => ({
+  const toggleFilter = (key) => {
+    setActiveFilters((prev) => ({
       ...prev,
       [key]: !prev[key],
     }));
@@ -34,19 +33,27 @@ function FilterOrderBar({ activeFilters, setActiveFilters, order, setOrder }) {
     setIsSortDropdownOpen(false);
   };
 
-  const currentSortLabel = sortItems.find(item => item.value === order)?.label || 'Sort By';
+  const currentSortLabel =
+    sortItems.find((item) => item.value === order)?.label || "Sort By";
 
   return (
     <View style={styles.filterBar}>
-      <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={{
+          paddingVertical: 0,
+          paddingBottom: 5,
+          paddingLeft: 2,
+          paddingRight: 15,
+        }}
+      >
         <View style={styles.orderPickerWrapper}>
           <TouchableOpacity
             style={styles.orderPicker}
             onPress={() => setIsSortDropdownOpen(true)}
           >
-            <Text style={styles.sortButtonText}>
-              {currentSortLabel}
-            </Text>
+            <Text style={styles.sortButtonText}>{currentSortLabel}</Text>
             <Text style={styles.dropdownArrow}>↓</Text>
           </TouchableOpacity>
 
@@ -86,17 +93,21 @@ function FilterOrderBar({ activeFilters, setActiveFilters, order, setOrder }) {
           </Modal>
         </View>
 
-        {filters.map(f => (
-          <Text
+        {filters.map((f) => (
+          <View
             key={f.key}
             style={[
-              styles.filterText,
-              activeFilters[f.key] && styles.activeFilterText,
+              styles.textWrapper,
+              activeFilters[f.key] && styles.activeTextWrapper,
             ]}
-            onPress={() => toggleFilter(f.key)}
           >
-            {f.label}
-          </Text>
+            <Text
+              style={[styles.filterText]}
+              onPress={() => toggleFilter(f.key)}
+            >
+              {f.label}
+            </Text>
+          </View>
         ))}
       </ScrollView>
     </View>

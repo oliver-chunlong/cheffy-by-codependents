@@ -52,6 +52,7 @@ export const styles = StyleSheet.create({
     fontFamily: shared.fontFamily,
     fontSize: 22,
     color: "#2b2b2b",
+    marginTop: 5,
   },
   description: {
     fontFamily: shared.fontFamily,
@@ -169,33 +170,27 @@ export const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     paddingVertical: 8,
-    paddingHorizontal: 10,
+    paddingHorizontal: 4,
+    justifyContent: "flex-start",
   },
 
-  filterBar: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingVertical: 8,
-    paddingHorizontal: 10,
+  textWrapper: {
+    borderBottomWidth: 2,
+    borderBottomColor: "transparent",
   },
-
+  activeTextWrapper: {
+    borderBottomColor: "#ffcba0",
+  },
   filterText: {
     marginRight: 10,
     fontSize: 16,
     color: "#888",
-    borderBottomWidth: 2,
-    borderBottomColor: "transparent",
   },
-
-  activeFilterText: {
-    borderBottomColor: "#ffcba0",
-  },
-
   orderPickerWrapper: {
     minWidth: 100,
-    justifyContent: "center",
     marginRight: 10,
     zIndex: 1,
+    alignSelf: "flex-start",
   },
 
   orderPicker: {
@@ -292,11 +287,12 @@ export const styles = StyleSheet.create({
   },
 
   cookingModeButtonText: {
-    fontFamily: shared.fontFamily,
-    fontSize: 19,
+    fontSize: 16,
     color: "#fff",
     textAlign: "center",
     padding: 5,
+    color: "white",
+    fontWeight: "bold",
   },
 
   cookingModeContainer: {
@@ -328,7 +324,7 @@ export const styles = StyleSheet.create({
     margin: 20,
     alignContent: "center",
     backgroundColor: "#fff",
-    borderRadius: 2,
+    borderRadius: 16,
   },
 
   cookingReadSection: {
@@ -466,49 +462,46 @@ export const styles = StyleSheet.create({
 
   loading: {},
 
-actionButton: {
-  width: "90%",
-  backgroundColor: "#f6c47b",
-  shadowColor: "#000",
-  shadowOffset: { width: 0, height: 2 },
-  shadowOpacity: 0.05,
-  shadowRadius: 4,
-  alignSelf: "center",
-  paddingHorizontal: 20,
-  paddingVertical: 10,
-  borderRadius: 20,
-  marginHorizontal: 16,
-  marginVertical: 8,
-  borderRadius: 8,
-},
+  actionButton: {
+    width: "90%",
+    backgroundColor: "#f6c47b",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 4,
+    alignSelf: "center",
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 20,
+    marginHorizontal: 16,
+    marginVertical: 8,
+    borderRadius: 8,
+  },
 
-actionButton2: {
-  width: "90%",
-  backgroundColor: "red",
-  shadowColor: "#000",
-  shadowOffset: { width: 0, height: 2 },
-  shadowOpacity: 0.05,
-  shadowRadius: 4,
-  alignSelf: "center",
-  paddingHorizontal: 20,
-  paddingVertical: 10,
-  borderRadius: 20,
-  marginHorizontal: 16,
-  marginVertical: 8,
-  borderRadius: 8,
-},
+  actionButton2: {
+    width: "90%",
+    backgroundColor: "red",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 4,
+    alignSelf: "center",
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 20,
+    marginHorizontal: 16,
+    marginVertical: 8,
+    borderRadius: 8,
+  },
 
-scrollContent: {
-  paddingVertical: 0,
-  paddingBottom: 5,
-  paddingLeft: 15,
-  paddingRight: 15,
-},
+  scrollContent: {
+    paddingVertical: 0,
+    paddingBottom: 5,
+    paddingLeft: 15,
+    paddingRight: 15,
+  },
 
-loading: {
-  
-},
-
+  loading: {},
 
   cookingModeStepWrapper: {
     flex: 1,
@@ -600,7 +593,7 @@ loading: {
   },
   shoppingListButton: {
     width: "90%",
-    backgroundColor: "#f6c47b",
+    backgroundColor: "#fc9f5d",
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.05,
@@ -618,19 +611,19 @@ loading: {
     textAlign: "center",
   },
 
-    shoppingListCancelButton: {
-    backgroundColor: "#f4b1af",
+  shoppingListCancelButton: {
+    backgroundColor: "#fc9f5d",
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.05,
     shadowRadius: 4,
     alignSelf: "center",
     paddingHorizontal: 20,
-    paddingVertical: 10,
+    paddingVertical: 7,
     borderRadius: 20,
   },
 
-    shoppingListClearButton: {
+  shoppingListClearButton: {
     backgroundColor: "#f6c47b",
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
@@ -639,7 +632,7 @@ loading: {
     alignSelf: "center",
     margin: 10,
     paddingHorizontal: 20,
-    paddingVertical: 10,
+    paddingVertical: 7,
     borderRadius: 20,
   },
 
@@ -662,7 +655,13 @@ loading: {
     marginBottom: 15,
     paddingTop: 10,
   },
-
+  shoppingListContainer: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: 25,
+    paddingTop: 10,
+  },
   button: {
     backgroundColor: "#fc9f5d",
     marginLeft: 10,
@@ -710,8 +709,10 @@ loading: {
   shoppingAddButton: {
     backgroundColor: "#fc9f5d",
     marginLeft: 0,
+    marginRight: 10,
   },
   buttonText: {
+    color: "white",
     fontWeight: "bold",
   },
 
@@ -724,7 +725,17 @@ loading: {
     borderBottomColor: "#eee",
     paddingBottom: 5,
   },
-
+  sectionTitleContainer: {
+    marginTop: 20,
+    marginBottom: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: "#eee",
+    paddingBottom: 5,
+  },
+  sectionTitleText: {
+    fontSize: 20,
+    fontWeight: "bold",
+  },
   ingredientsList: {
     marginBottom: 20,
   },
@@ -786,5 +797,9 @@ loading: {
     padding: 10,
     height: 30,
     margin: 10,
+  },
+  deleteText: {
+    color: "black",
+    fontWeight: "bold",
   },
 });
