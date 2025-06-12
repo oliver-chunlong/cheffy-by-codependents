@@ -29,7 +29,7 @@ export default function StartPage({ setHasSeenStartScreen }) {
             </Text>
           )}
           <Button
-            label="Continue as guest"
+            label="Continue as Guest"
             labelStyle={{
               fontSize: 15,
               color: "white",
