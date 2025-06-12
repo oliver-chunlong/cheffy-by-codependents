@@ -112,16 +112,60 @@ export default function Profile({ navigation, route }) {
     setIsLoading(true);
     setErrorMsg("");
 
-    requestUserRecipes(userId)
-      .then((res) => {
-        const arr = res || [];
-        setMyRecipes(arr.map(normalizeRecipeImage).filter(Boolean));
-      })
-      .catch((err) => {
+    const loadMyRecipes = async () => {
+      try {
+        const userRecipes = await requestUserRecipes(userId);
+        console.log("User recipes response:", userRecipes);
+
+        if (!userRecipes || !userRecipes.length) {
+          console.log("No user recipes found, setting empty array");
+          setMyRecipes([]);
+          return;
+        }
+
+        console.log("Starting to fetch full details for user recipes:", userRecipes);
+        const recipePromises = userRecipes.map((recipe) => {
+          console.log("Fetching full details for recipe ID:", recipe.recipe_id);
+          return requestRecipeById(recipe.recipe_id)
+            .then((fullRecipe) => {
+              if (!fullRecipe) {
+                console.error(`No recipe data returned for ID ${recipe.recipe_id}`);
+                return null;
+              }
+              console.log("Successfully fetched full recipe:", {
+                id: fullRecipe.recipe_id,
+                name: fullRecipe.recipe_name,
+                dietary: {
+                  vegetarian: fullRecipe.is_vegetarian,
+                  vegan: fullRecipe.is_vegan,
+                  glutenFree: fullRecipe.is_gluten_free,
+                  dairyFree: fullRecipe.is_dairy_free,
+                  nutFree: fullRecipe.is_nut_free
+                }
+              });
+              return normalizeRecipeImage(fullRecipe);
+            })
+            .catch((err) => {
+              console.error(`Failed to fetch full recipe ${recipe.recipe_id}:`, err);
+              return normalizeRecipeImage(recipe); // Fallback to basic recipe data
+            });
+        });
+
+        const fullRecipes = await Promise.all(recipePromises);
+        console.log("All user recipes fetched:", fullRecipes);
+        const validRecipes = fullRecipes.filter(Boolean);
+        console.log("Valid user recipes to display:", validRecipes);
+        setMyRecipes(validRecipes);
+      } catch (err) {
         console.error("Error loading my recipes:", err.message);
         setErrorMsg("Failed to load your recipes.");
-      })
-      .finally(() => setIsLoading(false));
+        setMyRecipes([]);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadMyRecipes();
   }, [userId]);
 
   const handleDelete = async (recipeId) => {
