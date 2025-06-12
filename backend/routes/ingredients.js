@@ -5,12 +5,15 @@ const db = require('../db/connection');
 router.get('/', async (req, res, next) => {
   try {
     const { rows } = await db.query(`
-      SELECT ingredient_name
+      SELECT id as ingredient_id, ingredient_name
       FROM ingredients
       ORDER BY ingredient_name;
     `);
+    
+    console.log('Ingredients route returning:', rows.slice(0, 3));
     res.json({ ingredients: rows });
   } catch (err) {
+    console.error('Error in ingredients route:', err);
     next(err);
   }
 });
