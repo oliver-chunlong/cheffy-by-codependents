@@ -34,24 +34,53 @@ export default function Profile({ navigation, route }) {
     setIsLoading(true);
     setErrorMsg('');
 
-    requestFavouriteRecipes(userId)
-      .then(res => {
-        const ids = Array.isArray(res)
-          ? res.map(fav => fav.recipe_id)
-          : (res.favourites || []).map(fav => fav.recipe_id);
+    const loadFavorites = async () => {
+      try {
+        const favorites = await requestFavouriteRecipes(userId);
+        console.log("Favourites response in Profile:", favorites);
+        
+        if (!favorites || !favorites.length) {
+          console.log("No favorites found, setting empty array");
+          setFavourites([]);
+          return;
+        }
 
-        return Promise.all(ids.map(id =>
-          requestRecipeById(id).then(r => normalizeRecipeImage(r)).catch(() => null)
-        ));
-      })
-      .then(favRecipes => {
-        setFavourites(favRecipes.filter(Boolean));
-      })
-      .catch(err => {
+        console.log("Starting to fetch recipes for favorites:", favorites);
+        const recipePromises = favorites.map(fav => {
+          console.log("Fetching recipe for favorite ID:", fav.recipe_id);
+          return requestRecipeById(fav.recipe_id)
+            .then(recipe => {
+              if (!recipe) {
+                console.error(`No recipe data returned for ID ${fav.recipe_id}`);
+                return null;
+              }
+              console.log("Successfully fetched recipe:", {
+                id: recipe.recipe_id,
+                name: recipe.recipe_name
+              });
+              return normalizeRecipeImage(recipe);
+            })
+            .catch(err => {
+              console.error(`Failed to fetch recipe ${fav.recipe_id}:`, err);
+              return null;
+            });
+        });
+
+        const favRecipes = await Promise.all(recipePromises);
+        console.log("All recipes fetched:", favRecipes);
+        const validRecipes = favRecipes.filter(Boolean);
+        console.log("Valid recipes to display:", validRecipes);
+        setFavourites(validRecipes);
+      } catch (err) {
         console.error("Error loading favourites:", err);
         setErrorMsg("Failed to load favourite recipes.");
-      })
-      .finally(() => setIsLoading(false));
+        setFavourites([]);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadFavorites();
   }, [userId]);
 
   useEffect(() => {
@@ -112,6 +141,10 @@ export default function Profile({ navigation, route }) {
         </View>
         {isLoading && favourites.length === 0 ? (
           <ActivityIndicator size="large" style={styles.loading} />
+        ) : errorMsg ? (
+          <View style={{ alignItems: 'center', marginVertical: 16 }}>
+            <Text text90 red10>{errorMsg}</Text>
+          </View>
         ) : favourites.length === 0 ? (
           <View style={{ alignItems: 'center', marginVertical: 16 }}>
             <Text text90>No favourites yet</Text>
@@ -128,35 +161,50 @@ export default function Profile({ navigation, route }) {
             }}
           >
             {favourites.map(recipe => (
-              <View key={recipe.recipe_id}>
+              <View key={recipe.recipe_id} style={styles.horizontalItem}>
                 <RecipeCard recipe={recipe}>
-<FavouriteButton
-  recipe_id={recipe.recipe_id}
-onToggle={async () => {
-  try {
-    const updated = await requestFavouriteRecipes(user.id);
-    const ids = Array.isArray(updated)
-      ? updated.map(fav => fav.recipe_id)
-      : (updated.favourites || []).map(fav => fav.recipe_id);
+                  <FavouriteButton
+                    recipe_id={recipe.recipe_id}
+                    onToggle={async () => {
+                      try {
+                        console.log("Refreshing favorites after toggle");
+                        const updatedFavourites = await requestFavouriteRecipes(user.id);
+                        console.log("Updated favorites response:", updatedFavourites);
 
-    const recipes = await Promise.all(
-      ids.map(id =>
-        requestRecipeById(id)
-          .then(r => normalizeRecipeImage(r))
-          .catch(err => {
-            console.error(`Failed to fetch recipe ${id}:`, err);
-            return null;
-          })
-      )
-    );
+                        if (!updatedFavourites || !updatedFavourites.length) {
+                          console.log("No favorites after toggle, setting empty array");
+                          setFavourites([]);
+                          return;
+                        }
 
-    setFavourites(recipes.filter(Boolean));
-  } catch (err) {
-    console.error("Failed to refresh favourites after toggle:", err);
-  }
-}}
-/>
-                  
+                        const recipePromises = updatedFavourites.map(fav => {
+                          console.log("Fetching recipe for favorite:", fav);
+                          return requestRecipeById(fav.recipe_id)
+                            .then(recipe => {
+                              if (!recipe) {
+                                console.error(`No recipe data returned for ID ${fav.recipe_id}`);
+                                return null;
+                              }
+                              console.log("Recipe fetched successfully:", recipe);
+                              return normalizeRecipeImage(recipe);
+                            })
+                            .catch(err => {
+                              console.error(`Failed to fetch recipe ${fav.recipe_id}:`, err);
+                              return null;
+                            });
+                        });
+
+                        const recipes = await Promise.all(recipePromises);
+                        console.log("All recipes fetched after toggle:", recipes);
+                        const validRecipes = recipes.filter(Boolean);
+                        console.log("Valid recipes to display after toggle:", validRecipes);
+                        setFavourites(validRecipes);
+                      } catch (err) {
+                        console.error("Failed to refresh favourites after toggle:", err);
+                        setErrorMsg("Failed to refresh favourites.");
+                      }
+                    }}
+                  />
                 </RecipeCard>
               </View>
             ))}
@@ -256,3 +304,5 @@ onToggle={async () => {
     </SafeAreaView>
   );
 }
+
+
