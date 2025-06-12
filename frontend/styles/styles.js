@@ -52,6 +52,7 @@ export const styles = StyleSheet.create({
     fontFamily: shared.fontFamily,
     fontSize: 22,
     color: "#2b2b2b",
+    marginTop: 5,
   },
   description: {
     fontFamily: shared.fontFamily,

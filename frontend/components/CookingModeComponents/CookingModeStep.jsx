@@ -49,7 +49,9 @@ export default function CookingModeStep({
   return (
     <Card style={styles.cookingModeStepContainer}>
       <View style={styles.cookingStepWrapper}>
-        <Text style={styles.cookingModeText}>Step {step_number}</Text>
+        <Text style={[styles.cookingModeText, { marginTop: 20 }]}>
+          Step {step_number}
+        </Text>
         <Text style={styles.cookingModeText}>{step_description}</Text>
       </View>
 
