@@ -1,10 +1,19 @@
-import React, { useContext, useEffect, useState, useRef } from "react";
-import { ScrollView, FlatList } from "react-native";
+import { ScrollView, FlatList, SafeAreaView } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import { useContext } from "react";
 import { ShoppingListContext } from "../context/ShoppingListContext";
-import { Colors, Card, Button, Image, Text, View, Timeline, ListItem } from "react-native-ui-lib";
-import { requestRecipeById, requestFavouriteRecipes, postRecipeToFavourites, removeRecipeFromFavourites } from "../utils/axios";
-
+import {
+  Colors,
+  Card,
+  Button,
+  Image,
+  Text,
+  View,
+  Timeline,
+  ListItem,
+} from "react-native-ui-lib";
+import { useEffect, useState, useRef } from "react";
+import { requestRecipeById } from "../utils/axios";
 import Toast from "react-native-toast-message";
 import Loading from "../components/Loading";
 import Stepper from "../components/Stepper";
@@ -63,13 +72,10 @@ export default function RecipeDetail({
 
   useEffect(() => {
     setIsLoading(true);
-    requestRecipeById(recipe.recipe_id)
-      .then(response => {
-        const full = response.recipe || response;
-        setRecipeState(full);
-      })
-      .catch(err => console.error("Failed to load recipe:", err))
-      .finally(() => setIsLoading(false));
+    requestRecipeById(recipe.recipe_id).then((recipe) => {
+      setRecipeState(recipe);
+      setIsLoading(false);
+    });
   }, [recipe]);
 
   return (
@@ -108,9 +114,10 @@ export default function RecipeDetail({
         <Text style={styles.sectionTitle}>Ingredients</Text>
         {recipeState.ingredients && recipeState.ingredients.length > 0 ? (
           <FlatList
-          scrollEnabled={false}
-         data={recipeState.ingredients}
-            renderItem={({ item }) => (
+            scrollEnabled={false}
+            data={recipeState.ingredients}
+            keyExtractor={(item) => item.ingredient_id.toString()}
+            renderItem={({ item, index }) => (
               <ListItem.Part
                 activeBackgroundColor={Colors.grey60}
                 activeOpacity={0.3}
@@ -174,13 +181,13 @@ export default function RecipeDetail({
 
         {recipeState.instructions && recipeState.instructions.length > 0 ? (
           recipeState.instructions?.map((instruction) => (
-              <Step
-                key={instruction.step_number}
+            <Step
+              key={instruction.step_number}
               lastStep={recipeState.instructions.at(-1).step_number}
-                instruction={instruction}
-              />
-            ))
-          ) : (
+              instruction={instruction}
+            />
+          ))
+        ) : (
           <Loading />
         )}
       </View>
@@ -197,4 +204,3 @@ export default function RecipeDetail({
 //     padding: 8,
 //   },
 // });
-

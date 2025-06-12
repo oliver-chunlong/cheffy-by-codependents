@@ -14,24 +14,38 @@ import { styles } from "../styles/styles.js";
 export default function FavouriteButton({ recipe_id, onToggle }) {
   const { user, login } = useContext(UserContext);
   const [isClicked, setIsClicked] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    if (!user) return;
+    if (!user) {
+      setIsLoading(false);
+      return;
+    }
 
-    requestFavouriteRecipes(user.id)
-      .then((res) => {
-        const arr = Array.isArray(res) ? res : res.favourites || [];
-        const favourites = arr.map((recipe) => recipe.recipe_id);
-        if (favourites.includes(recipe_id)) {
-          setIsClicked(true);
-        }
-      })
-      .catch((err) => {
+    const checkFavorite = async () => {
+      try {
+        setIsLoading(true);
+        const favorites = await requestFavouriteRecipes(user.id);
+        console.log('Checking if recipe is favorited:', { recipe_id, favorites });
+        
+        const isFavorited = Array.isArray(favorites) 
+          ? favorites.some(fav => fav.recipe_id === recipe_id)
+          : favorites?.favourites?.some(fav => fav.recipe_id === recipe_id) || false;
+        
+        console.log('Is recipe favorited:', isFavorited);
+        setIsClicked(isFavorited);
+      } catch (err) {
         console.error("Failed to load favourites:", err);
-      });
+        setIsClicked(false);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    checkFavorite();
   }, [user, recipe_id]);
 
-  const handleToggle = async (localUser = user) => {
+  const handleToggle = async (localUser) => {
     if (!localUser) {
       Toast.show({
         type: "error",
@@ -41,18 +55,20 @@ export default function FavouriteButton({ recipe_id, onToggle }) {
       return;
     }
 
-    const newClickedState = !isClicked;
-    setIsClicked(newClickedState);
-
     try {
+      setIsLoading(true);
+      const newClickedState = !isClicked;
+      
       if (newClickedState) {
-        const res = await postRecipeToFavourites(localUser.id, recipe_id);
-        console.log("Favourite added:", res);
+        await postRecipeToFavourites(localUser.id, recipe_id);
+        console.log("Favourite added successfully");
       } else {
-        const res = await removeRecipeFromFavourites(localUser.id, recipe_id);
-        console.log("Favourite removed:", res);
+        await removeRecipeFromFavourites(localUser.id, recipe_id);
+        console.log("Favourite removed successfully");
       }
 
+      setIsClicked(newClickedState);
+      
       Toast.show({
         type: "customToast",
         position: "bottom",
@@ -64,10 +80,12 @@ export default function FavouriteButton({ recipe_id, onToggle }) {
         },
       });
 
-      if (onToggle) onToggle(newClickedState);
+      if (onToggle) {
+        console.log("Calling onToggle callback");
+        onToggle();
+      }
     } catch (error) {
       console.error("Error updating favourite:", error);
-      setIsClicked(!newClickedState);
       Toast.show({
         type: "customToast",
         position: "bottom",
@@ -76,6 +94,8 @@ export default function FavouriteButton({ recipe_id, onToggle }) {
           text2: "Please try again later.",
         },
       });
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -95,7 +115,7 @@ export default function FavouriteButton({ recipe_id, onToggle }) {
         });
       }
     } else {
-      handleToggle();
+      handleToggle(user);
     }
   };
 
@@ -104,6 +124,7 @@ export default function FavouriteButton({ recipe_id, onToggle }) {
       <Button
         style={styles.favouriteButton}
         onPress={onPress}
+        disabled={isLoading}
         iconSource={isClicked ? HeartClicked : Heart}
         iconStyle={{ width: 30, height: 30, tintColor: undefined }}
         backgroundColor="transparent"
